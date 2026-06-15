@@ -2,13 +2,14 @@
   <!-- SelectorPersonalizado: Reemplazo del select nativo del navegador -->
   <div
     class="selector-personalizado"
+    :class="{ 'esta-abierto': estaAbierto }"
     ref="contenedorRef"
     @keydown="alPresionarTeclado"
   >
     <!-- Trigger: El botón principal que abre el listado -->
     <div
       class="selector-trigger"
-      :class="{ 'esta-abierto': estaAbierto, 'tiene-error': tieneError }"
+      :class="{ 'activo': estaAbierto, 'tiene-error': tieneError }"
       role="combobox"
       :aria-expanded="estaAbierto"
       aria-haspopup="listbox"
@@ -19,11 +20,13 @@
       @focus="alEnfocar"
       @blur="alDesenfocar"
     >
-      <span class="texto-seleccionado">{{ etiquetaSeleccionada || placeholder }}</span>
+      <span class="texto-seleccionado" :class="{ 'es-placeholder': !modelValue }">
+        {{ etiquetaSeleccionada || placeholder }}
+      </span>
       <span class="flecha-indicadora" aria-hidden="true">▼</span>
     </div>
 
-    <!-- Opciones: El listado flotante (Popover) -->
+    <!-- Opciones: El listado flotante (Popover) con fondo sólido opaco -->
     <transition name="slide-fade">
       <ul
         v-if="estaAbierto"
@@ -77,14 +80,18 @@ const props = defineProps({
   tieneError: {
     type: Boolean,
     default: false
+  },
+  /** Estado de apertura controlado desde el padre */
+  estaAbierto: {
+    type: Boolean,
+    default: false
   }
 })
 
 // --- Emits ---
-const emit = defineEmits(['update:modelValue', 'cambio'])
+const emit = defineEmits(['update:modelValue', 'cambio', 'abrir', 'cerrar'])
 
 // --- Estado local ---
-const estaAbierto = ref(false)
 const indiceResaltado = ref(-1)
 const contenedorRef = ref(null)
 
@@ -99,9 +106,10 @@ const etiquetaSeleccionada = computed(() => {
 
 // --- Acciones ---
 function alternarDesplegable() {
-  estaAbierto.value = !estaAbierto.value
-  if (estaAbierto.value) {
-    // Buscar si ya hay algo seleccionado para resaltar
+  if (props.estaAbierto) {
+    emit('cerrar')
+  } else {
+    emit('abrir')
     const index = props.opciones.findIndex(o => o.value === props.modelValue)
     indiceResaltado.value = index !== -1 ? index : 0
   }
@@ -115,7 +123,7 @@ function alDesenfocar() {
   // Esperar un instante para permitir clicks en las opciones
   setTimeout(() => {
     if (contenedorRef.value && !contenedorRef.value.contains(document.activeElement)) {
-      estaAbierto.value = false
+      emit('cerrar')
     }
   }, 150)
 }
@@ -123,12 +131,12 @@ function alDesenfocar() {
 function seleccionarOpcion(opcion) {
   emit('update:modelValue', opcion.value)
   emit('cambio', opcion.value)
-  estaAbierto.value = false
+  emit('cerrar')
 }
 
 // --- Manejo del teclado (A11y) ---
 function alPresionarTeclado(e) {
-  if (!estaAbierto.value) {
+  if (!props.estaAbierto) {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
       alternarDesplegable()
@@ -154,10 +162,10 @@ function alPresionarTeclado(e) {
       break
     case 'Escape':
       e.preventDefault()
-      estaAbierto.value = false
+      emit('cerrar')
       break
     case 'Tab':
-      estaAbierto.value = false
+      emit('cerrar')
       break
   }
 }
@@ -165,7 +173,9 @@ function alPresionarTeclado(e) {
 // --- Limpieza de clicks externos ---
 function alHacerClicFuera(e) {
   if (contenedorRef.value && !contenedorRef.value.contains(e.target)) {
-    estaAbierto.value = false
+    if (props.estaAbierto) {
+      emit('cerrar')
+    }
   }
 }
 
@@ -183,6 +193,12 @@ onUnmounted(() => {
   position: relative;
   width: 100%;
   font-family: inherit;
+  z-index: 5; /* Z-index base bajo para los cerrados */
+}
+
+/* Eleva el selector abierto para superponerse encima de labels y otros selectores */
+.selector-personalizado.esta-abierto {
+  z-index: 100;
 }
 
 /* --- Trigger / Botón principal --- */
@@ -192,7 +208,7 @@ onUnmounted(() => {
   justify-content: space-between;
   width: 100%;
   padding: var(--space-3) var(--space-4);
-  background: rgba(17, 24, 39, 0.75);
+  background: rgba(17, 24, 39, 0.9);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
@@ -207,10 +223,10 @@ onUnmounted(() => {
 .selector-trigger:focus-within {
   border-color: var(--color-neon-blue);
   box-shadow: 0 0 0 3px var(--color-neon-blue-glow);
-  background: rgba(17, 24, 39, 0.85);
+  background: rgba(17, 24, 39, 0.95);
 }
 
-.selector-trigger.esta-abierto {
+.selector-trigger.activo {
   border-color: var(--color-neon-purple);
   box-shadow: 0 0 0 3px var(--color-neon-purple-glow);
 }
@@ -225,6 +241,13 @@ onUnmounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-right: var(--space-2);
+  color: #ffffff;
+  font-weight: var(--font-semibold);
+}
+
+.texto-seleccionado.es-placeholder {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-normal);
 }
 
 .flecha-indicadora {
@@ -233,24 +256,23 @@ onUnmounted(() => {
   transition: transform 0.2s ease;
 }
 
-.selector-trigger.esta-abierto .flecha-indicadora {
+.selector-trigger.activo .flecha-indicadora {
   transform: rotate(180deg);
 }
 
-/* --- Popover / Opciones --- */
+/* --- Popover / Opciones (Completamente sólido para legibilidad perfecta) --- */
 .selector-opciones {
   position: absolute;
-  top: calc(100% + var(--space-1));
+  top: calc(100% + 4px);
   left: 0;
   width: 100%;
   max-height: 220px;
   overflow-y: auto;
-  z-index: var(--z-dropdown);
-  background: rgba(10, 14, 26, 0.95);
-  border: 1px solid var(--color-border);
+  z-index: 999;
+  background: #0d0f1a; /* Fondo ultra oscuro sólido, sin transparencias que confundan la lectura */
+  border: 1.5px solid var(--color-neon-purple);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card), 0 0 15px rgba(0,0,0,0.5);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-card), 0 0 15px rgba(184, 79, 255, 0.25);
   list-style: none;
   margin: 0;
   padding: var(--space-1);
@@ -274,23 +296,27 @@ onUnmounted(() => {
 .selector-opcion {
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: #c9d1d9; /* Gris claro de alto contraste */
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
+  text-align: left;
 }
 
+/* Opción activa / hover: fondo morado neón brillante */
 .selector-opcion.esta-resaltada {
-  background: rgba(184, 79, 255, 0.15);
-  color: var(--color-text-primary);
-  border-left: 3px solid var(--color-neon-purple);
-  padding-left: calc(var(--space-4) - 3px);
+  background: var(--color-neon-purple);
+  color: #ffffff !important;
+  font-weight: var(--font-semibold);
 }
 
+/* Opción seleccionada: verde neón */
 .selector-opcion.esta-seleccionada {
-  background: rgba(0, 255, 136, 0.12);
+  background: rgba(0, 255, 136, 0.15);
   color: var(--color-neon-green);
-  font-weight: var(--font-semibold);
+  font-weight: var(--font-bold);
+  border-left: 3px solid var(--color-neon-green);
+  padding-left: calc(var(--space-4) - 3px);
 }
 
 /* --- Transición --- */

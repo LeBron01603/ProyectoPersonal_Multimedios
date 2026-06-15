@@ -221,32 +221,41 @@
               </div>
 
               <!-- Campo: Universidad -->
-              <div class="form-group-edicion">
+              <div class="form-group-edicion" :class="{ 'selector-activo': selectorAbiertoEdicion === 'universidad' }">
                 <label>Universidad</label>
                 <SelectorPersonalizado
                   v-model="formularioEdicion.universidad"
                   :opciones="universidades"
                   placeholder="Selecciona tu U..."
+                  :esta-abierto="selectorAbiertoEdicion === 'universidad'"
+                  @abrir="selectorAbiertoEdicion = 'universidad'"
+                  @cerrar="selectorAbiertoEdicion = null"
                 />
               </div>
 
               <!-- Campo: Carrera -->
-              <div class="form-group-edicion">
+              <div class="form-group-edicion" :class="{ 'selector-activo': selectorAbiertoEdicion === 'carrera' }">
                 <label>Carrera</label>
                 <SelectorPersonalizado
                   v-model="formularioEdicion.carrera"
                   :opciones="carreras"
                   placeholder="Selecciona tu carrera..."
+                  :esta-abierto="selectorAbiertoEdicion === 'carrera'"
+                  @abrir="selectorAbiertoEdicion = 'carrera'"
+                  @cerrar="selectorAbiertoEdicion = null"
                 />
               </div>
 
               <!-- Campo: Actividad física -->
-              <div class="form-group-edicion">
+              <div class="form-group-edicion" :class="{ 'selector-activo': selectorAbiertoEdicion === 'deporte' }">
                 <label>Actividad física</label>
                 <SelectorPersonalizado
                   v-model="formularioEdicion.deporte"
                   :opciones="deportes"
                   placeholder="Selecciona una actividad..."
+                  :esta-abierto="selectorAbiertoEdicion === 'deporte'"
+                  @abrir="selectorAbiertoEdicion = 'deporte'"
+                  @cerrar="selectorAbiertoEdicion = null"
                 />
               </div>
 
@@ -347,6 +356,9 @@ const formularioEdicion = reactive({
 const erroresEdicion = reactive({
   nombre: ''
 })
+
+// Estado para coordinar la apertura de selectores en la edición de perfil
+const selectorAbiertoEdicion = ref(null)
 
 // --- Listado de pestañas ---
 const pestañas = [
@@ -501,11 +513,13 @@ function abrirEditarPerfil() {
   formularioEdicion.deporte = identidadHeroe.deporte
   formularioEdicion.personalidad = identidadHeroe.personalidad
   erroresEdicion.nombre = ''
+  selectorAbiertoEdicion.value = null
   mostrarModalEdicion.value = true
 }
 
 function cerrarEditarPerfil() {
   reproducirEfecto('click')
+  selectorAbiertoEdicion.value = null
   mostrarModalEdicion.value = false
 }
 
@@ -908,6 +922,11 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  position: relative;
+  z-index: 1;
+}
+.form-group-edicion.selector-activo {
+  z-index: 1000 !important;
 }
 .form-group-edicion label {
   font-size: var(--text-xs);

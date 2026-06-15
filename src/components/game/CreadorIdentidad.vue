@@ -34,7 +34,7 @@
         </div>
 
         <!-- Paso 2: Universidad -->
-        <div class="grupo-formulario animate-slide-left delay-200">
+        <div class="grupo-formulario animate-slide-left delay-200" :class="{ 'selector-activo': selectorAbierto === 'universidad' }">
           <label class="etiqueta-formulario">
             🎓 Universidad
           </label>
@@ -42,11 +42,14 @@
             v-model="formulario.universidad"
             :opciones="universidades"
             placeholder="Selecciona tu U..."
+            :esta-abierto="selectorAbierto === 'universidad'"
+            @abrir="selectorAbierto = 'universidad'"
+            @cerrar="selectorAbierto = null"
           />
         </div>
 
         <!-- Paso 3: Carrera -->
-        <div class="grupo-formulario animate-slide-left delay-300">
+        <div class="grupo-formulario animate-slide-left delay-300" :class="{ 'selector-activo': selectorAbierto === 'carrera' }">
           <label class="etiqueta-formulario">
             📚 Carrera
           </label>
@@ -54,11 +57,14 @@
             v-model="formulario.carrera"
             :opciones="carreras"
             placeholder="Selecciona tu carrera..."
+            :esta-abierto="selectorAbierto === 'carrera'"
+            @abrir="selectorAbierto = 'carrera'"
+            @cerrar="selectorAbierto = null"
           />
         </div>
 
         <!-- Paso 4: Deporte o actividad física -->
-        <div class="grupo-formulario animate-slide-right delay-100">
+        <div class="grupo-formulario animate-slide-right delay-100" :class="{ 'selector-activo': selectorAbierto === 'deporte' }">
           <label class="etiqueta-formulario">
             🏃 Actividad física favorita
           </label>
@@ -66,6 +72,9 @@
             v-model="formulario.deporte"
             :opciones="deportes"
             placeholder="Selecciona una actividad..."
+            :esta-abierto="selectorAbierto === 'deporte'"
+            @abrir="selectorAbierto = 'deporte'"
+            @cerrar="selectorAbierto = null"
           />
         </div>
 
@@ -157,6 +166,9 @@ const { reproducirEfecto } = useAudio()
 
 // --- Emits: notifica al padre la acción a realizar ---
 const emit = defineEmits(['confirmar', 'volver'])
+
+// --- Estado para coordinar la apertura de selectores personalizados ---
+const selectorAbierto = ref(null) // Puede ser 'universidad', 'carrera', 'deporte' o null
 
 // --- Estado del formulario (reactive para objeto) ---
 const formulario = reactive({
@@ -336,6 +348,12 @@ function alConfirmar() {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  position: relative;
+  z-index: 1;
+}
+
+.grupo-formulario.selector-activo {
+  z-index: 1000 !important;
 }
 
 .input-formulario {
