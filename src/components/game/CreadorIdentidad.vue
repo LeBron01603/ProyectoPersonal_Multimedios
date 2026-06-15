@@ -55,7 +55,7 @@
           </label>
           <SelectorPersonalizado
             v-model="formulario.carrera"
-            :opciones="carreras"
+            :opciones="carrerasDisponibles"
             placeholder="Selecciona tu carrera..."
             :esta-abierto="selectorAbierto === 'carrera'"
             @abrir="selectorAbierto = 'carrera'"
@@ -196,19 +196,25 @@ const universidades = [
   { value: 'Otra',     label: '🎓 Otra universidad' }
 ]
 
-const carreras = [
-  { value: 'Informatica',      label: '💻 Informática / Ingeniería en Sistemas' },
-  { value: 'Multimedios',      label: '🎬 Informática en Multimedios' },
-  { value: 'Administracion',   label: '📊 Administración de Empresas' },
-  { value: 'Derecho',          label: '⚖️ Derecho' },
-  { value: 'Medicina',         label: '🩺 Medicina / Ciencias de la Salud' },
-  { value: 'Ingenieria',       label: '🏗️ Ingeniería Civil / Industrial' },
-  { value: 'Turismo',          label: '✈️ Turismo y Hotelería' },
-  { value: 'Artes',            label: '🎨 Bellas Artes / Diseño' },
-  { value: 'Educacion',        label: '📖 Educación / Pedagogía' },
-  { value: 'Ambiental',        label: '🌱 Ciencias Ambientales' },
-  { value: 'Otra',             label: '📚 Otra carrera' }
-]
+import { RELACION_U_CARRERAS } from '../../data/carrerasUniversitarias.js'
+import { watch } from 'vue'
+
+const carrerasDisponibles = computed(() => {
+  if (!formulario.universidad) return []
+  return RELACION_U_CARRERAS[formulario.universidad] || []
+})
+
+watch(() => formulario.universidad, (nuevaU) => {
+  if (!nuevaU) {
+    formulario.carrera = ''
+    return
+  }
+  const listaValida = RELACION_U_CARRERAS[nuevaU] || []
+  const existe = listaValida.some(c => c.value === formulario.carrera)
+  if (!existe) {
+    formulario.carrera = ''
+  }
+})
 
 const deportes = [
   { value: 'Futbol',    label: '⚽ Fútbol' },

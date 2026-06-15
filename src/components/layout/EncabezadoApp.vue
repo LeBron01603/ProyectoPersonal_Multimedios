@@ -13,6 +13,11 @@
 
       <!-- Estadísticas del héroe (visibles solo si hay identidad) -->
       <div v-if="mostrarEstadisticas" class="header-stats">
+        <div class="indicador-nivel-header" title="Nivel y Experiencia de tu Héroe">
+          <span class="emoji-nivel" aria-hidden="true">⭐</span>
+          <span class="texto-nivel">Nvl {{ nivelHeroe }}</span>
+          <span class="xp-nivel">{{ experienciaHeroe }} XP</span>
+        </div>
         <IndicadorEstadistica
           v-for="stat in estadisticasVisibles"
           :key="stat.key"
@@ -90,6 +95,8 @@ const {
   identidadHeroe,
   porcentajeProgreso,
   reiniciarJuego,
+  nivelHeroe,
+  experienciaHeroe,
   PANTALLAS
 } = useEstadoJuego()
 
@@ -112,7 +119,8 @@ const mostrarReiniciar = computed(() => pantallaActual.value !== PANTALLAS.INICI
 const estadisticasVisibles = computed(() => [
   { key: 'energia',         etiqueta: 'Energía',         valor: estadisticasHeroe.energia,         icono: '⚡', color: 'gold'   },
   { key: 'conocimiento',    etiqueta: 'Conocimiento',    valor: estadisticasHeroe.conocimiento,    icono: '📚', color: 'blue'   },
-  { key: 'responsabilidad', etiqueta: 'Responsabilidad', valor: estadisticasHeroe.responsabilidad, icono: '🎓', color: 'green'  }
+  { key: 'responsabilidad', etiqueta: 'Resp.',            valor: estadisticasHeroe.responsabilidad, icono: '🎓', color: 'green'  },
+  { key: 'reputacionNocturna', etiqueta: 'Reputación',      valor: estadisticasHeroe.reputacionNocturna, icono: '🤝', color: 'purple' }
 ])
 
 // --- Emit: notificar reset al padre si es necesario ---
@@ -251,6 +259,28 @@ function confirmarReinicio() {
   background: var(--gradient-btn);
   transition: width 0.8s ease;
   box-shadow: 0 0 8px var(--color-neon-green-glow);
+}
+
+.indicador-nivel-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: var(--radius-full);
+  padding: 3px var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-neon-gold);
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.2);
+  flex-shrink: 0;
+}
+.xp-nivel {
+  color: var(--color-text-muted);
+  font-weight: var(--font-normal);
+  font-size: 0.75rem;
+  margin-left: 2px;
 }
 
 /* --- Responsive --- */

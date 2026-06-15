@@ -15,11 +15,11 @@
       "lugarPrincipal": "Barrio Escalante",
       "lugarAfter": "La Cali",
       "tipoMision": "Ciudad / Nocturna",
-      "recompensaColeccionable": {
+      "recompensaPrincipal": {
         "nombre": "Pilsen",
         "emoji": "🍺"
       },
-      "recompensaCheckpoint": {
+      "recompensaSecundaria": {
         "nombre": "After Seguro",
         "emoji": "🎉"
       },
@@ -32,59 +32,83 @@
       "preguntas": [
         {
           "id": "sj-001",
-          "texto": "¿En qué año se fundó la Universidad de Costa Rica (UCR)?",
-          "opciones": ["1940", "1957", "1963", "1972"],
-          "correcta": 0,
-          "explicacion": "La UCR fue fundada el 26 de agosto de 1940.",
-          "categoria": "Universidad"
+          "texto": "Inicias tu patrullaje nocturno en La Cali. Un grupo de estudiantes de la UCR está discutiendo sobre el origen de su campus. Te preguntan: ¿Cómo se llama el campus principal de la UCR ubicado en San Pedro de Montes de Oca?",
+          "opciones": ["Campus Omar Dengo", "Ciudad Universitaria Rodrigo Facio", "Sede del Atlántico", "Campus Benjamín Nuñez"],
+          "correcta": 1,
+          "explicacion": "Fundada en 1940, la sede central de la UCR lleva el nombre de Rodrigo Facio Brenes, ilustre rector y reformador de la institución.",
+          "categoria": "Universidad",
+          "consecuenciaCorrecta": "¡Lograste guiar a los estudiantes de primer ingreso! Ahora saben cómo ubicarse en San Pedro y llegaron a salvo a su destino nocturno, agradecidos con tu guía.",
+          "consecuenciaIncorrecta": "Los estudiantes se confundieron de campus, terminando perdidos en Montes de Oca de madrugada. La reputación del héroe bajó."
         },
         {
           "id": "sj-002",
-          "texto": "¿Cómo se llama el teatro nacional de Costa Rica ubicado en San José?",
-          "opciones": ["Teatro Melico Salazar", "Teatro Nacional", "Teatro Popular", "Auditorio Nacional"],
+          "texto": "Te trasladas a Barrio Escalante para asegurar el Paseo Gastronómico de la Calle 33. Un comensal extranjero te pregunta por el origen de este barrio cultural josefino. ¿En honor a quién lleva su nombre este histórico barrio?",
+          "opciones": ["Un expresidente de la República", "Leonidas Escalante, pionero del ferrocarril", "Monseñor Escalante, obispo de San José", "María Escalante, primera educadora tica"],
           "correcta": 1,
-          "explicacion": "El Teatro Nacional de Costa Rica es el principal teatro del país, inaugurado en 1897.",
-          "categoria": "Cultura"
-        }
-      ]
-    },
-    {
-      "id": "cartago",
-      "provincia": "Cartago",
-      "nombre": "Cartago",
-      "emoji": "⛪",
-      "region": "Valle Central",
-      "dificultad": 1,
-      "descripcion": "La primera capital de Costa Rica, cargada de historia y tradición.",
-      "color": "#00c8ff",
-      "desbloqueada": true,
-      "tituloMision": "El Misterio del Valle",
-      "descripcionMision": "Cartago guarda secretos históricos. Ayuda al héroe a descubrir sus misterios.",
-      "lugarPrincipal": "Ruinas de Cartago",
-      "lugarAfter": "Sendero de Prusia",
-      "tipoMision": "Histórica / Altura",
-      "recompensaColeccionable": {
-        "nombre": "Ruta Nocturna",
-        "emoji": "🏔"
-      },
-      "recompensaCheckpoint": {
-        "nombre": "Ruta Responsable",
-        "emoji": "🎉"
-      },
-      "estadisticas": {
-        "energia": 60,
-        "conocimiento": 90,
-        "diversion": 55,
-        "responsabilidad": 85
-      },
-      "preguntas": [
+          "explicacion": "Barrio Escalante debe su nombre a Leonidas Escalante, quien poseía grandes fincas de café en la zona y estuvo ligado al desarrollo ferroviario tico.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "Orientaste al turista con éxito y le contaste una gran anécdota. Se unió a tu causa y recomendó el Paseo Gastronómico con entusiasmo.",
+          "consecuenciaIncorrecta": "El turista se confundió de calle y terminó lejos del paseo gastronómico, frustrado por perder tiempo valioso en la noche."
+        },
         {
-          "id": "ct-001",
-          "texto": "¿Cuándo fue fundada Cartago, la primera capital de Costa Rica?",
-          "opciones": ["1523", "1563", "1600", "1650"],
+          "id": "sj-003",
+          "texto": "Caminas hacia la Plaza de la Cultura en el corazón de San José. Bajo el suelo de la plaza se esconde un tesoro arqueológico invaluable abierto al público. ¿De qué museo nacional se trata?",
+          "opciones": ["Museo Nacional de Costa Rica", "Museos del Banco Central (Oro Precolombino)", "Museo del Jade", "Museo de los Niños"],
           "correcta": 1,
-          "explicacion": "Cartago fue fundada en 1563 por Juan Vázquez de Coronado.",
-          "categoria": "Historia"
+          "explicacion": "Debajo de la Plaza de la Cultura se encuentran los Museos del Banco Central, que albergan la colección más grande de piezas de oro precolombino del país.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Espectacular! Resolviste la duda histórica. Los estudiantes decidieron visitar los museos subterráneos al día siguiente, motivados por la cultura.",
+          "consecuenciaIncorrecta": "El grupo se confundió de museo, yendo en la dirección opuesta. Perdieron la oportunidad de conocer la historia ligera del centro."
+        },
+        {
+          "id": "sj-004",
+          "texto": "Llegas a las afueras del Teatro Nacional. Un estudiante de arquitectura admira su fachada y te pregunta cuál estilo arquitectónico predomina en esta joya inaugurada en 1897.",
+          "opciones": ["Neoclásico con influencia barroca", "Gótico puro", "Modernista de cristal", "Art Decó"],
+          "correcta": 0,
+          "explicacion": "Inspirado en la Ópera de París, el Teatro Nacional posee un estilo neoclásico ecléctico con lujosos acabados barrocos y neorrenacentistas.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "Impresionaste al estudiante de arquitectura con tu conocimiento. Agradecido, te regaló datos del diseño de la ciudad y confía en ti.",
+          "consecuenciaIncorrecta": "El estudiante de arquitectura se confundió con tus datos y se fue desilusionado de la noche josefina, afectando tu reputación."
+        },
+        {
+          "id": "sj-005",
+          "texto": "Entras a Barrio Amón, famoso por sus mansiones de finales del siglo XIX. Un grupo de jóvenes admira la arquitectura victoriana y te pregunta qué cultivo impulsó la riqueza de los fundadores de estas residencias.",
+          "opciones": ["El Banano", "El Café ('El Grano de Oro')", "La Caña de Azúcar", "El Tabaco"],
+          "correcta": 1,
+          "explicacion": "El auge cafetalero de finales del siglo XIX permitió a los terratenientes construir lujosas viviendas de estilo victoriano y mudéjar en Barrio Amón.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Correcto! Los jóvenes aprendieron sobre la época del grano de oro y valoraron la belleza arquitectónica de Barrio Amón.",
+          "consecuenciaIncorrecta": "Los jóvenes se aburrieron con explicaciones confusas y decidieron irse a dormir temprano, bajando la diversión de la noche."
+        },
+        {
+          "id": "sj-006",
+          "texto": "Cruzas el Parque Morazán y te detienes frente al Templo de la Música. Un turista te pregunta a qué prócer centroamericano debe su nombre este parque urbano inaugurado en 1887.",
+          "opciones": ["Francisco Morazán", "Juan Mora Fernández", "Juan Rafael Mora Porras", "Braulio Carrillo"],
+          "correcta": 0,
+          "explicacion": "El parque honra al general hondureño Francisco Morazán, quien fue jefe de Estado de Costa Rica en 1842 y luchó por la unión centroamericana.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Genial! Aclaraste el misterio histórico y el grupo celebró tu sabiduría frente al Templo de la Música.",
+          "consecuenciaIncorrecta": "La confusión sobre el prócer hizo que el grupo perdiera interés en el recorrido histórico de los parques josefinos."
+        },
+        {
+          "id": "sj-007",
+          "texto": "[PREGUNTA DINÁMICA DE CARRERA] Esta pregunta se inyectará dinámicamente según tu carrera seleccionada.",
+          "opciones": ["Opción A", "Opción B", "Opción C", "Opción D"],
+          "correcta": 0,
+          "explicacion": "Explicación de carrera.",
+          "categoria": "Especialidad",
+          "consecuenciaCorrecta": "¡Excelente! Usaste las habilidades específicas de tu carrera para resolver la emergencia nocturna con éxito.",
+          "consecuenciaIncorrecta": "Tu falta de precisión provocó que la emergencia se complicara un poco, requiriendo más esfuerzo y bajando la reputación."
+        },
+        {
+          "id": "sj-008",
+          "texto": "La noche depende de ti. El Teatro Popular Melico Salazar está rodeado de gente. Te enteras de que hay un conato de incendio eléctrico en el escenario. Debes responder una pregunta técnica e histórica para ayudar a los bomberos a ubicar los planos antiguos: ¿Quién fue Melico Salazar, el personaje en honor al cual se renombró este teatro en 1980?",
+          "opciones": ["Un afamado tenor costarricense", "El primer ministro de cultura del país", "El arquitecto que diseñó el edificio", "Un célebre dramaturgo josefino"],
+          "correcta": 0,
+          "explicacion": "Manuel 'Melico' Salazar (1887-1950) fue un tenor costarricense de renombre mundial que cantó en escenarios como el Metropolitan Opera de Nueva York.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Salvado! Con los datos del tenor Melico Salazar, los bomberos localizaron los planos y controlaron el conato de incendio a tiempo. ¡Eres el héroe de San José!",
+          "consecuenciaIncorrecta": "La demora por responder incorrectamente provocó que se dañara parte del escenario histórico. Los estudiantes sienten desconfianza de tus habilidades."
         }
       ]
     },
@@ -103,11 +127,11 @@
       "lugarPrincipal": "Campus Omar Dengo (UNA)",
       "lugarAfter": "El Fortín Universitario",
       "tipoMision": "Universitaria / Cultura",
-      "recompensaColeccionable": {
+      "recompensaPrincipal": {
         "nombre": "Playlist Universitaria",
         "emoji": "🎶"
       },
-      "recompensaCheckpoint": {
+      "recompensaSecundaria": {
         "nombre": "Energía Tropical",
         "emoji": "🎉"
       },
@@ -120,11 +144,55 @@
       "preguntas": [
         {
           "id": "hr-001",
-          "texto": "¿Por qué apodo es conocida la ciudad de Heredia?",
+          "texto": "[PREGUNTA PLACEHOLDER] ¿Por qué apodo es conocida la ciudad de Heredia?",
           "opciones": ["La ciudad de las flores", "La ciudad eterna", "El Valle Hermoso", "La ciudad universitaria"],
           "correcta": 0,
-          "explicacion": "Heredia es conocida como 'La Ciudad de las Flores' por la abundancia de gardens.",
-          "categoria": "Geografía"
+          "explicacion": "Heredia es conocida como 'La Ciudad de las Flores' por su historia y tradición cafetalera y de jardines.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Correcto! Los estudiantes heredianos te felicitan por conocer la tradición de las flores.",
+          "consecuenciaIncorrecta": "Te confundiste de apodo y los estudiantes heredianos bromearon al respecto, bajando tu reputación."
+        }
+      ]
+    },
+    {
+      "id": "cartago",
+      "provincia": "Cartago",
+      "nombre": "Cartago",
+      "emoji": "⛪",
+      "region": "Valle Central",
+      "dificultad": 1,
+      "descripcion": "La primera capital de Costa Rica, cargada de historia y tradición.",
+      "color": "#00c8ff",
+      "desbloqueada": false,
+      "tituloMision": "El Misterio del Valle",
+      "descripcionMision": "Cartago guarda secretos históricos. Ayuda al héroe a descubrir sus misterios.",
+      "lugarPrincipal": "Ruinas de Cartago",
+      "lugarAfter": "Sendero de Prusia",
+      "tipoMision": "Histórica / Altura",
+      "recompensaPrincipal": {
+        "nombre": "Ruta Nocturna",
+        "emoji": "🏔"
+      },
+      "recompensaSecundaria": {
+        "nombre": "Ruta Responsable",
+        "emoji": "🎉"
+      },
+      "estadisticas": {
+        "energia": 60,
+        "conocimiento": 90,
+        "diversion": 55,
+        "responsabilidad": 85
+      },
+      "preguntas": [
+        {
+          "id": "ct-001",
+          "texto": "[PREGUNTA PLACEHOLDER] ¿En qué año fue fundada la ciudad de Cartago?",
+          "opciones": ["1523", "1563", "1600", "1650"],
+          "correcta": 1,
+          "explicacion": "Cartago fue fundada en 1563 por Juan Vázquez de Coronado y fue la primera capital del país.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Correcto! Aclaraste el misterio histórico de la fundación cartaginesa.",
+          "consecuenciaIncorrecta": "Confundiste la fecha del cabildo de Cartago y el grupo de historia se aburrió, bajando tu reputación."
         }
       ]
     },
@@ -143,11 +211,11 @@
       "lugarPrincipal": "Parque Juan Santamaría",
       "lugarAfter": "Mirador de Alajuela",
       "tipoMision": "Historia / Aventura",
-      "recompensaColeccionable": {
+      "recompensaPrincipal": {
         "nombre": "Pase Aventurero",
         "emoji": "🌋"
       },
-      "recompensaCheckpoint": {
+      "recompensaSecundaria": {
         "nombre": "Brindis Tico",
         "emoji": "🎉"
       },
@@ -160,11 +228,13 @@
       "preguntas": [
         {
           "id": "al-001",
-          "texto": "¿Quién es el héroe nacional de Costa Rica nacido en Alajuela?",
-          "opciones": ["Braulio Carrillo", "Juan Santamaría", "Alfredo González Flores", "Ricardo Jiménez"],
+          "texto": "[PREGUNTA PLACEHOLDER] ¿Quién es el héroe nacional nacido en Alajuela recordado por la Batalla de Rivas de 1856?",
+          "opciones": ["Braulio Carrillo", "Juan Santamaría", "Juan Rafael Mora", "Juanito Mora"],
           "correcta": 1,
-          "explicacion": "Juan Santamaría, el héroe nacional, nació en Alajuela en 1831.",
-          "categoria": "Historia"
+          "explicacion": "Juan Santamaría quemó el mesón en la Batalla de Rivas y es el héroe nacional oficial de Costa Rica.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Correcto! Inspiraste al grupo con el valor del héroe del erizo.",
+          "consecuenciaIncorrecta": "Fallaste al reconocer al héroe de Alajuela y el grupo de historia se confundió de monumento."
         }
       ]
     },
@@ -175,7 +245,7 @@
       "emoji": "🌊",
       "region": "Pacífico Norte",
       "dificultad": 3,
-      "descripcion": "Playas paradisíacas, cultura sabanera y Patrimonio Cultural de la Humanidad.",
+      "descripcion": "Playas paradisíacas, cultura sabanera y folclore nacional.",
       "color": "#ff6b35",
       "desbloqueada": false,
       "tituloMision": "El Llamado del Pacífico",
@@ -183,11 +253,11 @@
       "lugarPrincipal": "Tamarindo",
       "lugarAfter": "Sharky's",
       "tipoMision": "Playa / Sabanera",
-      "recompensaColeccionable": {
+      "recompensaPrincipal": {
         "nombre": "Cacique",
         "emoji": "🥃"
       },
-      "recompensaCheckpoint": {
+      "recompensaSecundaria": {
         "nombre": "Leyenda Nocturna",
         "emoji": "🎉"
       },
@@ -200,11 +270,13 @@
       "preguntas": [
         {
           "id": "gn-001",
-          "texto": "¿Cuál es el árbol nacional de Costa Rica, símbolo de Guanacaste?",
-          "opciones": ["Roble", "Guanacaste", "Ceibo", "Pochote"],
+          "texto": "[PREGUNTA PLACEHOLDER] ¿Cuál es el árbol nacional de Costa Rica, símbolo de esta provincia?",
+          "opciones": ["Roble Sabana", "Árbol de Guanacaste", "Corteza Amarilla", "Ceibo"],
           "correcta": 1,
-          "explicacion": "El árbol de Guanacaste (Enterolobium cyclocarpum) es el árbol nacional de Costa Rica.",
-          "categoria": "Ambiente"
+          "explicacion": "El árbol de Guanacaste es el símbolo nacional del país y da nombre a esta hermosa provincia norteña.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Correcto! Los sabaneros te felicitan por conocer el árbol de la provincia.",
+          "consecuenciaIncorrecta": "Confundiste el árbol nacional y los locales sintieron desconfianza de tus raíces ticas."
         }
       ]
     },
@@ -223,13 +295,13 @@
       "lugarPrincipal": "Paseo de los Turistas",
       "lugarAfter": "Sunset Bar",
       "tipoMision": "Puerto / Costera",
-      "recompensaColeccionable": {
+      "recompensaPrincipal": {
+        "nombre": "Pase Costero de Jacó",
+        "emoji": "🏄"
+      },
+      "recompensaSecundaria": {
         "nombre": "Jägermeister",
         "emoji": "🥃"
-      },
-      "recompensaCheckpoint": {
-        "nombre": "After Seguro",
-        "emoji": "🎉"
       },
       "estadisticas": {
         "energia": 85,
@@ -240,11 +312,13 @@
       "preguntas": [
         {
           "id": "pt-001",
-          "texto": "¿Cuál es el parque nacional más grande de Costa Rica, ubicado en Puntarenas?",
-          "opciones": ["Parque Nacional Corcovado", "Parque Nacional Tortuguero", "Parque Nacional Chirripó", "Parque Nacional Rincón de la Vieja"],
-          "correcta": 0,
-          "explicacion": "El Parque Nacional Corcovado, en la Península de Osa, Puntarenas, es el más biodiverso del país.",
-          "categoria": "Ambiente"
+          "texto": "[PREGUNTA PLACEHOLDER] ¿Cuál es el parque nacional famoso por su biodiversidad ubicado en el cantón de Osa, Puntarenas?",
+          "opciones": ["Parque Nacional Manuel Antonio", "Parque Nacional Corcovado", "Parque Nacional Carara", "Parque Nacional Marino Ballena"],
+          "correcta": 1,
+          "explicacion": "El Parque Nacional Corcovado en Puntarenas es considerado uno de los lugares biológicamente más intensos del planeta.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Correcto! Orientaste a los biólogos hacia la Península de Osa sin contratiempos.",
+          "consecuenciaIncorrecta": "Los enviaste en la dirección incorrecta hacia la costa central y se demoraron un día entero."
         }
       ]
     },
@@ -263,11 +337,11 @@
       "lugarPrincipal": "Puerto Viejo",
       "lugarAfter": "Roots Reggae Bar",
       "tipoMision": "Caribeña / Biodiversidad",
-      "recompensaColeccionable": {
+      "recompensaPrincipal": {
         "nombre": "Chiliguaro Caribeño",
         "emoji": "🍹"
       },
-      "recompensaCheckpoint": {
+      "recompensaSecundaria": {
         "nombre": "Leyenda Caribeña",
         "emoji": "🎉"
       },
@@ -280,19 +354,24 @@
       "preguntas": [
         {
           "id": "lm-001",
-          "texto": "¿Qué celebración popular y colorida se realiza cada año en la ciudad de Limón?",
-          "opciones": ["Carnaval de Limón", "Festival del Maíz", "Feria de Zapote", "Tope Nacional"],
-          "correcta": 0,
-          "explicacion": "El Carnaval de Limón se celebra en octubre y es una de las festividades más coloridas de Costa Rica.",
-          "categoria": "Cultura"
+          "texto": "[PREGUNTA PLACEHOLDER] ¿Qué manifestación musical caribeña, declarada patrimonio cultural inmaterial, destaca en Limón?",
+          "opciones": ["Marimba", "Calipso Limonense", "Salsa", "Cumbia Tica"],
+          "correcta": 1,
+          "explicacion": "El calipso es el ritmo representativo del Caribe costarricense, con figuras emblemáticas como Walter Ferguson.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Correcto! Pusiste a bailar calipso a todo el Roots con gran carisma.",
+          "consecuenciaIncorrecta": "Confundiste el calipso caribeño y los músicos sintieron desilusión de tus conocimientos musicales."
         }
       ]
     }
   ],
   "meta": {
-    "version": "1.1.0",
+    "version": "2.5.1",
     "ultimaActualizacion": "2026-06",
     "totalProvincias": 7,
-    "categorias": ["Historia", "Geografía", "Cultura", "Ambiente", "Universidad", "Deporte"]
+    "temporada": 1,
+    "eventoEspecial": null,
+    "tags": ["educacion", "nocturno", "responsabilidad", "aventura", "narrativa"],
+    "categorias": ["Historia", "Geografía", "Cultura", "Ambiente", "Universidad", "Responsabilidad", "Especialidad"]
   }
 }

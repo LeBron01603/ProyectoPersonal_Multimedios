@@ -10,6 +10,13 @@
           <h2 class="titulo-mapa">
             ¡Bienvenido, <span class="texto-nombre-heroe">{{ identidadHeroe.nombre }}</span>!
           </h2>
+          <div class="perfil-nivel-info">
+            <span class="badge-nivel-mapa">⭐ Nivel {{ nivelHeroe }}</span>
+            <div class="xp-bar-mapa" title="Experiencia actual">
+              <div class="xp-bar-fill" :style="{ width: porcentajeXPNivelActual + '%' }"></div>
+              <span class="xp-bar-texto">{{ experienciaHeroe }} XP / {{ proximoNivelXP }} XP</span>
+            </div>
+          </div>
           <p class="subtitulo-mapa">
             Elige una provincia y comienza tu misión nocturna
           </p>
@@ -39,7 +46,7 @@
     <div class="progreso-mapa animate-fade-in delay-100">
       <div class="info-progreso">
         <span class="etiqueta-progreso">🗺️ Misiones completadas</span>
-        <span class="valor-progreso">{{ misionesCompletadas.length }} / {{ provincias.length }}</span>
+        <span class="valor-progreso">{{ misionesCompletadas.length }} / {{ provinciasProcesadas.length }}</span>
       </div>
       <div class="pista-progreso" role="progressbar" :aria-valuenow="porcentajeProgreso" aria-valuemin="0" aria-valuemax="100">
         <div class="relleno-progreso" :style="{ width: porcentajeProgreso + '%' }"></div>
@@ -63,7 +70,7 @@
       <!-- Grid de tarjetas de provincias -->
       <div class="cuadricula-provincias">
         <TarjetaProvincia
-          v-for="(provincia, index) in provincias"
+          v-for="(provincia, index) in provinciasProcesadas"
           :key="provincia.id"
           :provincia="provincia"
           :esta-completada="misionesCompletadas.includes(provincia.id)"
@@ -91,14 +98,14 @@
           <p class="desc-detalle">{{ provinciaSeleccionada.descripcionMision }}</p>
           
           <!-- Recompensas de la misión -->
-          <div class="detalles-recompensas" v-if="provinciaSeleccionada.recompensaColeccionable">
+          <div class="detalles-recompensas" v-if="provinciaSeleccionada.recompensaPrincipal">
             <p class="titulo-recompensas-mision">🎁 Recompensas de Misión:</p>
             <div class="recompensas-iconos-grid">
-              <span class="recompensa-item-badge" title="Coleccionable de la provincia">
-                {{ provinciaSeleccionada.recompensaColeccionable.emoji }} {{ provinciaSeleccionada.recompensaColeccionable.nombre }}
+              <span class="recompensa-item-badge" title="Recompensa Principal">
+                {{ provinciaSeleccionada.recompensaPrincipal.emoji }} {{ provinciaSeleccionada.recompensaPrincipal.nombre }}
               </span>
-              <span class="recompensa-item-badge" title="Checkpoint de aventura">
-                {{ provinciaSeleccionada.recompensaCheckpoint.emoji }} {{ provinciaSeleccionada.recompensaCheckpoint.nombre }}
+              <span class="recompensa-item-badge" title="Recompensa Secundaria">
+                {{ provinciaSeleccionada.recompensaSecundaria.emoji }} {{ provinciaSeleccionada.recompensaSecundaria.nombre }}
               </span>
             </div>
           </div>
@@ -238,7 +245,7 @@
                 <label>Carrera</label>
                 <SelectorPersonalizado
                   v-model="formularioEdicion.carrera"
-                  :opciones="carreras"
+                  :opciones="carrerasDisponiblesEdicion"
                   placeholder="Selecciona tu carrera..."
                   :esta-abierto="selectorAbiertoEdicion === 'carrera'"
                   @abrir="selectorAbiertoEdicion = 'carrera'"
@@ -303,7 +310,8 @@
 
 <script setup>
 // --- Importaciones de Vue 3 Composition API ---
-import { ref, computed, onMounted, reactive } from 'vue'
+import { ref, computed, onMounted, reactive, watch } from 'vue'
+import { RELACION_U_CARRERAS } from '../../data/carrerasUniversitarias.js'
 
 // --- Componentes hijos ---
 import TarjetaProvincia from './TarjetaProvincia.vue'
@@ -327,9 +335,54 @@ const {
   coleccionAfter,
   inventarioHeroe,
   logrosHeroe,
+  nivelHeroe,
+  experienciaHeroe,
   iniciarMision,
   actualizarIdentidad
 } = useEstadoJuego()
+
+// --- Secuencia de progresión geográfica ---
+const secuenciaProvincias = ['san-jose', 'heredia', 'cartago', 'alajuela', 'guanacaste', 'puntarenas', 'limon']
+
+// Procesamiento dinámico de desbloqueo de provincias
+const provinciasProcesadas = computed(() => {
+  return provincias.value.map(prov => {
+    const idxEnSecuencia = secuenciaProvincias.indexOf(prov.id)
+    let desbloqueada = false
+    if (idxEnSecuencia === 0) {
+      desbloqueada = true // San José siempre está desbloqueado al inicio
+    } else if (idxEnSecuencia > 0) {
+      const provinciaAnteriorId = secuenciaProvincias[idxEnSecuencia - 1]
+      desbloqueada = misionesCompletadas.value.includes(provinciaAnteriorId)
+    } else {
+      desbloqueada = prov.desbloqueada
+    }
+    return {
+      ...prov,
+      desbloqueada
+    }
+  })
+})
+
+const proximoNivelXP = computed(() => {
+  if (nivelHeroe.value === 1) return 100
+  if (nivelHeroe.value === 2) return 250
+  if (nivelHeroe.value === 3) return 450
+  if (nivelHeroe.value === 4) return 700
+  return 700 // Nivel Máximo
+})
+
+const porcentajeXPNivelActual = computed(() => {
+  let xpBase = 0
+  if (nivelHeroe.value === 2) xpBase = 100
+  if (nivelHeroe.value === 3) xpBase = 250
+  if (nivelHeroe.value === 4) xpBase = 450
+  if (nivelHeroe.value === 5) return 100
+  
+  const xpRango = proximoNivelXP.value - xpBase
+  const xpObtenida = experienciaHeroe.value - xpBase
+  return Math.min(100, Math.max(0, Math.round((xpObtenida / xpRango) * 100)))
+})
 
 // --- Audio ---
 const { reproducirMusica, reproducirEfecto } = useAudio()
@@ -380,19 +433,22 @@ const universidades = [
   { value: 'Otra',     label: '🎓 Otra universidad' }
 ]
 
-const carreras = [
-  { value: 'Informatica',      label: '💻 Informática / Ingeniería en Sistemas' },
-  { value: 'Multimedios',      label: '🎬 Informática en Multimedios' },
-  { value: 'Administracion',   label: '📊 Administración de Empresas' },
-  { value: 'Derecho',          label: '⚖️ Derecho' },
-  { value: 'Medicina',         label: '🩺 Medicina / Ciencias de la Salud' },
-  { value: 'Ingenieria',       label: '🏗️ Ingeniería Civil / Industrial' },
-  { value: 'Turismo',          label: '✈️ Turismo y Hotelería' },
-  { value: 'Artes',            label: '🎨 Bellas Artes / Diseño' },
-  { value: 'Educacion',        label: '📖 Educación / Pedagogía' },
-  { value: 'Ambiental',        label: '🌱 Ciencias Ambientales' },
-  { value: 'Otra',             label: '📚 Otra carrera' }
-]
+const carrerasDisponiblesEdicion = computed(() => {
+  if (!formularioEdicion.universidad) return []
+  return RELACION_U_CARRERAS[formularioEdicion.universidad] || []
+})
+
+watch(() => formularioEdicion.universidad, (nuevaU) => {
+  if (!nuevaU) {
+    formularioEdicion.carrera = ''
+    return
+  }
+  const listaValida = RELACION_U_CARRERAS[nuevaU] || []
+  const existe = listaValida.some(c => c.value === formularioEdicion.carrera)
+  if (!existe) {
+    formularioEdicion.carrera = ''
+  }
+})
 
 const deportes = [
   { value: 'Futbol',    label: '⚽ Fútbol' },
@@ -420,7 +476,8 @@ const listaEstadisticasHeroe = computed(() => [
   { key: 'energia',         etiqueta: 'Energía',         valor: estadisticasHeroe.energia,         icono: '⚡', color: 'gold'   },
   { key: 'conocimiento',    etiqueta: 'Conocimiento',    valor: estadisticasHeroe.conocimiento,    icono: '📚', color: 'blue'   },
   { key: 'diversion',       etiqueta: 'Diversión',       valor: estadisticasHeroe.diversion,       icono: '🎉', color: 'purple' },
-  { key: 'responsabilidad', etiqueta: 'Resp.',            valor: estadisticasHeroe.responsabilidad, icono: '🎓', color: 'green'  }
+  { key: 'responsabilidad', etiqueta: 'Resp.',            valor: estadisticasHeroe.responsabilidad, icono: '🎓', color: 'green'  },
+  { key: 'reputacionNocturna', etiqueta: 'Reputación',      valor: estadisticasHeroe.reputacionNocturna, icono: '🤝', color: 'cyan'   }
 ])
 
 const formularioEdicionValido = computed(() =>
@@ -458,19 +515,19 @@ function obtenerProvinciasFallback() {
       desbloqueada: true, tituloMision: 'La Noche Josefina',
       descripcionMision: 'El caos universitario llegó a San José.',
       lugarPrincipal: "Barrio Escalante", lugarAfter: "La Cali", tipoMision: "Ciudad / Nocturna",
-      recompensaColeccionable: { nombre: "Pilsen", emoji: "🍺" },
-      recompensaCheckpoint: { nombre: "After Seguro", emoji: "🎉" },
+      recompensaPrincipal: { nombre: "Pilsen", emoji: "🍺" },
+      recompensaSecundaria: { nombre: "After Seguro", emoji: "🎉" },
       estadisticas: { energia: 70, conocimiento: 85, diversion: 75, responsabilidad: 80 }, preguntas: []
     },
     {
-      id: 'cartago', nombre: 'Cartago', emoji: '⛪', region: 'Valle Central',
-      dificultad: 1, descripcion: 'La primera capital de Costa Rica.', color: '#00c8ff',
-      desbloqueada: true, tituloMision: 'El Misterio del Valle',
-      descripcionMision: 'Cartago guarda secretos históricos.',
-      lugarPrincipal: "Ruinas de Cartago", lugarAfter: "Sendero de Prusia", tipoMision: "Histórica / Altura",
-      recompensaColeccionable: { nombre: "Ruta Nocturna", emoji: "🏔" },
-      recompensaCheckpoint: { nombre: "Ruta Responsable", emoji: "🎉" },
-      estadisticas: { energia: 60, conocimiento: 90, diversion: 55, responsabilidad: 85 }, preguntas: []
+      id: 'heredia', nombre: 'Heredia', emoji: '🌺', region: 'Valle Central',
+      dificultad: 2, descripcion: 'La ciudad de las flores.', color: '#b84fff',
+      desbloqueada: false, tituloMision: 'Entre Flores y Libros',
+      descripcionMision: 'Heredia te espera.',
+      lugarPrincipal: "Campus Omar Dengo (UNA)", lugarAfter: "El Fortín Universitario", tipoMision: "Universitaria / Cultura",
+      recompensaPrincipal: { nombre: "Playlist Universitaria", emoji: "🎶" },
+      recompensaSecundaria: { nombre: "Energía Tropical", emoji: "🎉" },
+      estadisticas: { energia: 65, conocimiento: 88, diversion: 70, responsabilidad: 82 }, preguntas: []
     }
   ]
 }
@@ -1062,5 +1119,56 @@ onMounted(async () => {
   .cuadricula-personalidad-edicion {
     grid-template-columns: 1fr;
   }
+}
+
+.perfil-nivel-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.badge-nivel-mapa {
+  font-size: var(--text-xs);
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  color: var(--color-neon-gold);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  font-weight: var(--font-bold);
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+}
+
+.xp-bar-mapa {
+  position: relative;
+  width: 180px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xp-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-neon-blue), var(--color-neon-purple));
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.4);
+  transition: width 0.5s ease;
+}
+
+.xp-bar-texto {
+  position: relative;
+  z-index: 2;
+  font-size: 0.65rem;
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
 </style>
