@@ -1,0 +1,11 @@
+# Carpeta de imágenes del juego
+
+Esta carpeta contendrá:
+
+- `hero/`      — Sprites e imágenes del héroe universitario
+- `provinces/` — Imágenes representativas de cada provincia
+- `ui/`        — Íconos y elementos de interfaz
+- `backgrounds/` — Fondos de pantalla del juego
+
+Las imágenes se integrarán en la Fase 2 del proyecto.
+Formatos recomendados: WebP (principal), PNG (fallback), SVG (íconos).

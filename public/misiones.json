@@ -1,0 +1,214 @@
+{
+  "provincias": [
+    {
+      "id": "san-jose",
+      "nombre": "San José",
+      "emoji": "🏙️",
+      "region": "Valle Central",
+      "dificultad": 1,
+      "descripcion": "La capital costarricense: cultura, historia y vida universitaria.",
+      "color": "#00ff88",
+      "desbloqueada": true,
+      "tituloMision": "La Noche Josefina",
+      "descripcionMision": "El caos universitario ha llegado al corazón de San José. Demuestra tu conocimiento de la capital.",
+      "estadisticas": {
+        "energia": 70,
+        "conocimiento": 85,
+        "diversion": 75,
+        "responsabilidad": 80
+      },
+      "preguntas": [
+        {
+          "id": "sj-001",
+          "texto": "¿En qué año se fundó la Universidad de Costa Rica (UCR)?",
+          "opciones": ["1940", "1957", "1963", "1972"],
+          "correcta": 0,
+          "explicacion": "La UCR fue fundada el 26 de agosto de 1940.",
+          "categoria": "Universidad"
+        },
+        {
+          "id": "sj-002",
+          "texto": "¿Cómo se llama el teatro nacional de Costa Rica ubicado en San José?",
+          "opciones": ["Teatro Melico Salazar", "Teatro Nacional", "Teatro Popular", "Auditorio Nacional"],
+          "correcta": 1,
+          "explicacion": "El Teatro Nacional de Costa Rica es el principal teatro del país, inaugurado en 1897.",
+          "categoria": "Cultura"
+        }
+      ]
+    },
+    {
+      "id": "cartago",
+      "nombre": "Cartago",
+      "emoji": "⛪",
+      "region": "Valle Central",
+      "dificultad": 1,
+      "descripcion": "La primera capital de Costa Rica, cargada de historia y tradición.",
+      "color": "#00c8ff",
+      "desbloqueada": true,
+      "tituloMision": "El Misterio del Valle",
+      "descripcionMision": "Cartago guarda secretos históricos. Ayuda al héroe a descubrir sus misterios.",
+      "estadisticas": {
+        "energia": 60,
+        "conocimiento": 90,
+        "diversion": 55,
+        "responsabilidad": 85
+      },
+      "preguntas": [
+        {
+          "id": "ct-001",
+          "texto": "¿Cuándo fue fundada Cartago, la primera capital de Costa Rica?",
+          "opciones": ["1523", "1563", "1600", "1650"],
+          "correcta": 1,
+          "explicacion": "Cartago fue fundada en 1563 por Juan Vázquez de Coronado.",
+          "categoria": "Historia"
+        }
+      ]
+    },
+    {
+      "id": "heredia",
+      "nombre": "Heredia",
+      "emoji": "🌺",
+      "region": "Valle Central",
+      "dificultad": 2,
+      "descripcion": "La ciudad de las flores y hogar de importantes universidades.",
+      "color": "#b84fff",
+      "desbloqueada": false,
+      "tituloMision": "Entre Flores y Libros",
+      "descripcionMision": "Heredia te espera con sus flores y universidades. ¿Estás listo?",
+      "estadisticas": {
+        "energia": 65,
+        "conocimiento": 88,
+        "diversion": 70,
+        "responsabilidad": 82
+      },
+      "preguntas": [
+        {
+          "id": "hr-001",
+          "texto": "¿Por qué apodo es conocida la ciudad de Heredia?",
+          "opciones": ["La ciudad de las flores", "La ciudad eterna", "El Valle Hermoso", "La ciudad universitaria"],
+          "correcta": 0,
+          "explicacion": "Heredia es conocida como 'La Ciudad de las Flores' por la abundancia de jardines.",
+          "categoria": "Geografía"
+        }
+      ]
+    },
+    {
+      "id": "alajuela",
+      "nombre": "Alajuela",
+      "emoji": "⚔️",
+      "region": "Valle Central",
+      "dificultad": 2,
+      "descripcion": "Tierra de héroes nacionales y del aeropuerto internacional.",
+      "color": "#ffd700",
+      "desbloqueada": false,
+      "tituloMision": "La Tierra de Mora",
+      "descripcionMision": "Alajuela honra a sus héroes. Demuestra que conoces su legado histórico.",
+      "estadisticas": {
+        "energia": 80,
+        "conocimiento": 82,
+        "diversion": 72,
+        "responsabilidad": 78
+      },
+      "preguntas": [
+        {
+          "id": "al-001",
+          "texto": "¿Quién es el héroe nacional de Costa Rica nacido en Alajuela?",
+          "opciones": ["Braulio Carrillo", "Juan Santamaría", "Alfredo González Flores", "Ricardo Jiménez"],
+          "correcta": 1,
+          "explicacion": "Juan Santamaría, el héroe nacional, nació en Alajuela en 1831.",
+          "categoria": "Historia"
+        }
+      ]
+    },
+    {
+      "id": "guanacaste",
+      "nombre": "Guanacaste",
+      "emoji": "🌊",
+      "region": "Pacífico Norte",
+      "dificultad": 3,
+      "descripcion": "Playas paradisíacas, cultura sabanera y Patrimonio Cultural de la Humanidad.",
+      "color": "#ff6b35",
+      "desbloqueada": false,
+      "tituloMision": "El Llamado del Pacífico",
+      "descripcionMision": "Las playas de Guanacaste necesitan al héroe. Conoce la región del sol.",
+      "estadisticas": {
+        "energia": 90,
+        "conocimiento": 75,
+        "diversion": 95,
+        "responsabilidad": 65
+      },
+      "preguntas": [
+        {
+          "id": "gn-001",
+          "texto": "¿Cuál es el árbol nacional de Costa Rica, símbolo de Guanacaste?",
+          "opciones": ["Roble", "Guanacaste", "Ceibo", "Pochote"],
+          "correcta": 1,
+          "explicacion": "El árbol de Guanacaste (Enterolobium cyclocarpum) es el árbol nacional de Costa Rica.",
+          "categoria": "Ambiente"
+        }
+      ]
+    },
+    {
+      "id": "puntarenas",
+      "nombre": "Puntarenas",
+      "emoji": "🐊",
+      "region": "Pacífico Central",
+      "dificultad": 3,
+      "descripcion": "Puerto principal del Pacífico y puerta de entrada a la naturaleza.",
+      "color": "#00e5cc",
+      "desbloqueada": false,
+      "tituloMision": "La Perla del Pacífico",
+      "descripcionMision": "El Pacífico costarricense tiene secretos. Explora Puntarenas y sus maravillas.",
+      "estadisticas": {
+        "energia": 85,
+        "conocimiento": 78,
+        "diversion": 88,
+        "responsabilidad": 70
+      },
+      "preguntas": [
+        {
+          "id": "pt-001",
+          "texto": "¿Cuál es el parque nacional más grande de Costa Rica, ubicado en Puntarenas?",
+          "opciones": ["Parque Nacional Corcovado", "Parque Nacional Tortuguero", "Parque Nacional Chirripó", "Parque Nacional Rincón de la Vieja"],
+          "correcta": 0,
+          "explicacion": "El Parque Nacional Corcovado, en la Península de Osa, Puntarenas, es el más biodiverso del país.",
+          "categoria": "Ambiente"
+        }
+      ]
+    },
+    {
+      "id": "limon",
+      "nombre": "Limón",
+      "emoji": "🌴",
+      "region": "Caribe",
+      "dificultad": 4,
+      "descripcion": "Costa Caribe rica en cultura afrocostarricense, biodiversidad y carnaval.",
+      "color": "#ff4b6e",
+      "desbloqueada": false,
+      "tituloMision": "Ritmo Caribeño",
+      "descripcionMision": "El Caribe costarricense vibra con su propia energía. ¿Conoces su cultura?",
+      "estadisticas": {
+        "energia": 95,
+        "conocimiento": 72,
+        "diversion": 98,
+        "responsabilidad": 60
+      },
+      "preguntas": [
+        {
+          "id": "lm-001",
+          "texto": "¿Qué celebración popular y colorida se realiza cada año en la ciudad de Limón?",
+          "opciones": ["Carnaval de Limón", "Festival del Maíz", "Feria de Zapote", "Tope Nacional"],
+          "correcta": 0,
+          "explicacion": "El Carnaval de Limón se celebra en octubre y es una de las festividades más coloridas de Costa Rica.",
+          "categoria": "Cultura"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "ultimaActualizacion": "2026-06",
+    "totalProvincias": 7,
+    "categorias": ["Historia", "Geografía", "Cultura", "Ambiente", "Universidad", "Deporte"]
+  }
+}

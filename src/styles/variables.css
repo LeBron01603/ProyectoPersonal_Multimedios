@@ -1,0 +1,116 @@
+/* =========================================================
+   variables.css — Tokens de diseño para Ruta Tica
+   Paleta: Neón Tropical Nocturno Universitario
+   ========================================================= */
+
+:root {
+  /* --- Colores base --- */
+  --color-bg-dark:        #0a0e1a;       /* Fondo noche profundo */
+  --color-bg-card:        #111827;       /* Tarjetas / superficies */
+  --color-bg-glass:       rgba(17, 24, 39, 0.75); /* Glassmorphism */
+
+  /* --- Neón primario (verde tica / tropical) --- */
+  --color-neon-green:     #00ff88;
+  --color-neon-green-dim: #00cc6a;
+  --color-neon-green-glow: rgba(0, 255, 136, 0.35);
+
+  /* --- Neón secundario (azul universitario) --- */
+  --color-neon-blue:      #00c8ff;
+  --color-neon-blue-dim:  #0099cc;
+  --color-neon-blue-glow: rgba(0, 200, 255, 0.30);
+
+  /* --- Acento héroe (violeta/morado) --- */
+  --color-neon-purple:    #b84fff;
+  --color-neon-purple-dim:#8b2fc9;
+  --color-neon-purple-glow: rgba(184, 79, 255, 0.30);
+
+  /* --- Acento cálido (dorado universitario) --- */
+  --color-neon-gold:      #ffd700;
+  --color-neon-gold-dim:  #ccac00;
+
+  /* --- Texto --- */
+  --color-text-primary:   #e8f4f8;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted:     #4a5568;
+  --color-text-hero:      #00ff88;
+
+  /* --- Bordes --- */
+  --color-border:         rgba(0, 255, 136, 0.20);
+  --color-border-hover:   rgba(0, 255, 136, 0.50);
+
+  /* --- Gradientes --- */
+  --gradient-hero:  linear-gradient(135deg, #0a0e1a 0%, #0d1f3c 50%, #0a1628 100%);
+  --gradient-card:  linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(10, 14, 26, 0.95));
+  --gradient-btn:   linear-gradient(90deg, #00ff88, #00c8ff);
+  --gradient-btn-hero: linear-gradient(90deg, #b84fff, #00c8ff);
+  --gradient-text-neon: linear-gradient(90deg, #00ff88, #00c8ff, #b84fff);
+
+  /* --- Sombras y glows --- */
+  --shadow-card:    0 4px 24px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-neon-green: 0 0 12px var(--color-neon-green-glow),
+                       0 0 30px var(--color-neon-green-glow);
+  --shadow-neon-blue:  0 0 12px var(--color-neon-blue-glow),
+                       0 0 30px var(--color-neon-blue-glow);
+  --shadow-neon-purple:0 0 12px var(--color-neon-purple-glow),
+                       0 0 30px var(--color-neon-purple-glow);
+  --shadow-btn:     0 4px 20px rgba(0, 255, 136, 0.45);
+
+  /* --- Tipografía --- */
+  --font-display:   'Exo 2', 'Orbitron', sans-serif;
+  --font-body:      'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* --- Espaciado --- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* --- Radios --- */
+  --radius-sm:  0.375rem;
+  --radius-md:  0.625rem;
+  --radius-lg:  1rem;
+  --radius-xl:  1.5rem;
+  --radius-full: 9999px;
+
+  /* --- Transiciones --- */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+  --transition-bounce: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* --- Z-index --- */
+  --z-base:    1;
+  --z-overlay: 10;
+  --z-modal:   100;
+  --z-toast:   200;
+
+  /* --- Breakpoints (solo como referencia; usar media queries directamente) ---
+     sm:  640px
+     md:  768px
+     lg:  1024px
+     xl:  1280px
+  */
+}

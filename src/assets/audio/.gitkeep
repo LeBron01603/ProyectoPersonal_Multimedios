@@ -1,0 +1,22 @@
+# Carpeta de audio del juego
+
+Esta carpeta contendrá los archivos de audio del juego.
+
+## Estructura esperada
+
+### BGM (Background Music)
+- `bgm_menu.mp3`    — Música de la pantalla principal
+- `bgm_map.mp3`     — Música del mapa de misiones
+- `bgm_game.mp3`    — Música durante las preguntas
+- `bgm_victory.mp3` — Música de victoria/resultados
+
+### SFX (Sound Effects)
+- `sfx_click.mp3`   — Clic de botones
+- `sfx_correct.mp3` — Respuesta correcta
+- `sfx_wrong.mp3`   — Respuesta incorrecta
+- `sfx_levelup.mp3` — Subida de nivel / logro
+- `sfx_unlock.mp3`  — Desbloqueo de provincia
+
+## Formatos
+Usar MP3 (compatibilidad universal) con OGG como fallback cuando sea posible.
+Licencias recomendadas: CC0, CC BY o royalty-free.
