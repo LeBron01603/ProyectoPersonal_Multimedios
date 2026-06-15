@@ -2,6 +2,7 @@
   "provincias": [
     {
       "id": "san-jose",
+      "provincia": "San José",
       "nombre": "San José",
       "emoji": "🏙️",
       "region": "Valle Central",
@@ -11,6 +12,17 @@
       "desbloqueada": true,
       "tituloMision": "La Noche Josefina",
       "descripcionMision": "El caos universitario ha llegado al corazón de San José. Demuestra tu conocimiento de la capital.",
+      "lugarPrincipal": "Barrio Escalante",
+      "lugarAfter": "La Cali",
+      "tipoMision": "Ciudad / Nocturna",
+      "recompensaColeccionable": {
+        "nombre": "Pilsen",
+        "emoji": "🍺"
+      },
+      "recompensaCheckpoint": {
+        "nombre": "After Seguro",
+        "emoji": "🎉"
+      },
       "estadisticas": {
         "energia": 70,
         "conocimiento": 85,
@@ -38,6 +50,7 @@
     },
     {
       "id": "cartago",
+      "provincia": "Cartago",
       "nombre": "Cartago",
       "emoji": "⛪",
       "region": "Valle Central",
@@ -47,6 +60,17 @@
       "desbloqueada": true,
       "tituloMision": "El Misterio del Valle",
       "descripcionMision": "Cartago guarda secretos históricos. Ayuda al héroe a descubrir sus misterios.",
+      "lugarPrincipal": "Ruinas de Cartago",
+      "lugarAfter": "Sendero de Prusia",
+      "tipoMision": "Histórica / Altura",
+      "recompensaColeccionable": {
+        "nombre": "Ruta Nocturna",
+        "emoji": "🏔"
+      },
+      "recompensaCheckpoint": {
+        "nombre": "Ruta Responsable",
+        "emoji": "🎉"
+      },
       "estadisticas": {
         "energia": 60,
         "conocimiento": 90,
@@ -66,6 +90,7 @@
     },
     {
       "id": "heredia",
+      "provincia": "Heredia",
       "nombre": "Heredia",
       "emoji": "🌺",
       "region": "Valle Central",
@@ -75,6 +100,17 @@
       "desbloqueada": false,
       "tituloMision": "Entre Flores y Libros",
       "descripcionMision": "Heredia te espera con sus flores y universidades. ¿Estás listo?",
+      "lugarPrincipal": "Campus Omar Dengo (UNA)",
+      "lugarAfter": "El Fortín Universitario",
+      "tipoMision": "Universitaria / Cultura",
+      "recompensaColeccionable": {
+        "nombre": "Playlist Universitaria",
+        "emoji": "🎶"
+      },
+      "recompensaCheckpoint": {
+        "nombre": "Energía Tropical",
+        "emoji": "🎉"
+      },
       "estadisticas": {
         "energia": 65,
         "conocimiento": 88,
@@ -87,13 +123,14 @@
           "texto": "¿Por qué apodo es conocida la ciudad de Heredia?",
           "opciones": ["La ciudad de las flores", "La ciudad eterna", "El Valle Hermoso", "La ciudad universitaria"],
           "correcta": 0,
-          "explicacion": "Heredia es conocida como 'La Ciudad de las Flores' por la abundancia de jardines.",
+          "explicacion": "Heredia es conocida como 'La Ciudad de las Flores' por la abundancia de gardens.",
           "categoria": "Geografía"
         }
       ]
     },
     {
       "id": "alajuela",
+      "provincia": "Alajuela",
       "nombre": "Alajuela",
       "emoji": "⚔️",
       "region": "Valle Central",
@@ -103,6 +140,17 @@
       "desbloqueada": false,
       "tituloMision": "La Tierra de Mora",
       "descripcionMision": "Alajuela honra a sus héroes. Demuestra que conoces su legado histórico.",
+      "lugarPrincipal": "Parque Juan Santamaría",
+      "lugarAfter": "Mirador de Alajuela",
+      "tipoMision": "Historia / Aventura",
+      "recompensaColeccionable": {
+        "nombre": "Pase Aventurero",
+        "emoji": "🌋"
+      },
+      "recompensaCheckpoint": {
+        "nombre": "Brindis Tico",
+        "emoji": "🎉"
+      },
       "estadisticas": {
         "energia": 80,
         "conocimiento": 82,
@@ -122,6 +170,7 @@
     },
     {
       "id": "guanacaste",
+      "provincia": "Guanacaste",
       "nombre": "Guanacaste",
       "emoji": "🌊",
       "region": "Pacífico Norte",
@@ -131,6 +180,17 @@
       "desbloqueada": false,
       "tituloMision": "El Llamado del Pacífico",
       "descripcionMision": "Las playas de Guanacaste necesitan al héroe. Conoce la región del sol.",
+      "lugarPrincipal": "Tamarindo",
+      "lugarAfter": "Sharky's",
+      "tipoMision": "Playa / Sabanera",
+      "recompensaColeccionable": {
+        "nombre": "Cacique",
+        "emoji": "🥃"
+      },
+      "recompensaCheckpoint": {
+        "nombre": "Leyenda Nocturna",
+        "emoji": "🎉"
+      },
       "estadisticas": {
         "energia": 90,
         "conocimiento": 75,
@@ -150,6 +210,7 @@
     },
     {
       "id": "puntarenas",
+      "provincia": "Puntarenas",
       "nombre": "Puntarenas",
       "emoji": "🐊",
       "region": "Pacífico Central",
@@ -159,6 +220,17 @@
       "desbloqueada": false,
       "tituloMision": "La Perla del Pacífico",
       "descripcionMision": "El Pacífico costarricense tiene secretos. Explora Puntarenas y sus maravillas.",
+      "lugarPrincipal": "Paseo de los Turistas",
+      "lugarAfter": "Sunset Bar",
+      "tipoMision": "Puerto / Costera",
+      "recompensaColeccionable": {
+        "nombre": "Jägermeister",
+        "emoji": "🥃"
+      },
+      "recompensaCheckpoint": {
+        "nombre": "After Seguro",
+        "emoji": "🎉"
+      },
       "estadisticas": {
         "energia": 85,
         "conocimiento": 78,
@@ -178,6 +250,7 @@
     },
     {
       "id": "limon",
+      "provincia": "Limón",
       "nombre": "Limón",
       "emoji": "🌴",
       "region": "Caribe",
@@ -187,6 +260,17 @@
       "desbloqueada": false,
       "tituloMision": "Ritmo Caribeño",
       "descripcionMision": "El Caribe costarricense vibra con su propia energía. ¿Conoces su cultura?",
+      "lugarPrincipal": "Puerto Viejo",
+      "lugarAfter": "Roots Reggae Bar",
+      "tipoMision": "Caribeña / Biodiversidad",
+      "recompensaColeccionable": {
+        "nombre": "Chiliguaro Caribeño",
+        "emoji": "🍹"
+      },
+      "recompensaCheckpoint": {
+        "nombre": "Leyenda Caribeña",
+        "emoji": "🎉"
+      },
       "estadisticas": {
         "energia": 95,
         "conocimiento": 72,
@@ -206,7 +290,7 @@
     }
   ],
   "meta": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ultimaActualizacion": "2026-06",
     "totalProvincias": 7,
     "categorias": ["Historia", "Geografía", "Cultura", "Ambiente", "Universidad", "Deporte"]

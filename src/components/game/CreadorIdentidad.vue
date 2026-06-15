@@ -13,7 +13,6 @@
       </header>
 
       <!-- Formulario de identidad -->
-      <!-- v-model: enlace bidireccional con el estado reactivo local -->
       <form class="formulario-identidad" @submit.prevent="alConfirmar" novalidate>
 
         <!-- Paso 1: Nombre del héroe -->
@@ -36,48 +35,54 @@
 
         <!-- Paso 2: Universidad -->
         <div class="grupo-formulario animate-slide-left delay-200">
-          <label class="etiqueta-formulario" for="universidad">
+          <label class="etiqueta-formulario">
             🎓 Universidad
           </label>
-          <select id="universidad" v-model="formulario.universidad" class="select-formulario">
-            <option value="" disabled>Selecciona tu U...</option>
-            <option v-for="u in universidades" :key="u.value" :value="u.value">
-              {{ u.label }}
-            </option>
-          </select>
+          <SelectorPersonalizado
+            v-model="formulario.universidad"
+            :opciones="universidades"
+            placeholder="Selecciona tu U..."
+          />
         </div>
 
         <!-- Paso 3: Carrera -->
         <div class="grupo-formulario animate-slide-left delay-300">
-          <label class="etiqueta-formulario" for="carrera">
+          <label class="etiqueta-formulario">
             📚 Carrera
           </label>
-          <select id="carrera" v-model="formulario.carrera" class="select-formulario">
-            <option value="" disabled>Selecciona tu carrera...</option>
-            <option v-for="c in carreras" :key="c.value" :value="c.value">
-              {{ c.label }}
-            </option>
-          </select>
+          <SelectorPersonalizado
+            v-model="formulario.carrera"
+            :opciones="carreras"
+            placeholder="Selecciona tu carrera..."
+          />
         </div>
 
         <!-- Paso 4: Deporte o actividad física -->
         <div class="grupo-formulario animate-slide-right delay-100">
-          <label class="etiqueta-formulario" for="deporte">
+          <label class="etiqueta-formulario">
             🏃 Actividad física favorita
           </label>
-          <select id="deporte" v-model="formulario.deporte" class="select-formulario">
-            <option value="" disabled>Selecciona una actividad...</option>
-            <option v-for="d in deportes" :key="d.value" :value="d.value">
-              {{ d.label }}
-            </option>
-          </select>
+          <SelectorPersonalizado
+            v-model="formulario.deporte"
+            :opciones="deportes"
+            placeholder="Selecciona una actividad..."
+          />
         </div>
 
-        <!-- Paso 5: Estilo de personalidad -->
+        <!-- Paso 5: Estilo inicial del héroe -->
         <div class="grupo-formulario animate-slide-right delay-200">
-          <label class="etiqueta-formulario">🧠 Estilo de personalidad</label>
+          <label class="etiqueta-formulario">🧠 Estilo inicial del héroe</label>
+          
+          <!-- Mensaje explicativo sobre la evolución del héroe -->
+          <div class="alerta-evolucion" role="note">
+            <span class="alerta-evolucion-icono" aria-hidden="true">💡</span>
+            <p class="alerta-evolucion-texto">
+              Este estilo representa tu punto de partida. Tus decisiones durante la aventura definirán el tipo de héroe en el que te convertirás.
+            </p>
+          </div>
+
           <!-- Selección visual con tarjetas de personalidad -->
-          <div class="cuadricula-personalidad" role="radiogroup" aria-label="Estilos de personalidad">
+          <div class="cuadricula-personalidad" role="radiogroup" aria-label="Estilos iniciales de héroe">
             <label
               v-for="p in personalidades"
               :key="p.value"
@@ -94,6 +99,7 @@
               />
               <span class="emoji-personalidad" aria-hidden="true">{{ p.emoji }}</span>
               <span class="nombre-personalidad">{{ p.label }}</span>
+              <span class="bono-personalidad">{{ p.bonoTexto }}</span>
               <span class="desc-personalidad">{{ p.description }}</span>
             </label>
           </div>
@@ -107,7 +113,7 @@
             <span v-if="formulario.universidad" class="badge-preview">{{ formulario.universidad }}</span>
           </p>
           <p v-if="formulario.personalidad" class="personalidad-preview">
-            {{ personalidadActual?.emoji }} {{ personalidadActual?.label }}
+            {{ personalidadActual?.emoji }} Estilo inicial: {{ personalidadActual?.label }}
           </p>
         </div>
 
@@ -139,6 +145,9 @@
 <script setup>
 // --- Importaciones de Vue 3 Composition API ---
 import { ref, reactive, computed } from 'vue'
+
+// --- Componentes hijos ---
+import SelectorPersonalizado from './SelectorPersonalizado.vue'
 
 // --- Composables ---
 import { useAudio } from '../../composables/useAudio.js'
@@ -177,7 +186,7 @@ const universidades = [
 
 const carreras = [
   { value: 'Informatica',      label: '💻 Informática / Ingeniería en Sistemas' },
-  { value: 'Multimedios',      label: '🎬 Multimedios / Comunicación Digital' },
+  { value: 'Multimedios',      label: '🎬 Informática en Multimedios' },
   { value: 'Administracion',   label: '📊 Administración de Empresas' },
   { value: 'Derecho',          label: '⚖️ Derecho' },
   { value: 'Medicina',         label: '🩺 Medicina / Ciencias de la Salud' },
@@ -208,24 +217,28 @@ const personalidades = [
     value:       'responsable',
     emoji:       '🎓',
     label:       'Responsable',
+    bonoTexto:   '+20 Responsabilidad',
     description: 'Equilibrio total. Tareas antes que after.'
   },
   {
     value:       'aventurero',
     emoji:       '🗺️',
     label:       'Aventurero',
+    bonoTexto:   '+20 Energía',
     description: 'Siempre listo para explorar algo nuevo.'
   },
   {
     value:       'equilibrado',
     emoji:       '⚖️',
     label:       'Fiestero equilibrado',
+    bonoTexto:   '+10 Diversión, +10 Resp.',
     description: 'Sabe cuándo trabajar y cuándo disfrutar.'
   },
   {
     value:       'nocturno',
     emoji:       '🌙',
     label:       'Estudioso nocturno',
+    bonoTexto:   '+20 Conocimiento',
     description: 'Más productivo cuando todos duermen.'
   }
 ]
@@ -325,11 +338,10 @@ function alConfirmar() {
   gap: var(--space-2);
 }
 
-.input-formulario,
-.select-formulario {
+.input-formulario {
   width: 100%;
   padding: var(--space-3) var(--space-4);
-  background: rgba(255,255,255,0.03);
+  background: rgba(17, 24, 39, 0.75);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
@@ -338,17 +350,16 @@ function alConfirmar() {
   transition: all var(--transition-base);
 }
 
-.input-formulario:focus,
-.select-formulario:focus {
+.input-formulario:focus {
   outline: none;
   border-color: var(--color-neon-purple);
   box-shadow: 0 0 0 3px var(--color-neon-purple-glow);
-  background: rgba(255,255,255,0.06);
+  background: rgba(17, 24, 39, 0.85);
 }
 
 .error-input {
   border-color: #ff4646 !important;
-  box-shadow: 0 0 0 3px rgba(255,70,70,0.2) !important;
+  box-shadow: 0 0 0 3px rgba(255, 70, 70, 0.2) !important;
 }
 
 .mensaje-error {
@@ -357,6 +368,30 @@ function alConfirmar() {
   display: flex;
   align-items: center;
   gap: var(--space-1);
+}
+
+/* --- Alerta Evolución --- */
+.alerta-evolucion {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  background: rgba(0, 200, 255, 0.08);
+  border: 1px solid rgba(0, 200, 255, 0.25);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.alerta-evolucion-icono {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.alerta-evolucion-texto {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* --- Personalidad grid --- */
@@ -369,7 +404,7 @@ function alConfirmar() {
 .tarjeta-personalidad {
   position: relative;
   cursor: pointer;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
@@ -383,13 +418,13 @@ function alConfirmar() {
 
 .tarjeta-personalidad:hover {
   border-color: var(--color-neon-purple);
-  background: rgba(184,79,255,0.08);
+  background: rgba(184, 79, 255, 0.08);
   transform: translateY(-2px);
 }
 
 .tarjeta-personalidad.selected {
   border-color: var(--color-neon-purple);
-  background: rgba(184,79,255,0.15);
+  background: rgba(184, 79, 255, 0.15);
   box-shadow: 0 0 15px var(--color-neon-purple-glow);
 }
 
@@ -412,6 +447,15 @@ function alConfirmar() {
   color: var(--color-text-primary);
 }
 
+.bono-personalidad {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-neon-green);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-block: 2px;
+}
+
 .desc-personalidad {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
@@ -420,8 +464,8 @@ function alConfirmar() {
 
 /* --- Preview --- */
 .preview-identidad {
-  background: rgba(0,200,255,0.06);
-  border: 1px solid rgba(0,200,255,0.2);
+  background: rgba(0, 200, 255, 0.06);
+  border: 1px solid rgba(0, 200, 255, 0.2);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   text-align: center;
@@ -450,9 +494,9 @@ function alConfirmar() {
 
 .badge-preview {
   font-size: var(--text-xs);
-  background: rgba(0,200,255,0.15);
+  background: rgba(0, 200, 255, 0.15);
   color: var(--color-neon-blue);
-  border: 1px solid rgba(0,200,255,0.3);
+  border: 1px solid rgba(0, 200, 255, 0.3);
   border-radius: var(--radius-full);
   padding: 2px var(--space-2);
 }

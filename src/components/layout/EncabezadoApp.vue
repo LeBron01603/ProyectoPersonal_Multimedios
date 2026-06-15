@@ -43,7 +43,7 @@
           class="control-btn control-btn--danger"
           title="Reiniciar juego"
           aria-label="Reiniciar juego"
-          @click="alReiniciar"
+          @click="abrirConfirmarReinicio"
         >
           🔄
         </button>
@@ -57,15 +57,27 @@
         :style="{ width: porcentajeProgreso + '%' }"
       ></div>
     </div>
+
+    <!-- Modal de confirmación de reinicio personalizado -->
+    <ModalConfirmacion
+      :mostrar="mostrarModalConfirmar"
+      titulo="¿Reiniciar partida?"
+      mensaje="¿Seguro que deseas reiniciar tu viaje? Perderás todo tu progreso actual de misiones, logros, checkpoints, colección del after e inventario."
+      textoConfirmar="Reiniciar Partida"
+      textoCancelar="Cancelar"
+      @confirmar="confirmarReinicio"
+      @cancelar="cerrarConfirmarReinicio"
+    />
   </header>
 </template>
 
 <script setup>
 // --- Importaciones de Vue 3 Composition API ---
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 // --- Componentes hijos ---
 import IndicadorEstadistica from '../game/IndicadorEstadistica.vue'
+import ModalConfirmacion from '../game/ModalConfirmacion.vue'
 
 // --- Composables ---
 import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
@@ -82,7 +94,10 @@ const {
 } = useEstadoJuego()
 
 // --- Audio ---
-const { estaSilenciado, alternarSilencio } = useAudio()
+const { estaSilenciado, alternarSilencio, reproducirEfecto } = useAudio()
+
+// --- Estado local para confirmación de reinicio ---
+const mostrarModalConfirmar = ref(false)
 
 // --- Computed: mostrar estadísticas solo en pantallas de juego ---
 const mostrarEstadisticas = computed(() =>
@@ -103,11 +118,21 @@ const estadisticasVisibles = computed(() => [
 // --- Emit: notificar reset al padre si es necesario ---
 const emit = defineEmits(['reiniciar'])
 
-function alReiniciar() {
-  if (confirm('¿Reiniciar el juego? Perderás tu progreso actual.')) {
-    reiniciarJuego()
-    emit('reiniciar')
-  }
+function abrirConfirmarReinicio() {
+  reproducirEfecto('click')
+  mostrarModalConfirmar.value = true
+}
+
+function cerrarConfirmarReinicio() {
+  reproducirEfecto('click')
+  mostrarModalConfirmar.value = false
+}
+
+function confirmarReinicio() {
+  reproducirEfecto('subirNivel')
+  reiniciarJuego()
+  emit('reiniciar')
+  mostrarModalConfirmar.value = false
 }
 </script>
 
