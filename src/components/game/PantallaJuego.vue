@@ -480,6 +480,7 @@ function alAgotarTiempo() {
   // Penalizaciones por tiempo agotado
   estadisticasHeroe.reputacionNocturna = Math.max(0, estadisticasHeroe.reputacionNocturna - 5)
   estadisticasHeroe.energia = Math.max(0, estadisticasHeroe.energia - 5)
+  estadisticasHeroe.sospechaIdentidad = Math.min(100, estadisticasHeroe.sospechaIdentidad + 5)
 
   reproducirEfecto('incorrecto')
 }
@@ -499,6 +500,7 @@ function seleccionarRespuesta(idx) {
     
     // Recompensa de reputación base
     estadisticasHeroe.reputacionNocturna = Math.min(100, estadisticasHeroe.reputacionNocturna + 5)
+    estadisticasHeroe.sospechaIdentidad = Math.max(0, estadisticasHeroe.sospechaIdentidad - 1)
     
     // Lógica de XP base y bonos
     let xpGanar = 10
@@ -524,6 +526,7 @@ function seleccionarRespuesta(idx) {
     
     // Penalizaciones dinámicas por fallar
     estadisticasHeroe.reputacionNocturna = Math.max(0, estadisticasHeroe.reputacionNocturna - 5)
+    estadisticasHeroe.sospechaIdentidad = Math.min(100, estadisticasHeroe.sospechaIdentidad + 5)
     
     const cat = preguntaActualDatos.value?.categoria
     if (cat === 'Universidad' || cat === 'Responsabilidad') {

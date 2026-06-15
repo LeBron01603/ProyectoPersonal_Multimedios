@@ -43,23 +43,76 @@
         </div>
       </div>
 
-      <!-- Estadísticas ganadas -->
-      <div class="estadisticas-resultado animate-fade-in delay-300">
-        <h3 class="titulo-seccion-resultado">Cambios en tus atributos:</h3>
-        <div class="cuadricula-estadisticas">
-          <div
-            v-for="stat in cambiosEstadisticas"
-            :key="stat.key"
-            class="cambio-estadistica"
-            :class="stat.delta > 0 ? 'cambio-estadistica--sube' : (stat.delta < 0 ? 'cambio-estadistica--baja' : 'cambio-estadistica--neutro')"
-          >
-            <span class="icono-cambio-estadistica">{{ stat.icon }}</span>
-            <span class="nombre-cambio-estadistica">{{ stat.etiqueta }}</span>
-            <span class="delta-cambio-estadistica">
-              {{ stat.delta > 0 ? '+' : '' }}{{ stat.delta }}
-            </span>
+      <!-- Impacto Académico y Heroico -->
+      <div class="impactos-grid animate-fade-in delay-300">
+        <!-- Bloque Académico -->
+        <div class="bloque-resultado-impacto academico">
+          <h3 class="titulo-seccion-resultado">🎓 Impacto Académico (Día)</h3>
+          <div class="lista-cambios">
+            <div
+              v-for="stat in impactoAcademico"
+              :key="stat.key"
+              class="cambio-estadistica"
+              :class="stat.delta > 0 ? 'cambio-estadistica--sube' : (stat.delta < 0 ? 'cambio-estadistica--baja' : 'cambio-estadistica--neutro')"
+            >
+              <span class="icono-cambio-estadistica">{{ stat.icon }}</span>
+              <span class="nombre-cambio-estadistica">{{ stat.etiqueta }}</span>
+              <span class="delta-cambio-estadistica">
+                {{ stat.delta > 0 ? '+' : '' }}{{ stat.delta }}
+              </span>
+            </div>
           </div>
         </div>
+
+        <!-- Bloque Heroico -->
+        <div class="bloque-resultado-impacto heroico">
+          <h3 class="titulo-seccion-resultado">🦸 Impacto Heroico (Noche)</h3>
+          <div class="lista-cambios">
+            <div
+              v-for="stat in impactoHeroico"
+              :key="stat.key"
+              class="cambio-estadistica"
+              :class="stat.delta > 0 ? 'cambio-estadistica--sube' : (stat.delta < 0 ? 'cambio-estadistica--baja' : 'cambio-estadistica--neutro')"
+            >
+              <span class="icono-cambio-estadistica">{{ stat.icon }}</span>
+              <span class="nombre-cambio-estadistica">{{ stat.etiqueta }}</span>
+              <span class="delta-cambio-estadistica">
+                {{ stat.delta > 0 ? '+' : '' }}{{ stat.delta }}
+              </span>
+            </div>
+            <!-- Cambio de Energía -->
+            <div
+              class="cambio-estadistica"
+              :class="deltaEnergia > 0 ? 'cambio-estadistica--sube' : (deltaEnergia < 0 ? 'cambio-estadistica--baja' : 'cambio-estadistica--neutro')"
+            >
+              <span class="icono-cambio-estadistica">⚡</span>
+              <span class="nombre-cambio-estadistica">Energía</span>
+              <span class="delta-cambio-estadistica">
+                {{ deltaEnergia > 0 ? '+' : '' }}{{ deltaEnergia }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado de Identidad Secreta -->
+      <div class="seccion-sospecha-resultado animate-fade-in delay-350">
+        <h3 class="titulo-seccion-resultado">🔍 Estado de Identidad Secreta</h3>
+        <div class="progreso-sospecha-res">
+          <div class="barra-sospecha-res-pista">
+            <div 
+              class="barra-sospecha-res-relleno" 
+              :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }"
+              :class="{ 'urgente': estadisticasHeroe.sospechaIdentidad > 50 }"
+            ></div>
+          </div>
+          <span class="porcentaje-sospecha-res">
+            Sospecha: <strong>{{ estadisticasHeroe.sospechaIdentidad }}%</strong>
+          </span>
+        </div>
+        <p class="mensaje-sospecha-res">
+          {{ mensajeSospecha }}
+        </p>
       </div>
 
       <!-- Sección de Título Final (Estructura preparada) -->
@@ -158,13 +211,28 @@ const xpGanada = computed(() => {
 })
 
 // --- Cambios reales en estadísticas (Deltas exactos del transcurso de la misión) ---
-const cambiosEstadisticas = computed(() => [
-  { key: 'energia',         etiqueta: 'Energía',         icon: '⚡', delta: estadisticasHeroe.energia - estadisticasPreMision.energia },
+const impactoAcademico = computed(() => [
   { key: 'conocimiento',    etiqueta: 'Conocimiento',    icon: '📚', delta: estadisticasHeroe.conocimiento - estadisticasPreMision.conocimiento },
-  { key: 'diversion',       etiqueta: 'Diversión',       icon: '🎉', delta: estadisticasHeroe.diversion - estadisticasPreMision.diversion },
-  { key: 'responsabilidad', etiqueta: 'Responsabilidad', icon: '🎓', delta: estadisticasHeroe.responsabilidad - estadisticasPreMision.responsabilidad },
-  { key: 'reputacionNocturna', etiqueta: 'Reputación',    icon: '🤝', delta: estadisticasHeroe.reputacionNocturna - estadisticasPreMision.reputacionNocturna }
+  { key: 'responsabilidad', etiqueta: 'Responsabilidad', icon: '🎓', delta: estadisticasHeroe.responsabilidad - estadisticasPreMision.responsabilidad }
 ])
+
+const impactoHeroico = computed(() => [
+  { key: 'reputacionNocturna', etiqueta: 'Reputación',    icon: '🤝', delta: estadisticasHeroe.reputacionNocturna - estadisticasPreMision.reputacionNocturna },
+  { key: 'xp',                 etiqueta: 'Experiencia',   icon: '⭐', delta: xpGanada.value }
+])
+
+const deltaEnergia = computed(() => estadisticasHeroe.energia - estadisticasPreMision.energia)
+
+const mensajeSospecha = computed(() => {
+  const sospecha = estadisticasHeroe.sospechaIdentidad
+  if (sospecha < 30) {
+    return 'Tu identidad sigue protegida de manera óptima. Eres invisible en el campus.'
+  } else if (sospecha <= 60) {
+    return 'Algunas personas en la universidad empiezan a hacer preguntas sobre tus ausencias. Ten cuidado.'
+  } else {
+    return '¡Alerta de sospecha! Hay rumores fuertes en la facultad sobre tus andanzas. Debes actuar con cautela.'
+  }
+})
 
 // --- Frases motivacionales ---
 const frases = [
@@ -351,18 +419,39 @@ onMounted(() => {
 }
 
 /* --- Stats --- */
-.estadisticas-resultado {
+/* --- Impactos Grid --- */
+.impactos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
   width: 100%;
-  background: rgba(255,255,255,0.03);
+}
+
+.bloque-resultado-impacto {
+  background: rgba(255, 255, 255, 0.015);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: left;
 }
 
-.cuadricula-estadisticas {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+.bloque-resultado-impacto.academico {
+  border-left: 3px solid var(--color-neon-blue);
+  background: linear-gradient(145deg, rgba(0, 200, 255, 0.02), transparent);
+}
+
+.bloque-resultado-impacto.heroico {
+  border-left: 3px solid var(--color-neon-purple);
+  background: linear-gradient(145deg, rgba(184, 79, 255, 0.02), transparent);
+}
+
+.lista-cambios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .cambio-estadistica {
@@ -375,13 +464,13 @@ onMounted(() => {
 }
 
 .cambio-estadistica--sube {
-  background: rgba(0,255,136,0.08);
-  border: 1px solid rgba(0,255,136,0.2);
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.2);
 }
 
 .cambio-estadistica--baja {
-  background: rgba(255,70,70,0.08);
-  border: 1px solid rgba(255,70,70,0.2);
+  background: rgba(255, 70, 70, 0.08);
+  border: 1px solid rgba(255, 70, 70, 0.2);
 }
 
 .cambio-estadistica--neutro {
@@ -390,10 +479,61 @@ onMounted(() => {
   opacity: 0.85;
 }
 
-@media (min-width: 481px) {
-  .cambio-estadistica:nth-child(5) {
-    grid-column: span 2;
-  }
+/* --- Seccion Sospecha --- */
+.seccion-sospecha-resultado {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-align: left;
+}
+
+.progreso-sospecha-res {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.barra-sospecha-res-pista {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.barra-sospecha-res-relleno {
+  height: 100%;
+  background: var(--color-neon-blue);
+  box-shadow: 0 0 8px var(--color-neon-blue-glow);
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.barra-sospecha-res-relleno.urgente {
+  background: #ff4646;
+  box-shadow: 0 0 8px rgba(255, 70, 70, 0.6);
+}
+
+.porcentaje-sospecha-res {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+.porcentaje-sospecha-res strong {
+  color: var(--color-text-primary);
+}
+
+.mensaje-sospecha-res {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin: 0;
+  font-style: italic;
 }
 
 .icono-cambio-estadistica { font-size: 1rem; }
@@ -500,7 +640,7 @@ onMounted(() => {
     padding: var(--space-6) var(--space-4);
   }
   .recompensas-resultado-grid,
-  .cuadricula-estadisticas {
+  .impactos-grid {
     grid-template-columns: 1fr;
   }
   .acciones-resultado {

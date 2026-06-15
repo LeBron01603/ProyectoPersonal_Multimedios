@@ -12,6 +12,8 @@ export const PANTALLAS = {
   INICIO:    'inicio',
   IDENTIDAD: 'identidad',
   MAPA:      'mapa',
+  ACTIVIDADES: 'actividades',
+  TRANSFORMACION: 'transformacion',
   JUEGO:     'juego',
   RESULTADO: 'resultado'
 }
@@ -23,10 +25,12 @@ const estaCargando   = ref(false)
 // reactive: para el objeto de identidad del héroe
 const identidadHeroe = reactive({
   nombre:       '',
+  edad:         '',
   universidad:  '',
   carrera:      '',
   deporte:      '',
-  personalidad: '' // Representa el "Estilo inicial del héroe"
+  personalidad: '', // Representa el "Estilo inicial del héroe"
+  aliasHeroe:   ''
 })
 
 // reactive: para estadísticas del juego
@@ -35,7 +39,8 @@ const estadisticasHeroe = reactive({
   conocimiento:    10,
   diversion:       10,
   responsabilidad: 80,
-  reputacionNocturna: 50
+  reputacionNocturna: 50,
+  sospechaIdentidad: 0
 })
 
 // reactive: copia de estadísticas antes de iniciar una misión para cálculo exacto de deltas
@@ -44,7 +49,8 @@ const estadisticasPreMision = reactive({
   conocimiento:    10,
   diversion:       10,
   responsabilidad: 80,
-  reputacionNocturna: 50
+  reputacionNocturna: 50,
+  sospechaIdentidad: 0
 })
 
 // ref: provincia/misión activa
@@ -106,9 +112,11 @@ const tituloFinal = computed(() => {
 // --- Computed: ¿identidad está completa? ---
 const identidadCompleta = computed(() =>
   identidadHeroe.nombre.trim() !== '' &&
+  identidadHeroe.edad !== '' &&
   identidadHeroe.universidad !== '' &&
   identidadHeroe.carrera !== '' &&
-  identidadHeroe.personalidad !== ''
+  identidadHeroe.personalidad !== '' &&
+  identidadHeroe.aliasHeroe.trim() !== ''
 )
 
 // --- Computed: porcentaje de misiones completadas ---
@@ -124,7 +132,7 @@ const porcentajeProgreso = computed(() => {
 /** Aplica las bonificaciones iniciales basadas en el estilo inicial */
 function aplicarBonificacionesIniciales(estilo) {
   // Inicializamos a base
-  Object.assign(estadisticasHeroe, { energia: 80, conocimiento: 10, diversion: 10, responsabilidad: 80, reputacionNocturna: 50 })
+  Object.assign(estadisticasHeroe, { energia: 80, conocimiento: 10, diversion: 10, responsabilidad: 80, reputacionNocturna: 50, sospechaIdentidad: 0 })
   
   switch (estilo) {
     case 'responsable':
@@ -296,6 +304,14 @@ function completarMision(idProvincia, puntaje) {
     agregarLogro("Héroe Nacional", "🏆")
   }
 
+  // Lógica de sospecha acumulada al terminar el día
+  if (estadisticasHeroe.responsabilidad < 50) {
+    estadisticasHeroe.sospechaIdentidad = Math.min(100, estadisticasHeroe.sospechaIdentidad + 10)
+  }
+  if (estadisticasHeroe.energia < 30) {
+    estadisticasHeroe.sospechaIdentidad = Math.min(100, estadisticasHeroe.sospechaIdentidad + 8)
+  }
+
   navegarA(PANTALLAS.RESULTADO)
 }
 
@@ -318,8 +334,8 @@ function reiniciarJuego() {
   experienciaHeroe.value = 0
   nivelHeroe.value = 1
   ultimoPuntajeMision.value = 0
-  Object.assign(identidadHeroe, { nombre: '', universidad: '', carrera: '', deporte: '', personalidad: '' })
-  Object.assign(estadisticasHeroe, { energia: 80, conocimiento: 10, diversion: 10, responsabilidad: 80, reputacionNocturna: 50 })
+  Object.assign(identidadHeroe, { nombre: '', edad: '', universidad: '', carrera: '', deporte: '', personalidad: '', aliasHeroe: '' })
+  Object.assign(estadisticasHeroe, { energia: 80, conocimiento: 10, diversion: 10, responsabilidad: 80, reputacionNocturna: 50, sospechaIdentidad: 0 })
 }
 
 // =========================================================

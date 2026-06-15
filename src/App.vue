@@ -33,7 +33,22 @@
         <MapaMisiones
           v-else-if="pantallaActual === PANTALLAS.MAPA"
           key="mapa"
-          @iniciar-mision="navegarA(PANTALLAS.JUEGO)"
+          @iniciar-mision="navegarA(PANTALLAS.ACTIVIDADES)"
+        />
+
+        <!-- Pantalla: Vida Universitaria -->
+        <PantallaVidaUniversitaria
+          v-else-if="pantallaActual === PANTALLAS.ACTIVIDADES"
+          key="actividades"
+          @completar="navegarA(PANTALLAS.TRANSFORMACION)"
+          @salir="navegarA(PANTALLAS.MAPA)"
+        />
+
+        <!-- Pantalla: Transformación -->
+        <PantallaTransformacion
+          v-else-if="pantallaActual === PANTALLAS.TRANSFORMACION"
+          key="transformacion"
+          @continuar="navegarA(PANTALLAS.JUEGO)"
         />
 
         <!-- Pantalla: Juego activo -->
@@ -74,11 +89,13 @@ import EncabezadoApp from './components/layout/EncabezadoApp.vue'
 import PiePaginaApp from './components/layout/PiePaginaApp.vue'
 
 // --- Componentes de juego ---
-import PantallaInicio    from './components/game/PantallaInicio.vue'
-import CreadorIdentidad  from './components/game/CreadorIdentidad.vue'
-import MapaMisiones      from './components/game/MapaMisiones.vue'
-import PantallaJuego     from './components/game/PantallaJuego.vue'
-import PantallaResultado from './components/game/PantallaResultado.vue'
+import PantallaInicio            from './components/game/PantallaInicio.vue'
+import CreadorIdentidad          from './components/game/CreadorIdentidad.vue'
+import MapaMisiones              from './components/game/MapaMisiones.vue'
+import PantallaVidaUniversitaria from './components/game/PantallaVidaUniversitaria.vue'
+import PantallaTransformacion    from './components/game/PantallaTransformacion.vue'
+import PantallaJuego             from './components/game/PantallaJuego.vue'
+import PantallaResultado         from './components/game/PantallaResultado.vue'
 
 // --- Composables ---
 import { useEstadoJuego, PANTALLAS } from './composables/useEstadoJuego.js'

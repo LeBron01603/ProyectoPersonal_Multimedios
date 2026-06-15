@@ -145,6 +145,47 @@
 
       <!-- Contenido de las pestañas -->
       <div class="contenido-pestana-wrapper">
+        <!-- Pestaña: Perfil Dual -->
+        <div v-if="pestanaActiva === 'perfil'" class="contenido-pestana">
+          <div class="perfil-dual-grid">
+            <!-- Bloque Civil -->
+            <div class="bloque-identidad civil">
+              <span class="bloque-titulo">🎓 IDENTIDAD CIVIL</span>
+              <div class="bloque-detalles">
+                <p class="bloque-item"><strong>Nombre:</strong> {{ identidadHeroe.nombre }}</p>
+                <p class="bloque-item"><strong>Edad:</strong> {{ identidadHeroe.edad || '—' }} años</p>
+                <p class="bloque-item"><strong>Universidad:</strong> {{ identidadHeroe.universidad }}</p>
+                <p class="bloque-item"><strong>Carrera:</strong> {{ identidadHeroe.carrera }}</p>
+                <p class="bloque-item"><strong>Deporte:</strong> {{ identidadHeroe.deporte || 'Ninguno' }}</p>
+              </div>
+            </div>
+
+            <!-- Bloque Héroe -->
+            <div class="bloque-identidad heroico">
+              <span class="bloque-titulo">🦸 ALIAS HEROICO</span>
+              <div class="bloque-detalles">
+                <p class="bloque-item"><strong>Alias:</strong> {{ identidadHeroe.aliasHeroe || 'Sin alias' }}</p>
+                <p class="bloque-item"><strong>Nivel:</strong> {{ nivelHeroe }}</p>
+                <p class="bloque-item"><strong>Experiencia:</strong> {{ experienciaHeroe }} XP</p>
+                <p class="bloque-item"><strong>Reputación:</strong> {{ estadisticasHeroe.reputacionNocturna }}</p>
+                
+                <div class="progreso-sospecha-container">
+                  <span class="progreso-sospecha-label">
+                    <strong>Sospecha:</strong> {{ estadisticasHeroe.sospechaIdentidad }}%
+                  </span>
+                  <div class="pista-sospecha-mapa" title="Nivel de Sospecha Secreta">
+                    <div 
+                      class="relleno-sospecha-mapa" 
+                      :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }"
+                      :class="{ 'alerta-sospecha': estadisticasHeroe.sospechaIdentidad > 50 }"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Pestaña: Inventario -->
         <div v-if="pestanaActiva === 'inventario'" class="contenido-pestana">
           <div class="grid-elementos-progreso" v-if="inventarioHeroe.length > 0">
@@ -214,17 +255,33 @@
               
               <!-- Campo: Nombre -->
               <div class="form-group-edicion">
-                <label for="edit-nombre">Nombre de héroe</label>
+                <label for="edit-nombre">Nombre de estudiante</label>
                 <input
                   id="edit-nombre"
                   v-model="formularioEdicion.nombre"
                   type="text"
                   class="input-formulario-edicion"
-                  placeholder="ej: NocturnoCR"
+                  placeholder="ej: Emmanuel"
                   maxlength="30"
                   required
                 />
                 <span v-if="erroresEdicion.nombre" class="error-edicion">{{ erroresEdicion.nombre }}</span>
+              </div>
+
+              <!-- Campo: Edad -->
+              <div class="form-group-edicion">
+                <label for="edit-edad">Edad</label>
+                <input
+                  id="edit-edad"
+                  v-model="formularioEdicion.edad"
+                  type="number"
+                  class="input-formulario-edicion"
+                  placeholder="Rango 17 a 45"
+                  min="17"
+                  max="45"
+                  required
+                />
+                <span v-if="erroresEdicion.edad" class="error-edicion">{{ erroresEdicion.edad }}</span>
               </div>
 
               <!-- Campo: Universidad -->
@@ -286,6 +343,37 @@
                     <span class="nombre-p-edicion">{{ p.label }}</span>
                   </label>
                 </div>
+              </div>
+
+              <!-- Campo: Alias Heroico -->
+              <div class="form-group-edicion" :class="{ 'selector-activo': selectorAbiertoEdicion === 'aliasHeroe' }">
+                <label>Alias Heroico</label>
+                <SelectorPersonalizado
+                  v-model="formularioEdicion.aliasHeroe"
+                  :opciones="[
+                    { value: 'Centinela Tico', label: '🛡️ Centinela Tico' },
+                    { value: 'Guardián Nocturno', label: '⚔️ Guardián Nocturno' },
+                    { value: 'Sombra Universitaria', label: '👥 Sombra Universitaria' },
+                    { value: 'Viajero de la Noche', label: '🌙 Viajero de la Noche' },
+                    { value: 'Otro', label: '✨ Personalizar alias...' }
+                  ]"
+                  placeholder="Selecciona tu alias..."
+                  :esta-abierto="selectorAbiertoEdicion === 'aliasHeroe'"
+                  @abrir="selectorAbiertoEdicion = 'aliasHeroe'"
+                  @cerrar="selectorAbiertoEdicion = null"
+                />
+                <span v-if="erroresEdicion.aliasHeroe" class="error-edicion">{{ erroresEdicion.aliasHeroe }}</span>
+                
+                <input
+                  v-if="formularioEdicion.aliasHeroe === 'Otro'"
+                  id="edit-alias-personalizado"
+                  v-model="formularioEdicion.aliasPersonalizado"
+                  type="text"
+                  class="input-formulario-edicion"
+                  placeholder="Ingresa tu alias personalizado..."
+                  maxlength="20"
+                  style="margin-top: 10px;"
+                />
               </div>
 
               <!-- Acciones del Formulario -->
@@ -395,19 +483,24 @@ const provinciaSeleccionada = ref(null)
 const idProvinciaActiva     = ref(null)
 
 // Pestaña activa del progreso
-const pestanaActiva = ref('inventario')
+const pestanaActiva = ref('perfil')
 
 // Estado del modal de edición
 const mostrarModalEdicion = ref(false)
 const formularioEdicion = reactive({
-  nombre:       '',
-  universidad:  '',
-  carrera:      '',
-  deporte:      '',
-  personalidad: ''
+  nombre:             '',
+  edad:               '',
+  universidad:        '',
+  carrera:            '',
+  deporte:            '',
+  personalidad:       '',
+  aliasHeroe:         '',
+  aliasPersonalizado: ''
 })
 const erroresEdicion = reactive({
-  nombre: ''
+  nombre: '',
+  edad: '',
+  aliasHeroe: ''
 })
 
 // Estado para coordinar la apertura de selectores en la edición de perfil
@@ -415,6 +508,7 @@ const selectorAbiertoEdicion = ref(null)
 
 // --- Listado de pestañas ---
 const pestañas = [
+  { id: 'perfil',      icono: '👤', etiqueta: 'Perfil' },
   { id: 'inventario',  icono: '🎒', etiqueta: 'Mochila' },
   { id: 'coleccion',   icono: '🍹', etiqueta: 'Recuerdos' },
   { id: 'checkpoints', icono: '🚩', etiqueta: 'Hitos' },
@@ -480,12 +574,20 @@ const listaEstadisticasHeroe = computed(() => [
   { key: 'reputacionNocturna', etiqueta: 'Reputación',      valor: estadisticasHeroe.reputacionNocturna, icono: '🤝', color: 'cyan'   }
 ])
 
-const formularioEdicionValido = computed(() =>
-  formularioEdicion.nombre.trim().length >= 2 &&
-  formularioEdicion.universidad !== '' &&
-  formularioEdicion.carrera !== '' &&
-  formularioEdicion.personalidad !== ''
-)
+const formularioEdicionValido = computed(() => {
+  const edadNum = Number(formularioEdicion.edad)
+  const edadValida = !isNaN(edadNum) && edadNum >= 17 && edadNum <= 45
+  
+  const aliasValido = formularioEdicion.aliasHeroe !== '' && 
+    (formularioEdicion.aliasHeroe !== 'Otro' || formularioEdicion.aliasPersonalizado.trim().length >= 3)
+
+  return formularioEdicion.nombre.trim().length >= 2 &&
+    edadValida &&
+    formularioEdicion.universidad !== '' &&
+    formularioEdicion.carrera !== '' &&
+    formularioEdicion.personalidad !== '' &&
+    aliasValido
+})
 
 // =========================================================
 // Carga de misiones desde JSON
@@ -565,11 +667,25 @@ function obtenerContadorPestana(id) {
 function abrirEditarPerfil() {
   reproducirEfecto('click')
   formularioEdicion.nombre = identidadHeroe.nombre
+  formularioEdicion.edad = identidadHeroe.edad
   formularioEdicion.universidad = identidadHeroe.universidad
   formularioEdicion.carrera = identidadHeroe.carrera
   formularioEdicion.deporte = identidadHeroe.deporte
   formularioEdicion.personalidad = identidadHeroe.personalidad
+  
+  // Mapeamos el alias
+  const aliasOpciones = ['Centinela Tico', 'Guardián Nocturno', 'Sombra Universitaria', 'Viajero de la Noche']
+  if (aliasOpciones.includes(identidadHeroe.aliasHeroe)) {
+    formularioEdicion.aliasHeroe = identidadHeroe.aliasHeroe
+    formularioEdicion.aliasPersonalizado = ''
+  } else {
+    formularioEdicion.aliasHeroe = 'Otro'
+    formularioEdicion.aliasPersonalizado = identidadHeroe.aliasHeroe
+  }
+
   erroresEdicion.nombre = ''
+  erroresEdicion.edad = ''
+  erroresEdicion.aliasHeroe = ''
   selectorAbiertoEdicion.value = null
   mostrarModalEdicion.value = true
 }
@@ -581,12 +697,49 @@ function cerrarEditarPerfil() {
 }
 
 function guardarEdicion() {
+  erroresEdicion.nombre = ''
+  erroresEdicion.edad = ''
+  erroresEdicion.aliasHeroe = ''
+
+  let esValido = true
+
   if (formularioEdicion.nombre.trim().length < 2) {
     erroresEdicion.nombre = 'El nombre debe tener al menos 2 caracteres.'
-    return
+    esValido = false
   }
+
+  const edadNum = Number(formularioEdicion.edad)
+  if (formularioEdicion.edad === '' || isNaN(edadNum)) {
+    erroresEdicion.edad = 'La edad debe ser un número válido.'
+    esValido = false
+  } else if (edadNum < 17 || edadNum > 45) {
+    erroresEdicion.edad = 'La edad debe estar en el rango de 17 a 45 años.'
+    esValido = false
+  }
+
+  if (formularioEdicion.aliasHeroe === '') {
+    erroresEdicion.aliasHeroe = 'Debes seleccionar un alias heroico.'
+    esValido = false
+  } else if (formularioEdicion.aliasHeroe === 'Otro' && formularioEdicion.aliasPersonalizado.trim().length < 3) {
+    erroresEdicion.aliasHeroe = 'El alias personalizado debe tener al menos 3 caracteres.'
+    esValido = false
+  }
+
+  if (!esValido) return
+
   reproducirEfecto('subirNivel')
-  actualizarIdentidad({ ...formularioEdicion })
+  
+  const aliasFinal = formularioEdicion.aliasHeroe === 'Otro' ? formularioEdicion.aliasPersonalizado.trim() : formularioEdicion.aliasHeroe
+
+  actualizarIdentidad({
+    nombre: formularioEdicion.nombre.trim(),
+    edad: edadNum,
+    universidad: formularioEdicion.universidad,
+    carrera: formularioEdicion.carrera,
+    deporte: formularioEdicion.deporte,
+    personalidad: formularioEdicion.personalidad,
+    aliasHeroe: aliasFinal
+  })
   mostrarModalEdicion.value = false
 }
 
@@ -1170,5 +1323,105 @@ onMounted(async () => {
   font-weight: var(--font-bold);
   color: var(--color-text-primary);
   text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* --- Perfil Dual Tab CSS --- */
+.perfil-dual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  padding: var(--space-4);
+  text-align: left;
+}
+
+.bloque-identidad {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: all var(--transition-base);
+}
+
+.bloque-identidad.civil {
+  border-left: 3px solid var(--color-neon-blue);
+  background: linear-gradient(145deg, rgba(0, 200, 255, 0.02), transparent);
+}
+
+.bloque-identidad.heroico {
+  border-left: 3px solid var(--color-neon-purple);
+  background: linear-gradient(145deg, rgba(184, 79, 255, 0.02), transparent);
+}
+
+.bloque-titulo {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  letter-spacing: 0.06em;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bloque-identidad.civil .bloque-titulo { color: var(--color-neon-blue); }
+.bloque-identidad.heroico .bloque-titulo { color: var(--color-neon-purple); }
+
+.bloque-detalles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.bloque-item {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+.bloque-item strong {
+  color: var(--color-text-primary);
+}
+
+/* --- Progreso Sospecha --- */
+.progreso-sospecha-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: var(--space-3);
+}
+
+.progreso-sospecha-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.pista-sospecha-mapa {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.relleno-sospecha-mapa {
+  height: 100%;
+  background: var(--color-neon-blue);
+  box-shadow: 0 0 8px var(--color-neon-blue-glow);
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.relleno-sospecha-mapa.alerta-sospecha {
+  background: #ff4646;
+  box-shadow: 0 0 8px rgba(255, 70, 70, 0.6);
+}
+
+@media (max-width: 640px) {
+  .perfil-dual-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
 }
 </style>

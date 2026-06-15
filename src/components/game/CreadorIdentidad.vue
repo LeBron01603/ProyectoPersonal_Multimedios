@@ -15,22 +15,41 @@
       <!-- Formulario de identidad -->
       <form class="formulario-identidad" @submit.prevent="alConfirmar" novalidate>
 
-        <!-- Paso 1: Nombre del héroe -->
+        <!-- Paso 1: Nombre de estudiante (Civil) -->
         <div class="grupo-formulario animate-slide-left delay-100">
-          <label class="etiqueta-formulario" for="nombre-heroe">
-            ⚡ Nombre de héroe
+          <label class="etiqueta-formulario" for="nombre-civil">
+            👤 Nombre de estudiante
           </label>
           <input
-            id="nombre-heroe"
+            id="nombre-civil"
             v-model="formulario.nombre"
             type="text"
             class="input-formulario"
-            placeholder="ej: NocturnoCR, ElBicho404..."
+            placeholder="ej: Emmanuel, Valeria..."
             maxlength="30"
             autocomplete="off"
             :class="{ 'error-input': errores.nombre }"
           />
           <span v-if="errores.nombre" class="mensaje-error" role="alert">{{ errores.nombre }}</span>
+        </div>
+
+        <!-- Paso 1.5: Edad (Nuevo) -->
+        <div class="grupo-formulario animate-slide-left delay-150">
+          <label class="etiqueta-formulario" for="edad-civil">
+            🎂 Edad
+          </label>
+          <input
+            id="edad-civil"
+            v-model="formulario.edad"
+            type="number"
+            class="input-formulario"
+            placeholder="Rango 17 a 45 años"
+            min="17"
+            max="45"
+            autocomplete="off"
+            :class="{ 'error-input': errores.edad }"
+          />
+          <span v-if="errores.edad" class="mensaje-error" role="alert">{{ errores.edad }}</span>
         </div>
 
         <!-- Paso 2: Universidad -->
@@ -114,16 +133,59 @@
           </div>
         </div>
 
+        <!-- Paso 6: Alias Heroico (Nuevo) -->
+        <div class="grupo-formulario animate-slide-right delay-300" :class="{ 'selector-activo': selectorAbierto === 'aliasHeroe' }">
+          <label class="etiqueta-formulario">
+            🦸‍♂️ Alias Heroico
+          </label>
+          <SelectorPersonalizado
+            v-model="formulario.aliasHeroe"
+            :opciones="[
+              { value: 'Centinela Tico', label: '🛡️ Centinela Tico' },
+              { value: 'Guardián Nocturno', label: '⚔️ Guardián Nocturno' },
+              { value: 'Sombra Universitaria', label: '👥 Sombra Universitaria' },
+              { value: 'Viajero de la Noche', label: '🌙 Viajero de la Noche' },
+              { value: 'Otro', label: '✨ Personalizar alias...' }
+            ]"
+            placeholder="Selecciona tu alias..."
+            :esta-abierto="selectorAbierto === 'aliasHeroe'"
+            @abrir="selectorAbierto = 'aliasHeroe'"
+            @cerrar="selectorAbierto = null"
+          />
+          <span v-if="errores.aliasHeroe" class="mensaje-error" role="alert">{{ errores.aliasHeroe }}</span>
+          
+          <input
+            v-if="formulario.aliasHeroe === 'Otro'"
+            id="alias-personalizado"
+            v-model="formulario.aliasPersonalizado"
+            type="text"
+            class="input-formulario"
+            placeholder="Ingresa tu alias personalizado..."
+            maxlength="20"
+            style="margin-top: 10px;"
+          />
+        </div>
+
         <!-- Preview de identidad -->
         <div v-if="formularioParcialmenteLleno" class="preview-identidad animate-fade-in">
-          <p class="etiqueta-preview">Vista previa de tu héroe:</p>
-          <p class="nombre-preview">
-            {{ formulario.nombre || 'Sin nombre' }}
-            <span v-if="formulario.universidad" class="badge-preview">{{ formulario.universidad }}</span>
-          </p>
-          <p v-if="formulario.personalidad" class="personalidad-preview">
-            {{ personalidadActual?.emoji }} Estilo inicial: {{ personalidadActual?.label }}
-          </p>
+          <p class="etiqueta-preview">Vista previa de Identidades:</p>
+          <div class="preview-columnas">
+            <!-- Columna Civil -->
+            <div class="columna-preview">
+              <span class="preview-header-sub">🎓 IDENTIDAD CIVIL</span>
+              <p class="preview-item"><strong>Nombre:</strong> {{ formulario.nombre || '—' }}</p>
+              <p class="preview-item"><strong>Edad:</strong> {{ formulario.edad || '—' }}</p>
+              <p class="preview-item"><strong>Universidad:</strong> {{ formulario.universidad || '—' }}</p>
+              <p class="preview-item"><strong>Carrera:</strong> {{ formulario.carrera || '—' }}</p>
+            </div>
+            <!-- Columna Héroe -->
+            <div class="columna-preview">
+              <span class="preview-header-sub">🦸 ALIAS HEROICO</span>
+              <p class="preview-item"><strong>Nombre héroe:</strong> {{ formulario.aliasHeroe === 'Otro' ? (formulario.aliasPersonalizado || 'Otro alias') : (formulario.aliasHeroe || '—') }}</p>
+              <p class="preview-item"><strong>Nivel:</strong> 1 (Novato)</p>
+              <p class="preview-item"><strong>Reputación:</strong> 50</p>
+            </div>
+          </div>
         </div>
 
         <!-- Botones de acción -->
@@ -172,16 +234,21 @@ const selectorAbierto = ref(null) // Puede ser 'universidad', 'carrera', 'deport
 
 // --- Estado del formulario (reactive para objeto) ---
 const formulario = reactive({
-  nombre:       '',
-  universidad:  '',
-  carrera:      '',
-  deporte:      '',
-  personalidad: ''
+  nombre:             '',
+  edad:               '',
+  universidad:        '',
+  carrera:            '',
+  deporte:            '',
+  personalidad:       '',
+  aliasHeroe:         '',
+  aliasPersonalizado: ''
 })
 
 // --- Errores de validación (reactive) ---
 const errores = reactive({
-  nombre: ''
+  nombre: '',
+  edad: '',
+  aliasHeroe: ''
 })
 
 // --- Datos de opciones ---
@@ -262,15 +329,23 @@ const personalidades = [
 ]
 
 // --- Computed: validaciones ---
-const formularioValido = computed(() =>
-  formulario.nombre.trim().length >= 2 &&
-  formulario.universidad !== '' &&
-  formulario.carrera !== '' &&
-  formulario.personalidad !== ''
-)
+const formularioValido = computed(() => {
+  const edadNum = Number(formulario.edad)
+  const edadValida = !isNaN(edadNum) && edadNum >= 17 && edadNum <= 45
+  
+  const aliasValido = formulario.aliasHeroe !== '' && 
+    (formulario.aliasHeroe !== 'Otro' || formulario.aliasPersonalizado.trim().length >= 3)
+
+  return formulario.nombre.trim().length >= 2 &&
+    edadValida &&
+    formulario.universidad !== '' &&
+    formulario.carrera !== '' &&
+    formulario.personalidad !== '' &&
+    aliasValido
+})
 
 const formularioParcialmenteLleno = computed(() =>
-  formulario.nombre.trim() !== '' || formulario.universidad !== ''
+  formulario.nombre.trim() !== '' || formulario.edad !== '' || formulario.universidad !== ''
 )
 
 const personalidadActual = computed(() =>
@@ -280,18 +355,52 @@ const personalidadActual = computed(() =>
 // --- Función de validación ---
 function validar() {
   errores.nombre = ''
+  errores.edad = ''
+  errores.aliasHeroe = ''
+
+  let esValido = true
+
   if (formulario.nombre.trim().length < 2) {
     errores.nombre = 'El nombre debe tener al menos 2 caracteres.'
-    return false
+    esValido = false
   }
-  return true
+
+  const edadNum = Number(formulario.edad)
+  if (formulario.edad === '' || isNaN(edadNum)) {
+    errores.edad = 'La edad debe ser un número válido.'
+    esValido = false
+  } else if (edadNum < 17 || edadNum > 45) {
+    errores.edad = 'La edad debe estar en el rango permitido de 17 a 45 años.'
+    esValido = false
+  }
+
+  if (formulario.aliasHeroe === '') {
+    errores.aliasHeroe = 'Debes seleccionar un alias heroico.'
+    esValido = false
+  } else if (formulario.aliasHeroe === 'Otro' && formulario.aliasPersonalizado.trim().length < 3) {
+    errores.aliasHeroe = 'El alias personalizado debe tener al menos 3 caracteres.'
+    esValido = false
+  }
+
+  return esValido
 }
 
 // --- Confirmar identidad: emitir datos al padre ---
 function alConfirmar() {
   if (!validar() || !formularioValido.value) return
   reproducirEfecto('subirNivel')
-  emit('confirmar', { ...formulario })
+  
+  const aliasFinal = formulario.aliasHeroe === 'Otro' ? formulario.aliasPersonalizado.trim() : formulario.aliasHeroe
+  
+  emit('confirmar', {
+    nombre: formulario.nombre.trim(),
+    edad: Number(formulario.edad),
+    universidad: formulario.universidad,
+    carrera: formulario.carrera,
+    deporte: formulario.deporte,
+    personalidad: formulario.personalidad,
+    aliasHeroe: aliasFinal
+  })
 }
 </script>
 
@@ -488,11 +597,11 @@ function alConfirmar() {
 
 /* --- Preview --- */
 .preview-identidad {
-  background: rgba(0, 200, 255, 0.06);
+  background: rgba(0, 200, 255, 0.04);
   border: 1px solid rgba(0, 200, 255, 0.2);
   border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  text-align: center;
+  padding: var(--space-4) var(--space-6);
+  text-align: left;
 }
 
 .etiqueta-preview {
@@ -500,35 +609,51 @@ function alConfirmar() {
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--space-4);
+  text-align: center;
+  font-weight: var(--font-bold);
 }
 
-.nombre-preview {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
+.preview-columnas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+}
+
+.columna-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: rgba(255, 255, 255, 0.01);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.preview-header-sub {
+  font-size: var(--text-xs);
   font-weight: var(--font-bold);
   color: var(--color-neon-blue);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(0, 200, 255, 0.15);
+  padding-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
-.badge-preview {
+.preview-item {
   font-size: var(--text-xs);
-  background: rgba(0, 200, 255, 0.15);
-  color: var(--color-neon-blue);
-  border: 1px solid rgba(0, 200, 255, 0.3);
-  border-radius: var(--radius-full);
-  padding: 2px var(--space-2);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+.preview-item strong {
+  color: var(--color-text-primary);
 }
 
-.personalidad-preview {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  margin: var(--space-2) 0 0;
+@media (max-width: 480px) {
+  .preview-columnas {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
 }
 
 /* --- Acciones --- */
