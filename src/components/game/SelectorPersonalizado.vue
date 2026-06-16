@@ -58,6 +58,9 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useAudio } from '../../composables/useAudio.js'
+
+const { reproducirEfecto } = useAudio()
 
 // --- Props ---
 const props = defineProps({
@@ -132,6 +135,7 @@ function seleccionarOpcion(opcion) {
   emit('update:modelValue', opcion.value)
   emit('cambio', opcion.value)
   emit('cerrar')
+  reproducirEfecto('boton')
 }
 
 // --- Manejo del teclado (A11y) ---

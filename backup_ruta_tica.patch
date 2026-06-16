@@ -1,0 +1,3136 @@
+diff --git a/REFERENCIAS.md b/REFERENCIAS.md
+index 6b4ed85..9cd5542 100644
+--- a/REFERENCIAS.md
++++ b/REFERENCIAS.md
+@@ -45,19 +45,45 @@
+ 
+ ## 4. Recursos multimedia usados
+ 
+-> _Pendiente de completar. Se actualizará conforme se agreguen imágenes y audio._
+-
+-### Imágenes
+-
+-| Recurso | Fuente | Licencia | URL |
+-|---------|--------|----------|-----|
+-| — | — | — | — |
+-
+-### Audio / Música
+-
+-| Recurso | Artista | Fuente | Licencia | URL |
+-|---------|---------|--------|----------|-----|
+-| — | — | — | — | — |
++### Mapas (Vectores SVG)
++
++| Recurso | Creador / Fuente | Licencia | URL | Modificaciones / Notas |
++|---------|------------------|----------|-----|-------------------------|
++| `mapa-costa-rica.svg` (Principal) | Pareto Software, LLC (Simplemaps.com) | Licencia: Simplemaps Free SVG Map License
++URL: https://simplemaps.com/resources/svg-license | Redimensionado a viewBox `0 0 1000 1000` y mapeo de IDs a provincias para interacción Vue. |
++| `mapa-costarica.svg` (Respaldo) | MapSVG (mapsvg.com) | Licencia: Según términos de uso de MapSVG
++URL: https://mapsvg.com| http://mapsvg.com | Incluye el contorno de la Laguna de Arenal. |
++
++### Audio / Música (BGM)
++
++Todas las pistas de música de fondo son de uso libre y seguro para la web. Se ha optimizado la tasa de bits (bitrate) para mantener archivos menores a 1MB y acelerar la carga web.
++
++| Recurso (Destino) | Nombre Original | Artista | Licencia | Fuente / URL |
++|-------------------|-----------------|---------|----------|--------------|
++| `bgm_menu.mp3` | `bgm_menu.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_campus.mp3` | `bgm_action_3.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_amanecer.mp3` | `bgm_action_5.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_transformacion.mp3` | `bgm_action_1.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_mapa.mp3` | `bgm_action_4.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_juego.mp3` | `bgm_action_2.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_desafio.mp3` | `bgm_action_1.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_victoria.mp3` | `bgm_menu.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++| `bgm_derrota.mp3` | `bgm_action_5.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
++
++**Atribución completa requerida (CC-BY 3.0):**
++Música de fondo por CodeManu (https://www.codemanu.com/) obtenida desde OpenGameArt (https://opengameart.org/content/8-bit-music-pack-loopable). Licencia de uso: Creative Commons Attribution 3.0 Unported.
++
++### Efectos de Sonido (SFX)
++
++Efectos de sonido ultralivianos (menores a 100KB) para reproducción con baja latencia.
++
++| Recurso (Destino) | Nombre Original | Artista | Licencia | Fuente / URL |
++|-------------------|-----------------|---------|----------|--------------|
++| `sfx_acierto.mp3` | `success_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
++| `sfx_error.mp3` | `bell1_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
++| `sfx_checkpoint.mp3` | `coin1_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
++| `sfx_logro.mp3` | `coin2_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
++| `sfx_boton.mp3` | `button_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
+ 
+ ### Fuentes tipográficas
+ 
+@@ -75,7 +101,16 @@
+ 
+ | Herramienta | Uso | Fecha | Descripción |
+ |------------|-----|-------|-------------|
+-| Antigravity (Google DeepMind) | Generación de estructura base del proyecto | 2026-06 | Creación inicial de componentes, composables, estilos y documentación de la Fase 1 del proyecto bajo la dirección y revisión del estudiante. |
++|Herramientas de IA utilizadas:
++- Antigravity (Google DeepMind)
++- ChatGPT (OpenAI)
++
++Uso:
++- Apoyo en diseño de arquitectura.
++- Revisión de flujo de juego.
++- Generación de documentación.
++- Propuestas de mejoras UX/UI.
++- Asistencia en depuración y planificación. | Generación de estructura base del proyecto | 2026-06 | Creación inicial de componentes, composables, estilos y documentación de la Fase 1 del proyecto bajo la dirección y revisión del estudiante. |
+ 
+ **Nota:** El uso de IA fue supervisado y revisado en todo momento. El estudiante comprende y puede explicar todo el código generado.
+ 
+diff --git a/src/App.vue b/src/App.vue
+index 6be3f5b..877279c 100644
+--- a/src/App.vue
++++ b/src/App.vue
+@@ -12,81 +12,65 @@
+     <!-- Área principal de contenido -->
+     <!-- transition: animación entre cambios de pantalla -->
+     <main class="game-main">
+-      <transition name="screen-transition">
+-
+-        <!-- Pantalla: Inicio -->
++      <transition name="screen-transition" mode="out-in" type="transition">
+         <PantallaInicio
+           v-if="pantallaActual === PANTALLAS.INICIO"
+           key="inicio"
+           @iniciar="navegarA(PANTALLAS.IDENTIDAD)"
+         />
+-
+-        <!-- Pantalla: Creador de identidad -->
+         <CreadorIdentidad
+           v-else-if="pantallaActual === PANTALLAS.IDENTIDAD"
+           key="identidad"
+           @confirmar="alConfirmarIdentidad"
+           @volver="navegarA(PANTALLAS.INICIO)"
+         />
+-
+-        <!-- Pantalla: Mapa de misiones -->
+         <MapaMisiones
+           v-else-if="pantallaActual === PANTALLAS.MAPA"
+           key="mapa"
+           @iniciar-mision="navegarA(PANTALLAS.VUELO)"
+         />
+-
+-        <!-- Pantalla: Vuelo Nocturno -->
+         <PantallaVuelo
+           v-else-if="pantallaActual === PANTALLAS.VUELO"
+           key="vuelo"
+           @completar="navegarA(PANTALLAS.JUEGO)"
+         />
+-
+-        <!-- Pantalla: Vida Universitaria -->
+         <PantallaVidaUniversitaria
+           v-else-if="pantallaActual === PANTALLAS.ACTIVIDADES"
+           key="actividades"
+           @completar="navegarA(PANTALLAS.TRANSICION_NOCHE)"
+           @salir="navegarA(PANTALLAS.MAPA)"
+         />
+-
+-        <!-- Pantalla: Transición horaria cinemática -->
+         <PantallaTransicionNoche
+           v-else-if="pantallaActual === PANTALLAS.TRANSICION_NOCHE"
+           key="transicion_noche"
+           @continuar="navegarA(PANTALLAS.TRANSFORMACION)"
+         />
+-
+-        <!-- Pantalla: Transformación -->
+         <PantallaTransformacion
+           v-else-if="pantallaActual === PANTALLAS.TRANSFORMACION"
+           key="transformacion"
+           @continuar="navegarA(PANTALLAS.MAPA)"
+         />
+-
+-        <!-- Pantalla: Juego activo -->
+         <PantallaJuego
+           v-else-if="pantallaActual === PANTALLAS.JUEGO"
+           key="juego"
+           @salir="navegarA(PANTALLAS.MAPA)"
+           @completar="navegarA(PANTALLAS.RESULTADO)"
+         />
+-
+-        <!-- Pantalla: Resultados -->
+         <PantallaResultado
+           v-else-if="pantallaActual === PANTALLAS.RESULTADO"
+           key="resultado"
+           @volver-al-campus="navegarA(PANTALLAS.NUEVO_DIA)"
+         />
+-
+-        <!-- Pantalla: Nuevo Día -->
+         <PantallaNuevoDia
+           v-else-if="pantallaActual === PANTALLAS.NUEVO_DIA"
+           key="nuevo_dia"
+           @comenzar="navegarA(PANTALLAS.ACTIVIDADES)"
+         />
+-
++        <PantallaInicio
++          v-else
++          key="inicio-fallback"
++          @iniciar="navegarA(PANTALLAS.IDENTIDAD)"
++        />
+       </transition>
+     </main>
+ 
+@@ -162,13 +146,16 @@ onMounted(() => {
+ }
+ 
+ /* --- Transición entre pantallas --- */
+-.screen-transition-enter-active {
+-  animation: fadeInScale 0.35s ease both;
+-}
++.screen-transition-enter-active,
+ .screen-transition-leave-active {
+-  transition: opacity 0.2s ease;
++  transition: opacity 300ms ease, transform 300ms ease;
++}
++.screen-transition-enter-from {
++  opacity: 0;
++  transform: scale(0.97);
+ }
+ .screen-transition-leave-to {
+   opacity: 0;
++  transform: scale(1.03);
+ }
+ </style>
+diff --git a/src/components/game/CentroHeroe.vue b/src/components/game/CentroHeroe.vue
+index c44ceba..2837902 100644
+--- a/src/components/game/CentroHeroe.vue
++++ b/src/components/game/CentroHeroe.vue
+@@ -23,7 +23,7 @@
+                 :key="tab.id"
+                 class="tab-btn"
+                 :class="{ activo: tabActiva === tab.id }"
+-                @click="tabActiva = tab.id"
++                @click="tabActiva = tab.id; reproducirEfecto('boton')"
+               >
+                 <span class="tab-icono">{{ tab.icono }}</span>
+                 <span class="tab-etiqueta">{{ tab.label }}</span>
+@@ -89,6 +89,16 @@
+                     </div>
+                   </div>
+ 
++                  <!-- Bloque Resumen de Último Patrullaje -->
++                  <div class="tarjeta-info mision-reciente">
++                    <h3>⚡ Último Patrullaje Registrado</h3>
++                    <div class="detalles-info grid-mision-reciente">
++                      <p><strong>Misión patrullada:</strong> {{ ultimaMisionNombre || 'Ninguna' }}</p>
++                      <p><strong>Resultado obtenido:</strong> {{ ultimaMisionResultado || 'Sin registrar' }}</p>
++                      <p><strong>Recompensa desbloqueada:</strong> {{ ultimaRecompensa || 'Ninguna' }}</p>
++                    </div>
++                  </div>
++
+                   <button class="btn btn-outline btn-editar-perfil-centro" @click="activarModoEdicion">
+                     ✏️ Modificar Identidad
+                   </button>
+@@ -308,6 +318,78 @@
+                 </div>
+               </div>
+ 
++              <!-- ================= PESTAÑA: AUDIO ================= -->
++              <div v-if="tabActiva === 'audio'" class="seccion-audio animate-fade-in">
++                <div class="audio-config-card">
++                  <p class="audio-intro">Personaliza el ambiente sonoro de tu patrullaje y vida universitaria:</p>
++
++                  <div class="control-grupo-audio">
++                    <!-- Configuración Música -->
++                    <div class="control-columna-audio">
++                      <div class="control-fila">
++                        <div class="control-info">
++                          <span class="control-icono">🎵</span>
++                          <div class="control-texto">
++                            <label class="control-label">Música de fondo</label>
++                            <span class="control-subtexto">Banda sonora (Nivel: {{ Math.round(volumenMusica * 100) }}%)</span>
++                          </div>
++                        </div>
++                        <label class="switch-neon">
++                          <input type="checkbox" v-model="musicaHabilitada" @change="alCambiarMusica">
++                          <span class="slider-neon"></span>
++                        </label>
++                      </div>
++                      <div class="slider-contenedor-neon" :class="{ 'deshabilitado-opaco': !musicaHabilitada }">
++                        <input
++                          type="range"
++                          min="0"
++                          max="1"
++                          step="0.05"
++                          v-model.number="volumenMusica"
++                          @input="alCambiarVolumenMusica"
++                          class="rango-neon"
++                          aria-label="Volumen de música"
++                          :disabled="!musicaHabilitada"
++                        >
++                        <div class="barra-progreso-rango" :style="{ width: (volumenMusica * 100) + '%' }"></div>
++                      </div>
++                    </div>
++
++                    <!-- Configuración Efectos -->
++                    <div class="control-columna-audio">
++                      <div class="control-fila">
++                        <div class="control-info">
++                          <span class="control-icono">⚡</span>
++                          <div class="control-texto">
++                            <label class="control-label">Efectos de sonido</label>
++                            <span class="control-subtexto">SFX y botones (Nivel: {{ Math.round(volumenEfectos * 100) }}%)</span>
++                          </div>
++                        </div>
++                        <label class="switch-neon">
++                          <input type="checkbox" v-model="efectosHabilitados" @change="alCambiarEfectos">
++                          <span class="slider-neon"></span>
++                        </label>
++                      </div>
++                      <div class="slider-contenedor-neon" :class="{ 'deshabilitado-opaco': !efectosHabilitados }">
++                        <input
++                          type="range"
++                          min="0"
++                          max="1"
++                          step="0.05"
++                          v-model.number="volumenEfectos"
++                          @input="alCambiarVolumenEfectos"
++                          @change="reproducirEfecto('boton')"
++                          class="rango-neon"
++                          aria-label="Volumen de efectos"
++                          :disabled="!efectosHabilitados"
++                        >
++                        <div class="barra-progreso-rango" :style="{ width: (volumenEfectos * 100) + '%' }"></div>
++                      </div>
++                    </div>
++                  </div>
++                </div>
++              </div>
++
+             </div>
+ 
+           </div>
+@@ -362,7 +444,10 @@ const {
+   cargarProgreso,
+   borrarProgreso,
+   hayProgresoGuardado,
+-  tituloFinal
++  tituloFinal,
++  ultimaMisionNombre,
++  ultimaMisionResultado,
++  ultimaRecompensa
+ } = useEstadoJuego()
+ 
+ const sospechaRangoInfo = computed(() => {
+@@ -388,7 +473,17 @@ function nombreSedeLegible(uni, value) {
+   return found ? found.label : value
+ }
+ 
+-const { reproducirEfecto } = useAudio()
++const {
++  musicaHabilitada,
++  efectosHabilitados,
++  volumenMusica,
++  volumenEfectos,
++  establecerMusicaHabilitada,
++  establecerEfectosHabilitados,
++  establecerVolumenMusica,
++  establecerVolumenEfectos,
++  reproducirEfecto
++} = useAudio()
+ 
+ // --- Estado local ---
+ const tabActiva = ref('perfil')
+@@ -398,10 +493,29 @@ const mensajeFeedback = ref('')
+ const feedbackExitoso = ref(true)
+ const mostrarConfirmarBorrar = ref(false)
+ 
++function alCambiarMusica() {
++  establecerMusicaHabilitada(musicaHabilitada.value)
++  reproducirEfecto('boton')
++}
++
++function alCambiarEfectos() {
++  establecerEfectosHabilitados(efectosHabilitados.value)
++  reproducirEfecto('boton')
++}
++
++function alCambiarVolumenMusica() {
++  establecerVolumenMusica(volumenMusica.value)
++}
++
++function alCambiarVolumenEfectos() {
++  establecerVolumenEfectos(volumenEfectos.value)
++}
++
+ const tabs = [
+   { id: 'perfil', icono: '👤', label: 'Perfil' },
+   { id: 'progreso', icono: '🚩', label: 'Progreso' },
+   { id: 'mochila', icono: '🎒', label: 'Mochila' },
++  { id: 'audio', icono: '🔊', label: 'Audio' },
+   { id: 'opciones', icono: '⚙️', label: 'Guardado' }
+ ]
+ 
+@@ -647,6 +761,7 @@ function cerrar() {
+   flex-direction: column;
+   gap: var(--space-5);
+   color: var(--color-text-primary);
++  overflow: hidden;
+ }
+ 
+ .btn-cerrar-modal {
+@@ -727,18 +842,28 @@ function cerrar() {
+ /* --- Contenido --- */
+ .contenido-tab {
+   flex: 1;
+-  overflow-y: auto;
++  display: flex;
++  flex-direction: column;
+   min-height: 280px;
+-  max-height: 50vh;
+-  padding-right: var(--space-2);
++  overflow: hidden;
+ }
+ 
+ /* --- Pestaña: Perfil --- */
++.seccion-perfil {
++  display: flex;
++  flex-direction: column;
++  flex: 1;
++  overflow: hidden;
++}
++
+ .perfil-info-grid {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: var(--space-4);
+   margin-bottom: var(--space-4);
++  flex: 1;
++  overflow-y: auto;
++  padding-right: var(--space-2);
+ }
+ 
+ .tarjeta-info {
+@@ -781,6 +906,25 @@ function cerrar() {
+   line-height: 1.4;
+ }
+ 
++.tarjeta-info.mision-reciente {
++  grid-column: span 2;
++  border: 1px solid rgba(255, 215, 0, 0.2);
++  background: rgba(255, 215, 0, 0.02);
++  box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.03);
++}
++
++.tarjeta-info.mision-reciente h3 {
++  color: var(--color-neon-gold) !important;
++  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
++  padding-bottom: var(--space-2);
++}
++
++.grid-mision-reciente {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
++  gap: var(--space-2);
++}
++
+ .progreso-sospecha {
+   display: flex;
+   flex-direction: column;
+@@ -882,15 +1026,18 @@ function cerrar() {
+   flex-direction: column;
+   gap: var(--space-4);
+   text-align: left;
++  flex: 1;
++  overflow: hidden;
+ }
+ 
+ .form-scroll {
+-  max-height: 38vh;
++  flex: 1;
+   overflow-y: auto;
+   padding-right: var(--space-2);
+   display: flex;
+   flex-direction: column;
+   gap: var(--space-4);
++  padding-bottom: var(--space-12);
+ }
+ 
+ .form-group-edicion {
+@@ -943,6 +1090,11 @@ function cerrar() {
+   justify-content: flex-end;
+   border-top: 1px solid var(--color-border);
+   padding-top: var(--space-4);
++  position: sticky;
++  bottom: 0;
++  background: #0d091a;
++  z-index: 10;
++  margin-top: auto;
+ }
+ 
+ /* --- Pestaña: Progreso --- */
+@@ -952,6 +1104,9 @@ function cerrar() {
+   flex-direction: column;
+   gap: var(--space-6);
+   text-align: left;
++  flex: 1;
++  overflow-y: auto;
++  padding-right: var(--space-2);
+ }
+ 
+ .progreso-provincias-ruta h4,
+@@ -1079,6 +1234,9 @@ function cerrar() {
+   max-width: 360px;
+   margin-inline: auto;
+   padding-block: var(--space-4);
++  flex: 1;
++  overflow-y: auto;
++  padding-right: var(--space-2);
+ }
+ 
+ .opciones-intro {
+@@ -1137,6 +1295,209 @@ function cerrar() {
+   color: #ff4646;
+ }
+ 
++/* --- Pestaña: Audio --- */
++.seccion-audio {
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-4);
++  flex: 1;
++  overflow-y: auto;
++  padding-right: var(--space-2);
++}
++
++.audio-config-card {
++  background: rgba(255, 255, 255, 0.02);
++  border: 1px solid rgba(255, 255, 255, 0.08);
++  border-radius: var(--radius-lg);
++  padding: var(--space-5);
++  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-4);
++}
++
++.audio-intro {
++  font-size: var(--text-sm);
++  color: var(--color-text-secondary);
++  margin: 0 0 var(--space-2) 0;
++  line-height: 1.4;
++  text-align: left;
++}
++
++.control-grupo-audio {
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-5);
++}
++
++.control-fila {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  padding-bottom: var(--space-4);
++  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
++}
++
++.control-columna {
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-3);
++  padding-bottom: var(--space-2);
++}
++
++.control-info {
++  display: flex;
++  align-items: center;
++  gap: var(--space-3);
++  text-align: left;
++}
++
++.control-icono {
++  font-size: 1.5rem;
++  line-height: 1;
++}
++
++.control-texto {
++  display: flex;
++  flex-direction: column;
++}
++
++.control-label {
++  font-family: var(--font-display);
++  font-size: var(--text-sm);
++  font-weight: var(--font-bold);
++  color: var(--color-text-primary);
++  margin: 0;
++}
++
++.control-subtexto {
++  font-size: 0.75rem;
++  color: var(--color-text-secondary);
++}
++
++/* Switches Neón */
++.switch-neon {
++  position: relative;
++  display: inline-block;
++  width: 50px;
++  height: 26px;
++  flex-shrink: 0;
++}
++
++.switch-neon input {
++  opacity: 0;
++  width: 0;
++  height: 0;
++}
++
++.slider-neon {
++  position: absolute;
++  cursor: pointer;
++  top: 0;
++  left: 0;
++  right: 0;
++  bottom: 0;
++  background-color: rgba(255, 255, 255, 0.1);
++  border: 1px solid rgba(255, 255, 255, 0.2);
++  transition: .4s;
++  border-radius: 34px;
++}
++
++.slider-neon:before {
++  position: absolute;
++  content: "";
++  height: 18px;
++  width: 18px;
++  left: 3px;
++  bottom: 3px;
++  background-color: var(--color-text-secondary);
++  transition: .4s;
++  border-radius: 50%;
++}
++
++.switch-neon input:checked + .slider-neon {
++  border-color: var(--color-neon-purple);
++  box-shadow: 0 0 8px var(--color-neon-purple);
++}
++
++.switch-neon input:checked + .slider-neon:before {
++  transform: translateX(24px);
++  background-color: var(--color-neon-purple);
++  box-shadow: 0 0 6px var(--color-neon-purple);
++}
++
++/* Sliders de Volumen Neón */
++.slider-contenedor-neon {
++  position: relative;
++  width: 100%;
++  display: flex;
++  align-items: center;
++}
++
++.deshabilitado-opaco {
++  opacity: 0.35;
++  pointer-events: none;
++  transition: opacity 0.3s ease;
++}
++
++.rango-neon {
++  -webkit-appearance: none;
++  appearance: none;
++  width: 100%;
++  height: 8px;
++  border-radius: var(--radius-sm);
++  background: rgba(255, 255, 255, 0.1);
++  outline: none;
++  border: 1px solid rgba(255, 255, 255, 0.2);
++  margin: 0;
++  position: relative;
++  z-index: 2;
++  cursor: pointer;
++}
++
++.rango-neon::-webkit-slider-thumb {
++  -webkit-appearance: none;
++  appearance: none;
++  width: 18px;
++  height: 18px;
++  border-radius: 50%;
++  background: var(--color-neon-blue);
++  border: 2px solid #fff;
++  cursor: pointer;
++  box-shadow: 0 0 8px var(--color-neon-blue);
++  transition: transform 0.1s ease;
++}
++
++.rango-neon::-webkit-slider-thumb:hover {
++  transform: scale(1.2);
++}
++
++.rango-neon::-moz-range-thumb {
++  width: 18px;
++  height: 18px;
++  border-radius: 50%;
++  background: var(--color-neon-blue);
++  border: 2px solid #fff;
++  cursor: pointer;
++  box-shadow: 0 0 8px var(--color-neon-blue);
++  transition: transform 0.1s ease;
++}
++
++.rango-neon::-moz-range-thumb:hover {
++  transform: scale(1.2);
++}
++
++.barra-progreso-rango {
++  position: absolute;
++  left: 0;
++  height: 8px;
++  background: var(--color-neon-blue);
++  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
++  z-index: 1;
++  pointer-events: none;
++  box-shadow: 0 0 6px var(--color-neon-blue);
++}
++
+ /* --- Responsive --- */
+ @media (max-width: 640px) {
+   .modal-card-centro {
+diff --git a/src/components/game/CreadorIdentidad.vue b/src/components/game/CreadorIdentidad.vue
+index 8eee96b..a6f4dc0 100644
+--- a/src/components/game/CreadorIdentidad.vue
++++ b/src/components/game/CreadorIdentidad.vue
+@@ -312,6 +312,12 @@ watch(() => formulario.universidad, (nuevaU) => {
+   }
+ })
+ 
++watch(() => formulario.personalidad, (nuevaP) => {
++  if (nuevaP) {
++    reproducirEfecto('boton')
++  }
++})
++
+ const deportes = [
+   { value: 'Futbol',    label: '⚽ Fútbol' },
+   { value: 'Natacion',  label: '🏊 Natación' },
+diff --git a/src/components/game/MapaCostaRica.vue b/src/components/game/MapaCostaRica.vue
+index 19f471c..75b85fb 100644
+--- a/src/components/game/MapaCostaRica.vue
++++ b/src/components/game/MapaCostaRica.vue
+@@ -1,36 +1,15 @@
+ <template>
+-  <!-- MapaCostaRica: mapa interactivo vectorial de Costa Rica (SVG) -->
+-  <div class="mapa-costa-rica-container">
++  <!-- MapaCostaRica: mapa interactivo vectorial real de Costa Rica (SVG) -->
++  <div class="mapa-costa-rica-container" @mousemove="onMouseMove">
+     <svg 
+-      viewBox="0 0 600 450" 
++      viewBox="280 40 600 800" 
+       class="svg-mapa-cr"
+       aria-label="Mapa interactivo de Costa Rica"
+     >
+       <!-- Definición de filtros de brillo neón -->
+       <defs>
+-        <filter id="neon-glow-green" x="-20%" y="-20%" width="140%" height="140%">
+-          <feGaussianBlur stdDeviation="6" result="blur" />
+-          <feMerge>
+-            <feMergeNode in="blur" />
+-            <feMergeNode in="SourceGraphic" />
+-          </feMerge>
+-        </filter>
+-        <filter id="neon-glow-purple" x="-20%" y="-20%" width="140%" height="140%">
+-          <feGaussianBlur stdDeviation="6" result="blur" />
+-          <feMerge>
+-            <feMergeNode in="blur" />
+-            <feMergeNode in="SourceGraphic" />
+-          </feMerge>
+-        </filter>
+-        <filter id="neon-glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+-          <feGaussianBlur stdDeviation="6" result="blur" />
+-          <feMerge>
+-            <feMergeNode in="blur" />
+-            <feMergeNode in="SourceGraphic" />
+-          </feMerge>
+-        </filter>
+-        <filter id="neon-glow-gold" x="-20%" y="-20%" width="140%" height="140%">
+-          <feGaussianBlur stdDeviation="6" result="blur" />
++        <filter id="neon-glow-map" x="-30%" y="-30%" width="160%" height="160%">
++          <feGaussianBlur stdDeviation="8" result="blur" />
+           <feMerge>
+             <feMergeNode in="blur" />
+             <feMergeNode in="SourceGraphic" />
+@@ -38,7 +17,33 @@
+         </filter>
+       </defs>
+ 
+-      <!-- Líneas de Conexión (Ruta del Héroe) -->
++      <!-- 1. CAPA: Formas Geográficas de las Provincias (SVG Real de Costa Rica) -->
++      <g id="capa-provincias">
++        <path 
++          v-for="prov in PROVINCIAS_GEOMETRY"
++          :key="prov.id"
++          :d="prov.d"
++          fill-rule="evenodd"
++          class="provincia-path"
++          :class="{ 
++            'bloqueada': !estadoMap[prov.id]?.desbloqueada, 
++            'disponible': estadoMap[prov.id]?.desbloqueada && !estadoMap[prov.id]?.completada,
++            'completada': estadoMap[prov.id]?.completada, 
++            'seleccionada': provinciaSeleccionada?.id === prov.id,
++            'recomendada': estadoMap[prov.id]?.recomendada,
++            'pulse-path-unlock': animacionUnlock.activa && animacionUnlock.fase === 2 && animacionUnlock.targetId === prov.id
++          }"
++          :style="{ 
++            '--neon-color': COLORES[prov.id]?.hex || '#00ff88', 
++            '--neon-color-rgb': COLORES[prov.id]?.rgb || '0, 255, 136' 
++          }"
++          @click="seleccionarNodo(estadoMap[prov.id], $event)"
++          @mouseenter="onMouseEnterProvincia(prov.id)"
++          @mouseleave="onMouseLeaveProvincia"
++        />
++      </g>
++
++      <!-- 2. CAPA: Líneas de Conexión (Ruta del Héroe conectando los centros) -->
+       <g class="rutas-conexiones" stroke-linecap="round">
+         <line 
+           v-for="(link, i) in enlacesRuta" 
+@@ -54,9 +59,18 @@
+             'pulsa': link.activo 
+           }"
+         />
++        <!-- Línea animada de desbloqueo temporal -->
++        <line 
++          v-if="animacionUnlock.activa"
++          :x1="animacionUnlock.x1"
++          :y1="animacionUnlock.y1"
++          :x2="animacionUnlock.x2"
++          :y2="animacionUnlock.y2"
++          class="linea-conexion-unlock-anim"
++        />
+       </g>
+ 
+-      <!-- Provincia Geográfica Nodes -->
++      <!-- 3. CAPA: Pines y Marcadores Interactivos en el centro de cada Provincia -->
+       <g 
+         v-for="node in nodosProvincias" 
+         :key="node.id"
+@@ -65,15 +79,21 @@
+           'bloqueada': !node.desbloqueada, 
+           'completada': node.completada, 
+           'seleccionada': node.seleccionada,
+-          'recomendada': node.recomendada
++          'recomendada': node.recomendada,
++          'pulse-unlock-neon': animacionUnlock.activa && animacionUnlock.fase === 2 && animacionUnlock.targetId === node.id
++        }"
++        :style="{
++          'transform-origin': animacionUnlock.activa && animacionUnlock.fase === 2 && animacionUnlock.targetId === node.id ? `${node.x}px ${node.y}px` : 'none'
+         }"
+-        @click="seleccionarNodo(node)"
++        @click="seleccionarNodo(node, $event)"
++        @mouseenter="onMouseEnterProvincia(node.id)"
++        @mouseleave="onMouseLeaveProvincia"
+       >
+         <!-- Círculo de Brillo Exterior -->
+         <circle 
+           :cx="node.x" 
+           :cy="node.y" 
+-          :r="node.seleccionada ? 28 : 22" 
++          :r="node.seleccionada ? 30 : 24" 
+           class="brillo-nodo"
+           :style="{ stroke: node.color, fill: node.color + '10' }"
+         />
+@@ -82,7 +102,7 @@
+         <circle 
+           :cx="node.x" 
+           :cy="node.y" 
+-          :r="node.seleccionada ? 24 : 18" 
++          :r="node.seleccionada ? 26 : 20" 
+           class="circulo-nodo-core"
+           :style="{ stroke: node.color }"
+         />
+@@ -94,46 +114,72 @@
+           class="emoji-nodo"
+           text-anchor="middle"
+         >
+-          {{ !node.desbloqueada ? '🔒' : node.emoji }}
++          {{ !node.desbloqueada ? '🔒' : (node.completada ? '✅' : node.emoji) }}
+         </text>
+ 
+         <!-- Etiqueta de Nombre de Provincia -->
+         <g class="label-nodo-grupo">
+           <!-- Fondo de la etiqueta -->
+           <rect 
+-            :x="node.x - 45" 
+-            :y="node.y + 24" 
+-            width="90" 
+-            height="18" 
+-            rx="4" 
++            :x="node.x - 55" 
++            :y="node.y + 26" 
++            width="110" 
++            height="22" 
++            rx="6" 
+             class="fondo-label-nodo"
+           />
+           <!-- Texto de la etiqueta -->
+           <text 
+             :x="node.x" 
+-            :y="node.y + 36" 
++            :y="node.y + 40" 
+             class="texto-label-nodo"
+             text-anchor="middle"
+           >
+-            {{ node.nombre }}
++            {{ node.nombre }}{{ node.completada ? ' ✓' : '' }}
+           </text>
+         </g>
+ 
+         <!-- Marcador de Provincia Recomendada (Siguiente Misión) -->
+         <circle 
+           v-if="node.recomendada" 
+-          :cx="node.x + 14" 
+-          :cy="node.y - 14" 
+-          r="6" 
++          :cx="node.x + 16" 
++          :cy="node.y - 16" 
++          r="7" 
+           class="nodo-recomendado-ping"
+         />
+       </g>
+     </svg>
++
++    <!-- Tooltip Flotante de Información General (para hover y touch) -->
++    <transition name="fade-fast">
++      <div 
++        v-if="tooltipActive" 
++        class="map-tooltip"
++        :style="{ 
++          left: tooltipData.x + 'px', 
++          top: tooltipData.y + 'px',
++          borderColor: tooltipData.color,
++          boxShadow: `0 0 15px ${tooltipData.color}50`
++        }"
++      >
++        <div class="tooltip-header" :style="{ color: tooltipData.color }">
++          {{ tooltipData.nombre }}
++        </div>
++        <div class="tooltip-status">
++          {{ tooltipData.estado }}
++        </div>
++        <div class="tooltip-message" v-if="tooltipData.mensaje">
++          {{ tooltipData.mensaje }}
++        </div>
++      </div>
++    </transition>
+   </div>
+ </template>
+ 
+ <script setup>
+-import { computed } from 'vue'
++import { computed, ref, onMounted } from 'vue'
++import { useAudio } from '../../composables/useAudio.js'
++import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
+ 
+ const props = defineProps({
+   provincias: {
+@@ -151,32 +197,76 @@ const props = defineProps({
+ })
+ 
+ const emit = defineEmits(['seleccionar'])
++const { reproducirEfecto } = useAudio()
+ 
+-// --- Coordenadas Geográficas de las Provincias en el SVG (600x450) ---
++// --- Coordenadas Geográficas Reales de los centros en la silueta 1000x1000 ---
+ const COORDENADAS = {
+-  'san-jose':  { x: 300, y: 220, color: '#00ff88' },
+-  'heredia':   { x: 340, y: 150, color: '#b84fff' },
+-  'cartago':   { x: 390, y: 240, color: '#00c8ff' },
+-  'alajuela':  { x: 250, y: 140, color: '#ffd700' },
+-  'guanacaste': { x: 120, y: 120, color: '#ff8c00' },
+-  'puntarenas': { x: 210, y: 280, color: '#ff4646' },
+-  'limon':     { x: 480, y: 200, color: '#ff007f' }
++  'alajuela':   { x: 554.5, y: 139.5, color: '#ffd700' },
++  'guanacaste': { x: 412.8, y: 157.5, color: '#ff8c00' },
++  'limon':      { x: 765.7, y: 299,   color: '#ff007f' },
++  'puntarenas': { x: 749.6, y: 401,   color: '#ff4646' },
++  'heredia':    { x: 630.2, y: 171.1, color: '#b84fff' },
++  'san-jose':   { x: 596,   y: 275.5, color: '#00ff88' },
++  'cartago':    { x: 682,   y: 271.8, color: '#00c8ff' }
++}
++
++const COLORES = {
++  'alajuela':   { hex: '#ffd700', rgb: '255, 215, 0' },
++  'guanacaste': { hex: '#ff8c00', rgb: '255, 140, 0' },
++  'limon':      { hex: '#ff007f', rgb: '255, 0, 127' },
++  'puntarenas': { hex: '#ff4646', rgb: '255, 70, 70' },
++  'heredia':    { hex: '#b84fff', rgb: '184, 79, 255' },
++  'san-jose':   { hex: '#00ff88', rgb: '0, 255, 136' },
++  'cartago':    { hex: '#00c8ff', rgb: '0, 200, 255' }
+ }
+ 
+-// Ruta ordenada
++// Ruta ordenada oficial de Ruta Tica
+ const rutaOrdenada = ['san-jose', 'heredia', 'cartago', 'alajuela', 'guanacaste', 'puntarenas', 'limon']
+ 
+-// --- Mapeo de Provincias a Nodos ---
++// Geometría real obtenida de Simplemaps (Optimizado para 1000x1000)
++const PROVINCIAS_GEOMETRY = [
++  { id: 'alajuela', d: 'M607.7 113.2l0 0.7-0.4 34.3-0.3 25.8-0.3 18.4-0.2 22-1.9 24.3 0 0.4-2.9 3.1-0.8 1.2-0.1 0.5 0 0.5 0 0.8 0.3 1.4-2.3 2.6-4.4 1.4-10.6 3-2.8 0.4-0.8-0.3-1.9-0.2-0.8-0.2-0.6-0.2-3.1-0.5-3.1-0.9-3.8 0.8-7 0.5-4.9 2.2-1.3 0.8-0.1 0.2-0.2 0.4-1.9 1.8-2.7 1.4-1 0.8-0.5 0.6 0.1 0.4-0.1 0.5-2.9 3.7-0.3 0.6-0.2 1.2-0.3 0.3-1.1 0-3.4-4.6-1.5-1.1-1.8-0.4-2.1-0.1-2.6-0.7-3.3-1.3-1.1-0.8-0.5-0.6 0.2-0.8 0-1 0.1-0.4 0.2-0.4 0.3-0.2 1.1-0.5 2.9-4.6 1.2-1.2 1.8-0.5 7.8-5.1 2.4-1 0.8-0.4 0.5-0.5 0.2-0.4 0.1-1.1-2-3.3-1.1-0.6-0.4 0.2-1.3 0.9-1.2 0.4-0.5 0-0.3-0.1-0.2-0.3-0.2-0.5-0.1-0.3-1-1.6-2.6-3.1-1.3-2.1-2.5-3.2-1-1.4-1.7-3.7-0.7-2.5 0.6-4.1-0.1-0.6-0.2-0.9-0.8-1.6-0.2-0.6 0-0.6 1-3.6 0.4-1.2 1.7-3.1 0.2-0.8-0.1-0.6-0.2-0.2-1-0.8-0.6-0.9-0.9-2.5-2.8-1.8-1.2-0.2-0.4 0.2-0.4 0.1-1 0.6-2.2 0.7-3 0.5-1.3 0.1-0.9-0.1-1-0.7-0.3-0.2-1-1.2-3.5-5.7 2.5-4.8 0.3-1.6-0.4-0.7-0.2-0.3-0.5-1.1-0.6-3 2.4-8.8-3.4-6.9-1.2-1.9-9-7-2.9-1.4-8.6-2.3-2.2-0.9-1.7-1.9-4.2-3.7-0.5-0.6-0.9-1.4-0.5-1.1-0.7-4.3-1.8-3.3-2.3-3.6-0.9-1-1-0.7-2.2-0.9-1.7-0.5-8.4-2-2.5-0.8-1-0.8-1.1-1.1-4.7-3.2-1.2-0.6-1-0.4-1-0.1-1 0.1-2 0.2-3.4 0.9-4.1 0.3-4.8-0.1-3.8-7.8-1.4-2.1-0.7-0.5-0.4-0.2-0.4-0.2-0.4-0.1-3.5-0.5-1-0.3-3.8-2.3-1.8-1.3-7.2-8.4-0.2-0.3-0.3-0.6-0.1-0.5 0.1-0.3 0.6-0.7 5.4-0.4 1.4-0.7 0.5-0.7 0.3-0.7 12.4-8.5 7.5-8.5 0.6-0.5 0.4-0.1 0.6-0.1 1-0.3 1.2-0.3 0.3-0.3 22.7 8.4 25.5 9.5 3.6 0.4 3.7-1.4 16.3-10.8 11.7-7.7 5-1.2 2.8 1.2 6 4.4 2.7 0.4 3.4-0.2 3.7 1.2 7.8 3.4 0.9 0.3 0.8 0.3 0.8 0.4 0.6 0.5 3.6 4.5 1.4 1.1 1.4 0.9 1.7 0.6 1.7 0.2 1.5-0.6 8.5-5.6 1.3-0.8 1.5 0.8 0.4 1.2 0 1.6 0.3 2 0.7 1.1 2.1 2.7 0.4 1.1 1.7 1.6 7.3 2.8 1.7 1.2 1.4 1.5 3 1.6 2.8 2.3 0.5 3.8-2.1 1.2-0.7 0.4-0.7 1.3 0.3 0.9 0.6 0.7 0.4 0.5 3.5 2.8 0.8 1.1 1.8-1.3 2.4 0.1 1.1 0.1z' },
++  { id: 'guanacaste', d: 'M437.4 70.7l-0.3 0.3-1.2 0.3-1 0.3-0.6 0.1-0.4 0.1-0.6 0.5-7.5 8.5-12.4 8.5-0.3 0.7-0.5 0.7-1.4 0.7-5.4 0.4-0.6 0.7-0.1 0.3 0.1 0.5 0.3 0.6 0.2 0.3 7.2 8.4 1.8 1.3 3.8 2.3 1 0.3 3.5 0.5 0.4 0.1 0.4 0.2 0.4 0.2 0.7 0.5 1.4 2.1 3.8 7.8 4.8 0.1 4.1-0.3 3.4-0.9 2-0.2 1-0.1 1 0.1 1 0.4 1.2 0.6 4.7 3.2 1.1 1.1 1 0.8 2.5 0.8 8.4 2 1.7 0.5 2.2 0.9 1 0.7 0.9 1 2.3 3.6 1.8 3.3 0.7 4.3 0.5 1.1 0.9 1.4 0.5 0.6 4.2 3.7 1.7 1.9 2.2 0.9 8.6 2.3 2.9 1.4 9 7 1.2 1.9 3.4 6.9-2.4 8.8 0.6 3 0.5 1.1 0.2 0.3 0.4 0.7-0.3 1.6-2.5 4.8-2.5-2-0.7-0.3-0.9-0.3-0.8-0.1-1.2 0.1-0.7 0.1-0.5 0.2-0.9 0.7-1.4 1.4-0.6 0.5-1.4 0.8-0.9 0.6-0.7 0.7-0.5 0.7-0.3 0.5-0.1 0.5 0 0.5 0.1 0.4 0.2 0.3 0.2 0.4 1.2 1 0.2 0.3 0.1 0.5 0.1 0.4-0.1 0.4-0.7 2.1-0.4 3.1-0.1 0.5-1 2-0.1 0.6 0 0.4 0.1 0.4 0.1 0.4 0.2 0.3 0.5 0.6 0.3 0.4 0.1 0.6-0.1 1.2-0.3 0.5-0.3 0.5-3 1.3-0.7 0.4-2.9 2.6-0.7 0.9-0.4 0.7-0.2 1 0 0.5 0.2 0.9 0.6 1.7 0.1 0.6-0.3 0.3-0.4 0-0.4-0.1-0.4-0.1-1.5-0.8-1.2-1-0.6-0.6-1.9-2.4-1.2-1-0.3-0.3-1.4-0.8-0.8-0.3-0.5-0.1-0.5 0-0.6 0.1-0.8 0.3-0.3 0-0.4 0-0.4-0.1-0.4-0.1-0.3-0.3-0.6-0.4-0.3-0.2-0.5-0.1-0.4 0-0.9 0.2-1 0.1-0.5 0-0.5-0.1-1.3-0.1-3.1 1-0.7-0.5-0.6-0.3-2.1-1.9-2.9 1-10.6 0.1-2.9-0.7-2.5-1.8-3.9-4.1 0-1 0.9-3-2.8-3.3-6.8-4.8 1 3.3 4.6 3.3 1 3.9 0.4 7.5 1 4.3 1.8 3-2 1.3 0.3 2.3 1.8 2.1 4.9 1.7 1.7 1.8 2 4 1 0 1.3-0.5 0.6 0.4 0.2 1.1-1.4 0.1-1.4-0.1-1.3-0.4-1.2-0.6 0 1 3 2.7-1.6 5.2-1 1.3-3.4 0.8-0.8 0.4-4.1 2.3-0.7 0.2-0.4-0.1-0.3-0.3-0.2-0.3-0.3-0.2-1.1 0.1-1.6 0.5-3.9 1.9-1.4 1.3-0.7 1.3 0.3 0.9 0.5 0.7 0.6 0.5 0.7 0.4 0.6 0.1 1.5-0.2 0.5 0 0.5 0 1.4 0.3 0.4 0.1 0.7 0.4 0.4 0.2 0.4 0.1 1.5 0 0.9 0.2 1.1 0.6 1.2 0.4 0.3 0.2 0.3 0.2 0.7 1 0.9 0.8 0.4 0.7 0.2 0.3 0.2 0.4 0.3 0.7 0.2 1 0.2 0.9 0.2 0.3 0.3 0.2 0.4 0.2 2.3 0.5 0.3 0.3 0.1 0.4-0.5 1-0.6 1.7-1.6 6.1 0 1 0.2 0.7 0.4 0.5 0.1 0.3-0.1 0.3-0.9 0.8-0.4 0.4-0.3 0.7-0.4 1.4-0.4 0.7-0.4 0.4-0.4 0.3-0.4 0.4-1 2.1-0.4 0.2-0.4 0.1-0.9 0.4-0.4 0.5-0.8-2-0.7-0.8-1.5-0.9-3.9-1.6-0.3-1.3 0-1.5-0.1-1.1-3.8-4.1-5.2-3-17-6.1-1.5 0.3-2.3 1.6-1 0.4-1.5-0.4-2.1-1.5-1.8-0.4-1-0.1-0.3-0.2-0.2-0.5-0.6-0.7-1.1-0.6-0.9 0.3-0.7 0.5-0.1 0.3-8.9-2.9-4.3-0.6-1-0.7-0.8-0.7-1.2-0.7-1.8 0.1-1.2 0.7-1 0.1-1.4-1.9 1.1-2.9-1.7-4.1-16.1-19.9-1-1.8-1.3-4.3-1.9-3-6.2-15.2-0.5-4.5-0.7-2.8-0.9-2 2.2-2.1 0.9-1.6-0.4-1.3-3.3-4.3-2.2-1.3 1.2-1.5 2.8-2.2 1.8-2.7 1.3-2.7 2.7 1.1 1.5-1.7 1.1-2.5 3.4-2.6-1.3-2.8-2.4-3-1.7-1.7 1-0.7 0.4-0.3 0.8-0.1 0-1.1-2.2 0 0-1.1 1.8-0.4 1.2-1.1 1.3-3 1.1 0 2.2 1.8 3.1-1.3 3.2-1.8 2.4 0.3 1 0-0.2-2.1 0.5-1 0.9-0.6 0.8-0.7 1.5-2.5 0.5 0.1 2 0.2 4.7-5-0.3-1.3-0.8-1-2.1-1.5-6.5 6.6-0.1-0.5 0-0.5-0.2-0.3-0.7 0.1 0-1 1.8-2 1.1-0.8 1.4-0.5-1.1-1.1-0.1 0.2-0.3 0.3-0.3 0.3-0.5 0.3 0.4-1.3 0.1-0.5 1.8-0.5 0-1-1.1 0 0-1.2 2.6-2.1 0.6-5.4-0.9-10.6-2.4-2.8-5.2-2.4-5.3-0.8-2.3 1.6-1 0-4.3-3.6-1.3-1.4 0.7 0.3 1-0.5 0.4-0.9-0.9-1.1-1.2-0.3-3 0.3-1.3 0-4.7-1.7-3.6-2.2-4.1-1.8-5.9-0.8 0-1.2 3.5-0.9 6.7-3 3.8-0.5-0.6-0.9-0.5-0.7-0.7-0.3-1.5-0.3 0-1 7.9-0.5 1.9 0.5 0.9 1.2-0.2 1.4-0.4 1.2 0.3 0.5 0.6 0.3 2.1 1.9 1 0 1.1-1.2 0-1-1.8-1.8 1.8-1.1 3.3-0.5 3.2 0.1 1.1 0.6 1.4 1.4 1.3 0.2 1-0.3 0.4-1-0.1-1.1-0.8-0.8 0-1.2 2.3-0.9 0.7-1.8-0.5-2.1-1.3-1.8-1.2-0.9-2.6-1.1-1.2-0.8-1.3-1.4 0-0.4 0.8-0.1 1.1-0.8 2.4-2.3 1.4 0.8 1.6 1.5 3.2 0 1.9-1.8-0.4-2.3-1.7-2.3-2-1.4-1.3-0.6 3.8-6.2 2.9-6.3 4.4-6 5.3-2.2 4.5 2.3 4.5 4 5.1 2.9 16 6 21.3 7.9 5.6 2.1z' },
++  { id: 'limon', d: 'M669.9 115.6l10.4-2.5 5.5-2.8 0.5-4.4-1.4-5.7-0.1-3.6-1.6-0.8 0.5-2.1-0.3-1-0.4-0.1-1.2-2.9-1.2-0.3 1.5-0.2 0.8 0.4 0.5-0.1 0.9 0.5 0 0.3-0.4 0.3 0 0.5 0.6-0.1 0.8-0.7 0.2-0.7 0.7 0.2 2.6 1.3 3.2 3.7 4 7.5 2.9 7.9-0.4 5.1-2.3-2.9-4.2-10.3 2.7 12.9-0.3 5.1-4.5 4 2.4-0.5 1.6-1.1 1.6-1.4 2-1.3-0.7 0.8-0.2 1 0.3 1.1 0.6 1.4 0.6-1.9 0.7-3.7 0.9-2 7.6 21.2 9.6 22.8 11.3 19 30.2 39.6 2.4 1.8 10 12.4 6.2 6.1 3.8-2.1 1.4 1 4.2 0.7 0.9 1.2 0.1 3 0.5 2.5 1.1 2.2 2.1 2.2 7.3 10.9 2.4 1.7 9.1 12.3 6.9 6.5 4-1.2 0.9 2.5 0.9 6.5 1.4 2.9 2.5 1.9 10.6 3.7 3.7 0.4 3.7-0.1 3.5 0.2 3.1 1.7 3.9 6 2.7 1.6 0.1 0.1 1.7 6-0.5 0-0.7 0.1-2.4-1.3-2.4-0.4-0.6 0.7-0.7 1.1-0.7 5.9 0 0.3-1 2-2.1 0.3-2.9-0.5-2.8-0.8-1.6-0.8-1.5-1.7-0.1-0.1-2-3.8-0.1-0.1-1.6-1.8-0.1 0-0.7 0.4-0.4 0.2-1.6-0.6-6.5-5.6-0.7-0.3-1.1-0.4-3.9-1.6-1.4-0.5-2.1-0.9-2.9 0.4-2.9 2.5-1.8 2.5-0.3 1.5 0.6 1 0.8 1.5 0.5 0.9 0.8 3.3 0.3 1.1 0.7 0.9 1 0.3 0.4 0.3 0.3 0.2-0.2 1.3-0.5 0.2-1.9 1.1-8.4 1.2-3 1-0.8 1.4-0.5 0.9-0.4 3 0.2 13.3 0.2 19.2 0.4 26.2-0.1-0.1-1.5-1.3-0.5-0.3-2.6-0.8-2.6-2.7-0.8-1.2-1-2.7-0.9-1.4-0.6-0.4-1-0.4-5.4-1.5-0.5-0.3-0.5-0.4-0.4-0.9-0.3-0.5-1.7-8.6-0.5-1.6-0.4-0.7-0.2-0.3-0.3-0.3-0.4-0.2-5.6-3.3-0.6-0.4-1.2-1.1-6.1-8-0.7-0.2-1.1-0.1-3.4 0.2-2.1 0.4-0.6 0-0.8-0.1-1.1-0.4-2.5-1.2-1.5-1-0.8-0.4-2.9-1-0.8-0.4-0.3-0.2-0.4-0.2-2.9-2.5-0.7-0.5-0.8-0.4-0.5 0-0.7 0.1-1.1 0.6-0.6 0.4-0.4 0.4-1.9 2.6-0.2 0.3-0.7 0.2-3 0.3-0.8 0.2-0.6 0.3-0.6 0.6-0.3 0.2-0.3 0.2-0.4 0.1-0.3-0.2-0.4-1.2-0.1-0.6-0.2-0.4-0.5-0.5-0.5-0.3-4.2-1.2-1.9-1.4-0.6-0.5-1.3-1.9-5.2-14.4-0.6-1.7-1-2.2-0.4-0.4-0.5-0.6-0.3-0.4-0.9-2.2-0.3-1.9-0.4-1.6 0.6-4.9 2.2-4.5 9.1-11 3.5-9 1.3-2 4.8-5.8 6.7-8.4 1-2.8-0.4-2.9-1.8-5.7-0.2-3.5 0.5-2.8 1.2-2.7 2-2.8 0.4-0.6-3.2-0.7-16.7-0.4-22.8-0.2-4.1-1.5-15.5-7.2-9.5-4.5-6.9-3.3-19.8-9 2.1-7.2 1.1-1.4 1.4-1.4 7.4-8 0.5-0.8 2-4.1 0.4-1.2 0.2-0.8-0.1-0.5 0.1-1.9 0.5-2.3 0.2-1.2-0.1-0.8-0.1-0.3-0.5-0.6-0.4-0.7-0.3-0.8-0.5-1.7-2.1-4-0.2-0.6-0.4-2.3 0.1-1 0.1-0.7 0.6-1.1 0.4-0.7 1.3-2.4 0.3-0.4 0.4-0.2 0.4 0 0.4-0.1 0.4-0.2 0.3-0.3 0.6-0.6 1.4-2.2 0.9-3.4 0-0.8 0-0.4-0.7-1.6-0.1-0.5 0-0.5 0.1-1.3 0.1-0.6-0.1-0.4-0.2-0.4-0.2-0.3-0.5-0.6-0.2-0.4-0.2-0.3 0-1 0.9-6.9-0.1-1.5 0.2-4.9 0.2-1.4 0.3-1 0.2-0.3 0.6-0.5 1.4-0.9 1.5-0.8 0.6-0.4 1.6-1.8 2.7-1.7 1.6-0.5 0.9-0.2 4.6-0.4 1.7-0.5 0.6 0 0.6 0.1 0.7 0.2 0.1-0.1 0-0.3-0.3-0.5-0.4-0.5-0.6-0.5-1.3-0.8-0.7-0.5-0.5-0.6-0.5-0.6-0.1-0.6-0.1-0.7 0.5-3.3 0-0.5-0.1-0.6-0.5-0.7-0.6-0.7-0.7-0.8-0.4-0.3-0.4-0.2-0.5-0.2-1.8-0.5-0.5-0.4z' },
++  { id: 'puntarenas', d: 'M508.5 189.2l3.5 5.7 1 1.2 0.3 0.2 1 0.7 0.9 0.1 1.3-0.1 3-0.5 2.2-0.7 1-0.6 0.4-0.1 0.4-0.2 1.2 0.2 2.8 1.8 0.9 2.5 0.6 0.9 1 0.8 0.2 0.2 0.1 0.6-0.2 0.8-1.7 3.1-0.4 1.2-1 3.6 0 0.6 0.2 0.6 0.8 1.6 0.2 0.9 0.1 0.6-0.6 4.1 0.7 2.5 1.7 3.7 1 1.4 2.5 3.2 1.3 2.1 2.6 3.1 1 1.6 0.1 0.3 0.2 0.5 0.2 0.3 0.3 0.1 0.5 0 1.2-0.4 1.3-0.9 0.4-0.2 1.1 0.6 2 3.3-0.1 1.1-0.2 0.4-0.5 0.5-0.8 0.4-2.4 1-7.8 5.1-1.8 0.5-1.2 1.2-2.9 4.6-1.1 0.5-0.3 0.2-0.2 0.4-0.1 0.4 0 1-0.2 0.8 0.5 0.6 1.1 0.8 3.3 1.3 2.6 0.7 2.1 0.1 1.8 0.4 1.5 1.1 3.4 4.6-1.4 1.2 1.5 0.6 1.1 0.7 0.7 0.5 0.5 0.5 0.3 0.3 0.9 1.3 0.8 1.5 0.1 0.6 0.1 0.9-0.2 1.3-0.3 0.6-0.3 0.4-0.3 0.3-0.4 0.1-0.4 0.1-0.5 0.1-3-0.2-1 0.1-0.4 0.2-0.4 0.2-0.3 0.2-0.2 0.4-0.1 0.3-0.1 0.5 0.1 0.4 1.2 4 0.4 2-0.1 3.1 0 0.5 0.4 0.9 3.5 6.2 0.1 0.3 1.1 5.4 0.4 1.2 0.7 1.5 1 1.3 1.1 1 0.5 0.4 1.6 0.2 4.9-0.8 1.1 0.4 0.4 0.1 0.6 0 2.5-0.7 0.5 0 0.5 0.1 0.3 0.2 0.4 0.2 0.7 0.8 0.3 0.3 0.4 0.2 0.4 0.1 0.4 0.1 0.5-0.1 0.4-0.2 0.5-0.4 0.9-1.9 0.3-0.4 0.4-0.4 1.8-1.4 0.5-0.6 0.4-0.4 0.1-0.4 0.1-1-0.5-3.2 0-0.4 0.4-0.2 0.9-0.2 1.8 0 4.2-0.8 6.7-0.3 2.3 0.2 0.9 0.7 0.6 0.5 1.1 1.3 0.2 0.3 1.7 0.3 5.6-0.2 2.1 0.9 2.3 0.2 7.1-0.6 1.4 0.1 0.4 0.2 0.5 0.4 0.4 0.7 0.4 1.3 0 0.7 0 0.6-0.3 1.4-0.1 1 0 0.5 0.3 0.6 0.5 0.6 1.2 1.1 1.3 0.5 0.7 0.1 1.4-0.2 2.1-0.1 1.4 0.2 0.8 0.3 0.4 0.3 0.4 0.6 0.3 0.8 0.3 2 0 1-0.1 0.7-0.4 0.7-0.4 0.8 0.6 1 3.5 1.6 2.5 4.9 3.6 3.6 10.4 6.9 2.4 0.8 0.2-0.4 0.3-0.3 0.3-0.2 0.3-0.3 0.4-0.1 0.4-0.2 0.4 0 0.5 0 0.4 0.1 0.5 0.3 0.6 0.6 1.1 2 0.2 0.7 0.7 3 0.2 0.4 5.1 5.2 1 1.4 0.6 1-0.2 1.6 0 1 0.2 1.8 1.1 3.2 0.7 1.5 0.4 0.7 0.6 0.6 1.1 1 7.9 3.6 1.1 0.3 0.5-0.1 0.4-0.1 0.3-0.2 0.2-0.3 1.4-2 0.3-0.2 0.4-0.2 0.4-0.2 0.5-0.1 0.5 0 0.4 0 0.4 0 0.5 0.1 1.5 0.8 2.2 2.1 3.6 4.4 0.5 1 0.1 0.4 0.1 0.4 1.2 4.2 0.1 0.3 0.5 0.6 1 1.3 14.4 9.3 0.3 0.2 1.7-0.1 1.4-0.2 0.4-0.1 0.5 0.1 0.4 0.2 0.7 0.5 0.7 0.8 0.3 0.3 0.7 0.4 0.4 0.1 0.4 0.1 0.5 0 0.3-0.2 0.3-0.2 0.3-0.2 1.7-2.4 0.6-0.6 0.5-0.3 0.3-0.2 0.4-0.2 0.3-0.3 0.2-0.6 0.1-0.8-0.5-3.7 0.1-0.6 0.3-0.9 1.2-2.2 0.3-1-0.1-1.9-0.2-0.9-0.2-0.6-0.2-0.3-0.1-0.5-0.2-0.3-0.3-0.2-0.4 0-0.4 0-0.4 0-0.4-0.1-0.3-0.2-0.2-0.3-0.3-0.3-0.4-0.1-1.4-0.3-0.3-0.2-0.2-0.3 0-0.5 1.5-8 0.1-0.4 0.6-0.8 4.3-4.9 0.3-0.6 0.4-0.9 1.1-3.9 0.5-0.9 0.4-0.6 3.4-3.6 4.2 1.2 0.5 0.3 0.5 0.5 0.2 0.4 0.1 0.6 0.4 1.2 0.3 0.2 0.4-0.1 0.3-0.2 0.3-0.2 0.6-0.6 0.6-0.3 0.8-0.2 3-0.3 0.7-0.2 0.2-0.3 1.9-2.6 0.4-0.4 0.6-0.4 1.1-0.6 0.7-0.1 0.5 0 0.8 0.4 0.7 0.5 2.9 2.5 0.4 0.2 0.3 0.2 0.8 0.4 2.9 1 0.8 0.4 1.5 1 2.5 1.2 1.1 0.4 0.8 0.1 0.6 0 2.1-0.4 3.4-0.2 1.1 0.1 0.7 0.2 6.1 8 1.2 1.1 0.6 0.4 5.6 3.3 0.4 0.2 0.3 0.3 0.2 0.3 0.4 0.7 0.5 1.6 1.7 8.6 0.3 0.5 0.4 0.9 0.5 0.4 0.5 0.3 5.4 1.5 1 0.4 0.6 0.4 0.9 1.4 1 2.7 0.8 1.2 2.6 2.7 2.6 0.8 0.5 0.3 1.5 1.3 0.1 0.1 0 1.7 4.7-2 1.5 0 1.1 0.9 0.5 1.2 0.5 1.2 0.7 1 0.9 0.6 3.6 1.5 7.2 5.4 7.2 2.5 2.1 1.4 4.1 6.9 0.5 1.3 0.1 0.2-0.1 0.2-0.6 0.9-1.6 2.7-4.7 2.8-16.3 6.7-1.8 1.4-0.5 0.7-1.1 1.3 0.8 0.7 1.3 0.8-0.1 2.2-0.1 0.2-1.3 1.5-1.3 0.8-2 1.2-1.4 0.9-0.2 0.2-1.1 1.2-0.2 2.4 0.8 2.3 1.4 2.1 4.9 5.5 2.7 3.8 1.9 4.1 1.3 4.8 0.7 8.3 0.1 1.8 0.1 1.1-0.5 5.6-1.4 4.7-2.7 3.2-0.8 1.1-4.1 2-4.5 1.4-4.5 2.3-0.5 0.5-0.6 0.5-0.6 0.7-2.9 2.7-2.4 2.3-1 0.6-0.9 0.5-5.3 3-1 0.8-0.4 0.3-0.2 2 1.5 1.6 4.4 2.6 0.8 0.9 1.5 2.2 0.9 0.7 1 0.1 1.9-0.8 1.5 0.2 2.7 1.5 1.1 1.6 0.7 5.1 5.2 11.4 2.7 6 0.1 0.2 0.4 0.7-0.8 7.1-0.4 1.3-0.6 2.3-2.2-1.7 0.3-2.4 1.2-2.7 0.7-2.4-0.5-2-10.7-18.5-3.8-4-19.6-14.3-5.4-5.3 4.6-5.7 0.9-0.5 0.9-1.6 1.7-2.1 1.1-2.5-1-2.5-5.2-6.5-0.8-1.8-0.1-2.4 1.1-0.8 2-0.6 2.4-1.6-1.8-0.5-4.6 0.2-2.3-0.8-1.2-1.4-3.1-6.2 0.5-0.8 0.3-0.6 0.3-0.9 1.1 0 1.5 2.6 0.4 1.3 0.2 2.1 0.7 0.4 4.7-1.9 0-1.2-2.1-0.9-2.3-1.7-2-2-1.1-1.9-1.1 0-1.2 1.9-2.9 0.1-3.3-0.3-2.4 0.5-1.2-2.2-1.8-2.2-2.2-1.2-2.3 1.2-5-3-1.4-2.4 1-3.3-1.1-0.1-1.1 0.1 0.7-2.6-2.3-1.3-3.3-0.7-2.6-0.9-1 1.9-0.8-0.1-1.1-0.8-1.5 0-0.8 0.9-0.2 1.1-0.6 1-2.2 0.4-5.2-0.8-2.1 0.8-0.8 3.2 1.2-1 0.9 0 5.6 8.3 0.7 2.6 3.3 5.1 1.2 1.5 2.1 1.1 5.9 1.8 2.4 0.3 2.1 1.3 2.1 2.5 2 1.7 1.9-1.2 0.1 4-0.3 1.6-0.9 1.1 0 1.1 2.3 3.2 1 5.6-0.4 5.8-1.8 4-3.5 0.1-5.8-1.8-5.4-2.7-2.6-2.1 1 0 0.7 0.5 0.6 0.3 2.1 0.2-3-1.3-1.3-0.8-1.3-1.2 0 2.3-9.1-4-3.2-0.5-9.7 1.2-2.7 0-2.2-1.1-2.2-2.2-3.8-5-13.7-12.8-0.9-1.5-0.7-0.1-3.2-1.4-1-0.6-0.5-4.9 4.8-7.5 1.1-1.3 2.5-1.4 1.7-0.7 0.8 0.5 0.5 0.9 1.1-1.1 3.8-5.9 1.1-1.1-2-2.5 2.4-2.9 4.3-2.3 3.9-1 0-1-3.4-0.4-1.8 0.1-1.1 1-1.9 2-1.8 0.8-0.6-1.5 0.7-2.7 2.2-2.7 3.9-1.9 1.8-1.2 0.8-1.8-1-1.7-2-1.1-1.9-1.5-0.4-2.8 3.1 1.6 1.4 0.5 2 0-1-1.2-1.2-0.9-2.2-1.2-1-0.8-0.5-0.7-0.9-0.5-1.8-0.1 1.9-1.2-0.3-0.8-1.1-0.7-0.5-0.5 0.7-1.8 0.8-1.3 1.1-1.1 1.6-1.4-4.2-11-0.8-1.4-2.6-2.8-1.1 1-3.5-4.6-3.2-5.4-4.2-4.2-6.3-1.1 0.4-4.2-3.5-3.5-4.8-2.4-3.5-1-12.4-11.9-12.2-5.7-1.9-1.5-15.2-6-1 0-1 0.8-0.9 0-0.7-0.7-0.6-1.3-2.2 1-1.3-1.1-1.5-1.5-2.7-0.5 1.7-2.9-2.2-4.2-4.1-3.6-4-1.4 0 1.1 1.4 0.3 0.9 0.4 2.1 1.5-4.1-0.7-6.5-3.9-4.1-0.9-4-0.3-21.1-5.9-4.1-0.3-1.9 0.3-2 0.7-2.1 0.4-2.1-0.3-1.9-1.6-0.6-1.9-0.7-1.5-2.2-0.5 0.4 0.6 0.2 0.5 0.4 1.2-2.6-2.1-5.9-3.8-1.1-2.4-0.6-2.2-1.4-1.1-1.7-0.7-1.7-1-0.6-1.6 0.3-1.7-0.5-1.1-2.4 0.1 0.6-1.8-0.2-1.8-0.4-1.6 0-1.5 0.9-1.8 2.7-2.7 1.1-2.7 1.1-1.3 1.1-1.8 0.5-2.3-0.5-1.9-1.3-1.7-2.4-2.4-6.4-9.6-1.8-1.4-2.6-1.1 0.4-2.4 2.2-3.7-3.9-3.2-0.7-1.6 0.8-2.3-4.5-1.4-14 1.4 0-1.2 2-0.8 2.4-0.2 5.5 0 0-1.1-5-0.2-4.5-0.8-4.1-1.4-3.7-2.1-4.8-3.9-0.7-0.9-1-0.2-2-1.4-1.5-1.5 0.8-0.7-2.6-1.4-6.5-6.1-3.5-1.7-1.6-1.5-1-0.4-0.8 0.4-0.7 0.6-0.9 0.1-1.3-1.1 0.9-1.7 0.3-1.1 3.1-1 1.3 0.1 0.5 0.1 0.5 0 1-0.1 0.9-0.2 0.4 0 0.5 0.1 0.3 0.2 0.6 0.4 0.3 0.3 0.4 0.1 0.4 0.1 0.4 0 0.3 0 0.8-0.3 0.6-0.1 0.5 0 0.5 0.1 0.8 0.3 1.4 0.8 0.3 0.3 1.2 1 1.9 2.4 0.6 0.6 1.2 1 1.5 0.8 0.4 0.1 0.4 0.1 0.4 0 0.3-0.3-0.1-0.6-0.6-1.7-0.2-0.9 0-0.5 0.2-1 0.4-0.7 0.7-0.9 2.9-2.6 0.7-0.4 3-1.3 0.3-0.5 0.3-0.5 0.1-1.2-0.1-0.6-0.3-0.4-0.5-0.6-0.2-0.3-0.1-0.4-0.1-0.4 0-0.4 0.1-0.6 1-2 0.1-0.5 0.4-3.1 0.7-2.1 0.1-0.4-0.1-0.4-0.1-0.5-0.2-0.3-1.2-1-0.2-0.4-0.2-0.3-0.1-0.4 0-0.5 0.1-0.5 0.3-0.5 0.5-0.7 0.7-0.7 0.9-0.6 1.4-0.8 0.6-0.5 1.4-1.4 0.9-0.7 0.5-0.2 0.7-0.1 1.2-0.1 0.8 0.1 0.9 0.3 0.7 0.3 2.5 2z m-69.9 94.7l0.4-0.5 0.9-0.4 0.4-0.1 0.4-0.2 1-2.1 0.4-0.4 0.4-0.3 0.4-0.4 0.4-0.7 0.4-1.4 0.3-0.7 0.4-0.4 0.9-0.8 0.1-0.3-0.1-0.3-0.4-0.5-0.2-0.7 0-1 1.6-6.1 0.6-1.7 0.5-1-0.1-0.4-0.3-0.3-2.3-0.5-0.4-0.2-0.3-0.2-0.2-0.3-0.2-0.9-0.2-1-0.3-0.7-0.2-0.4-0.2-0.3-0.4-0.7-0.9-0.8-0.7-1-0.3-0.2-0.3-0.2-1.2-0.4-1.1-0.6-0.9-0.2-1.5 0-0.4-0.1-0.4-0.2-0.7-0.4-0.4-0.1-1.4-0.3-0.5 0-0.5 0-1.5 0.2-0.6-0.1-0.7-0.4-0.6-0.5-0.5-0.7-0.3-0.9 0.7-1.3 1.4-1.3 3.9-1.9 1.6-0.5 1.1-0.1 0.3 0.2 0.2 0.3 0.3 0.3 0.4 0.1 0.7-0.2 4.1-2.3 0.8-0.4 3.4-0.8 1-1.3 1.6-5.2 3.6 3.2 9.5 3.9 1.3 0.7 1.1-0.4 2.5 1 6.1 3.5 2.8 0.9 3 0.1 2.9-1.2 1.8 1.5 4 2.5 1.8 1.5 0 1-3.1 0.8 0.1 2.3 1.9 2.7 2.1 2-1.3 0.4-1.2 0.9-1.9 2 2.3 1 2.8 0.3 5.7-0.1 0 1-2.3 1.5-2.8 1.2-2.4 1.6-1.1 2.8-0.6 0.7-3.7 2.1-0.7 1.2-0.8 2.9-0.6 1.3-5-2.5-2.6-0.2-1.2 2.1 0.7 1.3 2.5 3.1-0.4 0.7-5.1 2.5-0.9 0.2-0.6 0.8-3.7 1.9-0.8 1.3-3.4 11-1.5 2.8-1.9 2.5-1.1 0-4.4-9.1-13.2-17.9 0-0.1z m15.4-59.9l1.6 0.3 0.9 0.8 1.2 0.3 1.7 0 0 1-1.9 0.7-2.4 0.6-2.7 0.2-2.7-0.3-2.7-1.2-1.5-1.4-2.2-4.1 3-1 1.3-0.1 5.1 0.9 4.6 1.4 0 1.1-5.4 0 1.5 0.8 0.6 0z m-310.6 730.4l-2.9 0.1 2-3.5 1.9-1.5 2.2-1.3 2.2-0.4 0 1.6-0.1 2-2.1 2.3-3.2 0.7z m505.6-507.7l2-1 2.3-0.1-0.2 1.9-1.2 0.5-2-0.4-0.9-0.9z' },
++  { id: 'heredia', d: 'M601.1 246.6l-0.3-1.4 0-0.8 0-0.5 0.1-0.5 0.8-1.2 2.9-3.1 0-0.4 1.9-24.3 0.2-22 0.3-18.4 0.3-25.8 0.4-34.3 0-0.7 1.4 0.2 1.9-0.3 3 2.9 1.8 0.7 1.8-1.4 1.1 0 1.9 1.9 3.9-2.5 2.7 0.6 1.9-1.9 2.1-0.3 1.7 1.2 0.8 2.7 9.5 7.6 1 0.5 1.5 0.2 1.6-0.3 2.2-1.6 1-0.3 4.3 0.9 0.6-0.4 3.2-3.8 10.5-4 0.8-0.2 0.5 0.4 1.8 0.5 0.5 0.2 0.4 0.2 0.4 0.3 0.7 0.8 0.6 0.7 0.5 0.7 0.1 0.6 0 0.5-0.5 3.3 0.1 0.7 0.1 0.6 0.5 0.6 0.5 0.6 0.7 0.5 1.3 0.8 0.6 0.5 0.4 0.5 0.3 0.5 0 0.3-0.1 0.1-0.7-0.2-0.6-0.1-0.6 0-1.7 0.5-4.6 0.4-0.9 0.2-1.6 0.5-2.7 1.7-1.6 1.8-0.6 0.4-1.5 0.8-1.4 0.9-0.6 0.5-0.2 0.3-0.3 1-0.2 1.4-0.2 4.9 0.1 1.5-0.9 6.9 0 1 0.2 0.3 0.2 0.4 0.5 0.6 0.2 0.3 0.2 0.4 0.1 0.4-0.1 0.6-0.1 1.3 0 0.5 0.1 0.5 0.7 1.6 0 0.4 0 0.8-0.9 3.4-1.4 2.2-0.6 0.6-0.3 0.3-0.4 0.2-0.4 0.1-0.4 0-0.4 0.2-0.3 0.4-1.3 2.4-0.4 0.7-0.6 1.1-0.1 0.7-0.1 1 0.4 2.3 0.2 0.6 2.1 4 0.5 1.7 0.3 0.8 0.4 0.7 0.5 0.6 0.1 0.3 0.1 0.8-0.2 1.2-0.5 2.3-0.1 1.9 0.1 0.5-0.2 0.8-0.4 1.2-2 4.1-0.5 0.8-7.4 8-5.8 0.6-3.1 4-1 1-0.7 0.2-3.5 0.3-3.1 0.6-6.9 0.6-0.8 0.3 0.1 0.8 0.6 1.3 3.6 5.4 2.1 2.2 0.4 1.3 0.2 3.9 1.3 1.4 0.8 0.6 0.5 0.6 0.2 1.2-1 3.2-2 5.3-3 1.8-4.2 1.4-1.6 0.3-4.1-0.4-0.7 0.1-5.8 2.6-1.8-0.8-3.1-1.5-2.8 0.4z' },
++  { id: 'san-jose', d: 'M542.5 267.9l1.1 0 0.3-0.3 0.2-1.2 0.3-0.6 2.9-3.7 0.1-0.5-0.1-0.4 0.5-0.6 1-0.8 2.7-1.4 1.9-1.8 0.2-0.4 0.1-0.2 1.3-0.8 4.9-2.2 7-0.5 3.8-0.8 3.1 0.9 3.1 0.5 0.6 0.2 0.8 0.2 1.9 0.2 0.8 0.3 2.8-0.4 10.6-3 4.4-1.4 2.3-2.6 2.8-0.4 3.1 1.5 1.8 0.8 5.8-2.6 0.7-0.1 4.1 0.4 1.6-0.3 4.2-1.4 3-1.8 2-5.3 1-3.2-0.2-1.2-0.5-0.6-0.8-0.6-1.3-1.4-0.2-3.9-0.4-1.3-2.1-2.2-3.6-5.4-0.6-1.3-0.1-0.8 0.8-0.3 6.9-0.6 3.1-0.6 3.5-0.3 0.7-0.2 1-1 3.1-4 5.8-0.6-1.4 1.4-1.1 1.4-2.1 7.2 2.2 7.7 0.4 0.6 0.6 0.7 1.3 1.3 1.4 0.9 0.7 0.4 0.3 0.2 3.2 3.6 0.6 0.9 0.4 1.4 0.3 4.2 0.7 3.5-0.3 1.3-0.5 0.7-0.6 0.5-0.9 0.3-1.9 0.2-2 2.2-0.5 0.2-0.6 0.1-0.5-0.1-0.3-0.2-1.5-0.3-4.1 0.1-0.2 0.1-7.2 2.6-4.2 6.9-0.3 1.3 0.3 0.2 0.6 0.3 3.1 1.4-4.5 7.4-1.2 1.3-1.9 1.3-2.8 2.6-1.1 1.7-0.5 1-0.1 0.7 0 0.5 0.1 0.5 0.2 0.4 0.2 0.3 0.4 0.2 0.4 0 0.5-0.1 1.9-0.7 1.3-0.4 0.4 0 1 0.1 0.9 0.2 5.8-1.3 1.3 0.2 0.4 1.5 0.3 0.8 0.3 0.8 1 2 3.1 1 0.8 0.7 0.1 0.4 0.1 0.3 1.4 2.4 3.5 4.6 0.8 0.7 0.5 0.1 1.9 0.7 3.2 1.6 0.8 0.2 0.4-0.1 0.4-0.2 0.4-0.2 0.7-0.1 1.2 0.1 0.7 0.2 0.4 0.3 0.3 0.3 1.2 2 1.1 2.3 0.1 0.4 0.3 0.7 0.6 1.3 0.8 1.3 0.6 0.6 0.4 0.4 0.5 0.1 3.4 0.7 0.8 0 3-0.3 1.8 2.4 0.4 0.4 0.8 0.5 2.4 0.8 0.7 0.4 0.4 0.4 0.2 0.4 0.5 1.7 0.3 2.1 0.3 0.3 0.3 0 2.2-1.1 0.8-0.3 0.4-0.1 1.9 0.2 0.5 0 0.5-0.1 0.4-0.1 0.4-0.1 0.4-0.2 0.3-0.2 0.3-0.3 0.2-0.3 0.8-1.4 0.6-0.7 1.9-0.6 4 4.2 1.4 1.2 1.5 0.7 0.4 0.2 16.7 10.1 5.2 14.4 1.3 1.9 0.6 0.5 1.9 1.4-3.4 3.6-0.4 0.6-0.5 0.9-1.1 3.9-0.4 0.9-0.3 0.6-4.3 4.9-0.6 0.8-0.1 0.4-1.5 8 0 0.5 0.2 0.3 0.3 0.2 1.4 0.3 0.4 0.1 0.3 0.3 0.2 0.3 0.3 0.2 0.4 0.1 0.4 0 0.4 0 0.4 0 0.3 0.2 0.2 0.3 0.1 0.5 0.2 0.3 0.2 0.6 0.2 0.9 0.1 1.9-0.3 1-1.2 2.2-0.3 0.9-0.1 0.6 0.5 3.7-0.1 0.8-0.2 0.6-0.3 0.3-0.4 0.2-0.3 0.2-0.5 0.3-0.6 0.6-1.7 2.4-0.3 0.2-0.3 0.2-0.3 0.2-0.5 0-0.4-0.1-0.4-0.1-0.7-0.4-0.3-0.3-0.7-0.8-0.7-0.5-0.4-0.2-0.5-0.1-0.4 0.1-1.4 0.2-1.7 0.1-0.3-0.2-14.4-9.3-1-1.3-0.5-0.6-0.1-0.3-1.2-4.2-0.1-0.4-0.1-0.4-0.5-1-3.6-4.4-2.2-2.1-1.5-0.8-0.5-0.1-0.4 0-0.4 0-0.5 0-0.5 0.1-0.4 0.2-0.4 0.2-0.3 0.2-1.4 2-0.2 0.3-0.3 0.2-0.4 0.1-0.5 0.1-1.1-0.3-7.9-3.6-1.1-1-0.6-0.6-0.4-0.7-0.7-1.5-1.1-3.2-0.2-1.8 0-1 0.2-1.6-0.6-1-1-1.4-5.1-5.2-0.2-0.4-0.7-3-0.2-0.7-1.1-2-0.6-0.6-0.5-0.3-0.4-0.1-0.5 0-0.4 0-0.4 0.2-0.4 0.1-0.3 0.3-0.3 0.2-0.3 0.3-0.2 0.4-2.4-0.8-10.4-6.9-3.6-3.6-2.5-4.9-3.5-1.6-0.6-1 0.4-0.8 0.4-0.7 0.1-0.7 0-1-0.3-2-0.3-0.8-0.4-0.6-0.4-0.3-0.8-0.3-1.4-0.2-2.1 0.1-1.4 0.2-0.7-0.1-1.3-0.5-1.2-1.1-0.5-0.6-0.3-0.6 0-0.5 0.1-1 0.3-1.4 0-0.6 0-0.7-0.4-1.3-0.4-0.7-0.5-0.4-0.4-0.2-1.4-0.1-7.1 0.6-2.3-0.2-2.1-0.9-5.6 0.2-1.7-0.3-0.2-0.3-1.1-1.3-0.6-0.5-0.9-0.7-2.3-0.2-6.7 0.3-4.2 0.8-1.8 0-0.9 0.2-0.4 0.2 0 0.4 0.5 3.2-0.1 1-0.1 0.4-0.4 0.4-0.5 0.6-1.8 1.4-0.4 0.4-0.3 0.4-0.9 1.9-0.5 0.4-0.4 0.2-0.5 0.1-0.4-0.1-0.4-0.1-0.4-0.2-0.3-0.3-0.7-0.8-0.4-0.2-0.3-0.2-0.5-0.1-0.5 0-2.5 0.7-0.6 0-0.4-0.1-1.1-0.4-4.9 0.8-1.6-0.2-0.5-0.4-1.1-1-1-1.3-0.7-1.5-0.4-1.2-1.1-5.4-0.1-0.3-3.5-6.2-0.4-0.9 0-0.5 0.1-3.1-0.4-2-1.2-4-0.1-0.4 0.1-0.5 0.1-0.3 0.2-0.4 0.3-0.2 0.4-0.2 0.4-0.2 1-0.1 3 0.2 0.5-0.1 0.4-0.1 0.4-0.1 0.3-0.3 0.3-0.4 0.3-0.6 0.2-1.3-0.1-0.9-0.1-0.6-0.8-1.5-0.9-1.3-0.3-0.3-0.5-0.5-0.7-0.5-1.1-0.7-1.5-0.6 1.4-1.2z' },
++  { id: 'cartago', d: 'M641.7 217.9l19.8 9 6.9 3.3 9.5 4.5 15.5 7.2 4.1 1.5 22.8 0.2 16.7 0.4 3.2 0.7-0.4 0.6-2 2.8-1.2 2.7-0.5 2.8 0.2 3.5 1.8 5.7 0.4 2.9-1 2.8-6.7 8.4-4.8 5.8-1.3 2-3.5 9-9.1 11-2.2 4.5-0.6 4.9 0.4 1.6 0.3 1.9 0.9 2.2 0.3 0.4 0.5 0.6 0.4 0.4 1 2.2 0.6 1.7-16.7-10.1-0.4-0.2-1.5-0.7-1.4-1.2-4-4.2-1.9 0.6-0.6 0.7-0.8 1.4-0.2 0.3-0.3 0.3-0.3 0.2-0.4 0.2-0.4 0.1-0.4 0.1-0.5 0.1-0.5 0-1.9-0.2-0.4 0.1-0.8 0.3-2.2 1.1-0.3 0-0.3-0.3-0.3-2.1-0.5-1.7-0.2-0.4-0.4-0.4-0.7-0.4-2.4-0.8-0.8-0.5-0.4-0.4-1.8-2.4-3 0.3-0.8 0-3.4-0.7-0.5-0.1-0.4-0.4-0.6-0.6-0.8-1.3-0.6-1.3-0.3-0.7-0.1-0.4-1.1-2.3-1.2-2-0.3-0.3-0.4-0.3-0.7-0.2-1.2-0.1-0.7 0.1-0.4 0.2-0.4 0.2-0.4 0.1-0.8-0.2-3.2-1.6-1.9-0.7-0.5-0.1-0.8-0.7-3.5-4.6-1.4-2.4-0.1-0.3-0.1-0.4-0.8-0.7-3.1-1-1-2-0.3-0.8-0.3-0.8-0.4-1.5-1.3-0.2-5.8 1.3-0.9-0.2-1-0.1-0.4 0-1.3 0.4-1.9 0.7-0.5 0.1-0.4 0-0.4-0.2-0.2-0.3-0.2-0.4-0.1-0.5 0-0.5 0.1-0.7 0.5-1 1.1-1.7 2.8-2.6 1.9-1.3 1.2-1.3 4.5-7.4-3.1-1.4-0.6-0.3-0.3-0.2 0.3-1.3 4.2-6.9 7.2-2.6 0.2-0.1 4.1-0.1 1.5 0.3 0.3 0.2 0.5 0.1 0.6-0.1 0.5-0.2 2-2.2 1.9-0.2 0.9-0.3 0.6-0.5 0.5-0.7 0.3-1.3-0.7-3.5-0.3-4.2-0.4-1.4-0.6-0.9-3.2-3.6-0.3-0.2-0.7-0.4-1.4-0.9-1.3-1.3-0.6-0.7-0.4-0.6-2.2-7.7z' }
++]
++
++// Mapeo dinámico para el estado del mapa geográfico
++const estadoMap = computed(() => {
++  const map = {}
++  props.provincias.forEach(prov => {
++    const completada = props.misionesCompletadas.includes(prov.id)
++    
++    // Identificar recomendada
++    const idxEnRuta = rutaOrdenada.indexOf(prov.id)
++    let recomendada = false
++    if (prov.desbloqueada && !completada) {
++      const anterioresCompletadas = rutaOrdenada.slice(0, idxEnRuta).every(id => props.misionesCompletadas.includes(id))
++      if (anterioresCompletadas) recomendada = true
++    }
++
++    map[prov.id] = {
++      ...prov,
++      color: COLORES[prov.id]?.hex || '#00ff88',
++      completada,
++      recomendada
++    }
++  })
++  return map
++})
++
++// Mapeo dinámico de pines e información de nodos
+ const nodosProvincias = computed(() => {
+   return props.provincias.map(prov => {
+     const coords = COORDENADAS[prov.id] || { x: 300, y: 200, color: '#00ff88' }
+     const completada = props.misionesCompletadas.includes(prov.id)
+     
+-    // Identificar si es la provincia recomendada (primera desbloqueada que no esté completada)
+     const idxEnRuta = rutaOrdenada.indexOf(prov.id)
+     let recomendada = false
+     if (prov.desbloqueada && !completada) {
+-      // Es recomendada si todas las anteriores en la ruta están completadas
+       const anterioresCompletadas = rutaOrdenada.slice(0, idxEnRuta).every(id => props.misionesCompletadas.includes(id))
+       if (anterioresCompletadas) recomendada = true
+     }
+@@ -193,7 +283,7 @@ const nodosProvincias = computed(() => {
+   })
+ })
+ 
+-// --- Enlaces/Conexiones entre provincias en la ruta ---
++// Conexiones de rutas geométricas dinámicas
+ const enlacesRuta = computed(() => {
+   const enlaces = []
+   for (let i = 0; i < rutaOrdenada.length - 1; i++) {
+@@ -217,59 +307,287 @@ const enlacesRuta = computed(() => {
+         y2: c2.y,
+         desbloqueado: p2.desbloqueada,
+         completado: p1Completada && p2Completada,
+-        activo: p1Completada && !p2Completada // La línea pulsa hacia la provincia activa
++        activo: p1Completada && !p2Completada
+       })
+     }
+   }
+   return enlaces
+ })
+ 
+-function seleccionarNodo(node) {
+-  if (!node.desbloqueada) return
++const tooltipActive = ref(false)
++const tooltipData = ref({ nombre: '', estado: '', mensaje: '', color: '#fff', x: 0, y: 0 })
++let tooltipTimeout = null
++
++const { provinciaRecienDesbloqueada, guardarProgreso } = useEstadoJuego()
++
++const animandoUnlock = ref(false)
++const animacionUnlock = ref({
++  activa: false,
++  x1: 0,
++  y1: 0,
++  x2: 0,
++  y2: 0,
++  targetId: '',
++  fase: 0
++})
++
++onMounted(() => {
++  if (provinciaRecienDesbloqueada.value) {
++    const newId = provinciaRecienDesbloqueada.value
++    const idxNew = rutaOrdenada.indexOf(newId)
++    if (idxNew > 0) {
++      const prevId = rutaOrdenada[idxNew - 1]
++      const c1 = COORDENADAS[prevId]
++      const c2 = COORDENADAS[newId]
++      
++      if (c1 && c2) {
++        animandoUnlock.value = true
++        animacionUnlock.value = {
++          activa: true,
++          x1: c1.x,
++          y1: c1.y,
++          x2: c2.x,
++          y2: c2.y,
++          targetId: newId,
++          fase: 1
++        }
++        
++        // Fase 1: Dibujar la línea de conexión (1.2 segundos)
++        setTimeout(() => {
++          animacionUnlock.value.fase = 2
++          reproducirEfecto('checkpoint')
++          
++          // Fase 2: Pulso neón (0.8 segundos)
++          setTimeout(() => {
++            animandoUnlock.value = false
++            animacionUnlock.value.activa = false
++            provinciaRecienDesbloqueada.value = null
++            guardarProgreso()
++          }, 800)
++        }, 1200)
++      } else {
++        provinciaRecienDesbloqueada.value = null
++        guardarProgreso()
++      }
++    } else {
++      provinciaRecienDesbloqueada.value = null
++      guardarProgreso()
++    }
++  }
++})
++
++function getProvinciaInfo(id) {
++  const p = props.provincias.find(prov => prov.id === id)
++  if (!p) return null
++  
++  const completada = props.misionesCompletadas.includes(id)
++  const estadoMapItem = estadoMap.value[id]
++  const recomendada = estadoMapItem?.recomendada
++  
++  let estado = 'Bloqueada 🔒'
++  if (completada) estado = 'Completada ✅'
++  else if (recomendada) estado = 'Recomendada ⚡'
++  else if (p.desbloqueada) estado = 'Disponible 🔓'
++  
++  let mensaje = ''
++  if (!p.desbloqueada) {
++    const idx = rutaOrdenada.indexOf(id)
++    if (idx > 0) {
++      const prevId = rutaOrdenada[idx - 1]
++      const prevProv = props.provincias.find(prov => prov.id === prevId)
++      const prevNombre = prevProv ? prevProv.nombre : prevId
++      mensaje = `Completa ${prevNombre} para desbloquear.`
++    } else {
++      mensaje = 'Provincia bloqueada.'
++    }
++  } else {
++    mensaje = completada ? 'Misión superada.' : 'Misión lista para patrullar.'
++  }
++  
++  return {
++    nombre: p.nombre,
++    estado,
++    mensaje,
++    color: COLORES[id]?.hex || '#00ff88'
++  }
++}
++
++function onMouseMove(e) {
++  const container = e.currentTarget.getBoundingClientRect()
++  tooltipData.value.x = e.clientX - container.left + 15
++  tooltipData.value.y = e.clientY - container.top + 15
++}
++
++function onMouseEnterProvincia(id) {
++  const info = getProvinciaInfo(id)
++  if (info) {
++    tooltipData.value.nombre = info.nombre
++    tooltipData.value.estado = info.estado
++    tooltipData.value.mensaje = info.mensaje
++    tooltipData.value.color = info.color
++    tooltipActive.value = true
++  }
++}
++
++function onMouseLeaveProvincia() {
++  tooltipActive.value = false
++}
++
++function seleccionarNodo(node, event) {
++  if (animandoUnlock.value) return
++  if (!node) return
++  
++  // Siempre emitimos la selección para poder ver detalles del nodo
+   emit('seleccionar', node)
++  
++  // Disparar sonido
++  reproducirEfecto('boton')
++  
++  // Soporte de Tooltip para móvil/tap
++  const info = getProvinciaInfo(node.id)
++  if (info) {
++    tooltipData.value.nombre = info.nombre
++    tooltipData.value.estado = info.estado
++    tooltipData.value.mensaje = info.mensaje
++    tooltipData.value.color = info.color
++    
++    let clientX = null
++    let clientY = null
++
++    if (event) {
++      if (event.clientX !== undefined && event.clientX !== null) {
++        clientX = event.clientX
++        clientY = event.clientY
++      } else if (event.touches && event.touches.length > 0) {
++        clientX = event.touches[0].clientX
++        clientY = event.touches[0].clientY
++      } else if (event.changedTouches && event.changedTouches.length > 0) {
++        clientX = event.changedTouches[0].clientX
++        clientY = event.changedTouches[0].clientY
++      }
++    }
++
++    const svg = event?.currentTarget?.ownerSVGElement || event?.currentTarget
++    const container = svg?.parentElement || svg
++
++    if (clientX !== null && clientY !== null && container) {
++      const containerRect = container.getBoundingClientRect()
++      let posX = clientX - containerRect.left + 15
++      let posY = clientY - containerRect.top + 15
++
++      // Limitar coordenadas para evitar desborde lateral y vertical en pantallas pequeñas
++      if (posX + 180 > containerRect.width) {
++        posX = clientX - containerRect.left - 190
++      }
++      if (posY + 100 > containerRect.height) {
++        posY = clientY - containerRect.top - 110
++      }
++
++      tooltipData.value.x = Math.max(10, posX)
++      tooltipData.value.y = Math.max(10, posY)
++    } else {
++      tooltipData.value.x = node.x - 50
++      tooltipData.value.y = node.y - 120
++    }
++    
++    tooltipActive.value = true
++    
++    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
++      if (tooltipTimeout) clearTimeout(tooltipTimeout)
++      tooltipTimeout = setTimeout(() => {
++        tooltipActive.value = false
++      }, 3500)
++    }
++  }
+ }
+ </script>
+ 
+ <style scoped>
+ .mapa-costa-rica-container {
+   width: 100%;
+-  background: rgba(10, 15, 30, 0.4);
++  background: rgba(8, 10, 20, 0.4);
+   border: 1px solid rgba(255, 255, 255, 0.05);
+   border-radius: var(--radius-xl);
+-  padding: var(--space-4);
+-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
++  padding: var(--space-2);
++  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+   display: flex;
+   align-items: center;
+   justify-content: center;
++  backdrop-filter: blur(8px);
++  position: relative;
++  overflow: hidden;
+ }
+ 
+ .svg-mapa-cr {
+   width: 100%;
+-  max-width: 580px;
++  max-width: 600px;
+   height: auto;
++  aspect-ratio: 3 / 4;
++}
++
++/* --- Capas Geográficas --- */
++.provincia-path {
++  fill: rgba(10, 12, 28, 0.7);
++  stroke: rgba(255, 255, 255, 0.05);
++  stroke-width: 1.5;
++  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
++  cursor: pointer;
++  pointer-events: all;
++}
++
++.provincia-path.disponible {
++  fill: rgba(var(--neon-color-rgb), 0.03);
++  stroke: rgba(var(--neon-color-rgb), 0.4);
++  stroke-width: 2.2;
++  cursor: pointer;
++  animation: dynamic-glow 3s infinite alternate;
++}
++
++.provincia-path.completada {
++  fill: rgba(0, 255, 136, 0.06);
++  stroke: rgba(0, 255, 136, 0.5);
++  stroke-width: 2.2;
++  cursor: pointer;
++}
++
++/* Hover y Selección */
++.provincia-path.disponible:hover,
++.provincia-path.completada:hover {
++  fill: rgba(var(--neon-color-rgb), 0.12);
++  stroke: var(--neon-color);
++  stroke-width: 3.5;
++  filter: drop-shadow(0 0 10px var(--neon-color));
++}
++
++.provincia-path.seleccionada {
++  fill: rgba(var(--neon-color-rgb), 0.18) !important;
++  stroke: var(--neon-color) !important;
++  stroke-width: 4.5 !important;
++  filter: drop-shadow(0 0 14px var(--neon-color)) !important;
++  z-index: 10;
+ }
+ 
+ /* --- Conexiones vectoriales --- */
+ .linea-conexion-neon {
+-  stroke: rgba(255, 255, 255, 0.05);
+-  stroke-width: 3;
++  stroke: rgba(255, 255, 255, 0.03);
++  stroke-width: 2.5;
+   transition: all 0.5s ease;
++  pointer-events: none;
+ }
+ 
+ .linea-conexion-neon.desbloqueada {
+-  stroke: rgba(0, 200, 255, 0.25);
+-  stroke-width: 4;
++  stroke: rgba(0, 200, 255, 0.18);
++  stroke-width: 3.5;
+ }
+ 
+ .linea-conexion-neon.completada {
+-  stroke: var(--color-neon-green);
+-  box-shadow: 0 0 10px var(--color-neon-green-glow);
+-  stroke-width: 4;
++  stroke: rgba(0, 255, 136, 0.4);
++  stroke-width: 3.5;
+ }
+ 
+ .linea-conexion-neon.pulsa {
+   stroke: #ff9d00;
+-  stroke-width: 4;
++  stroke-width: 3.5;
+   stroke-dasharray: 8 4;
+   animation: stroke-slide 1.5s linear infinite;
+ }
+@@ -280,7 +598,7 @@ function seleccionarNodo(node) {
+   }
+ }
+ 
+-/* --- Nodos --- */
++/* --- Pines e Indicadores en el Centro --- */
+ .nodo-provincia {
+   cursor: pointer;
+   pointer-events: all;
+@@ -288,13 +606,13 @@ function seleccionarNodo(node) {
+ }
+ 
+ .nodo-provincia.bloqueada {
+-  cursor: not-allowed;
+-  opacity: 0.5;
++  cursor: pointer;
++  opacity: 0.65;
+ }
+ 
+ .circulo-nodo-core {
+   fill: #060913;
+-  stroke-width: 3;
++  stroke-width: 2.5;
+   transition: all 0.3s ease;
+ }
+ 
+@@ -305,48 +623,48 @@ function seleccionarNodo(node) {
+   transition: all 0.3s ease;
+ }
+ 
+-/* Hover en nodos activos */
++/* Interacciones con los pines */
+ .nodo-provincia:not(.bloqueada):hover .circulo-nodo-core {
+-  r: 22;
+-  stroke-width: 4;
++  r: 26;
++  stroke-width: 3.5;
+   filter: drop-shadow(0 0 8px currentColor);
+ }
+ 
+ .nodo-provincia:not(.bloqueada):hover .brillo-nodo {
+-  r: 28;
+-  stroke-width: 2;
++  r: 32;
++  stroke-width: 1.5;
+   animation: rotate-clockwise 4s linear infinite;
+ }
+ 
+ .nodo-provincia.seleccionada .circulo-nodo-core {
+-  r: 24;
+-  stroke-width: 4;
++  r: 28;
++  stroke-width: 3.5;
+ }
+ 
+ .nodo-provincia.seleccionada .brillo-nodo {
+-  r: 30;
++  r: 34;
+   stroke-width: 2;
+   stroke-dasharray: 6 3;
+   animation: rotate-clockwise 6s linear infinite;
+ }
+ 
+ .emoji-nodo {
+-  font-size: 1.15rem;
++  font-size: 1.1rem;
+   user-select: none;
+ }
+ 
+ .nodo-provincia.seleccionada .emoji-nodo {
+-  font-size: 1.35rem;
++  font-size: 1.25rem;
+ }
+ 
+-/* --- Labels de Provincias --- */
++/* --- Etiquetas de Provincias --- */
+ .label-nodo-grupo {
+-  opacity: 0.85;
++  opacity: 0;
+   transition: opacity 0.3s ease;
+   pointer-events: none;
+ }
+ 
+-.nodo-provincia:hover .label-nodo-grupo,
++.nodo-provincia:not(.bloqueada):hover .label-nodo-grupo,
+ .nodo-provincia.seleccionada .label-nodo-grupo {
+   opacity: 1;
+ }
+@@ -355,6 +673,7 @@ function seleccionarNodo(node) {
+   fill: #0c0f1a;
+   stroke: rgba(255, 255, 255, 0.08);
+   stroke-width: 1;
++  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+ }
+ 
+ .nodo-provincia.seleccionada .fondo-label-nodo {
+@@ -363,7 +682,7 @@ function seleccionarNodo(node) {
+ 
+ .texto-label-nodo {
+   font-family: var(--font-display);
+-  font-size: 0.65rem;
++  font-size: 0.7rem;
+   font-weight: var(--font-bold);
+   fill: var(--color-text-secondary);
+   user-select: none;
+@@ -376,18 +695,140 @@ function seleccionarNodo(node) {
+ /* --- Pings recomendados --- */
+ .nodo-recomendado-ping {
+   fill: #ff9d00;
+-  stroke: #0a0e1a;
++  stroke: #060913;
+   stroke-width: 1.5;
+-  animation: pulse-ping 2s infinite;
++  animation: pulse-ping 1.6s infinite ease-in-out;
++  transform-origin: center;
+ }
+ 
+ @keyframes pulse-ping {
+-  0% { transform: scale(0.9); opacity: 0.9; }
+-  50% { transform: scale(1.2); opacity: 1; }
+-  100% { transform: scale(0.9); opacity: 0.9; }
++  0% {
++    r: 6px;
++    opacity: 0.55;
++  }
++  50% {
++    r: 10px;
++    opacity: 1;
++    fill: #ffb700;
++  }
++  100% {
++    r: 6px;
++    opacity: 0.55;
++  }
+ }
+ 
+ @keyframes rotate-clockwise {
+   to { transform: rotate(360deg); }
+ }
++
++/* --- Responsividad --- */
++@media (max-width: 640px) {
++  .texto-label-nodo {
++    font-size: 0.6rem;
++  }
++  .fondo-label-nodo {
++    width: 90px;
++    x: -45px;
++  }
++}
++
++/* --- Tooltip Flotante --- */
++.map-tooltip {
++  position: absolute;
++  background: rgba(10, 14, 26, 0.92);
++  backdrop-filter: blur(12px);
++  -webkit-backdrop-filter: blur(12px);
++  border: 1px solid rgba(255, 255, 255, 0.12);
++  border-radius: var(--radius-md);
++  padding: var(--space-3) var(--space-4);
++  pointer-events: none;
++  z-index: 100;
++  display: flex;
++  flex-direction: column;
++  gap: 4px;
++  font-family: var(--font-display);
++  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
++  max-width: 220px;
++  text-align: left;
++}
++
++.tooltip-header {
++  font-size: var(--text-sm);
++  font-weight: var(--font-bold);
++  text-shadow: 0 0 5px rgba(255, 255, 255, 0.15);
++}
++
++.tooltip-status {
++  font-size: 0.75rem;
++  font-weight: var(--font-semibold);
++  color: var(--color-text-secondary);
++}
++
++.tooltip-message {
++  font-size: 0.7rem;
++  color: var(--color-text-muted);
++  line-height: 1.3;
++  border-top: 1px solid rgba(255, 255, 255, 0.05);
++  padding-top: 4px;
++  margin-top: 2px;
++}
++
++/* Transiciones Rápidas del Tooltip */
++.fade-fast-enter-active,
++.fade-fast-leave-active {
++  transition: opacity 0.15s ease;
++}
++.fade-fast-enter-from,
++.fade-fast-leave-to {
++  opacity: 0;
++}
++
++/* --- Animación de Desbloqueo de Provincia --- */
++.linea-conexion-unlock-anim {
++  stroke: var(--color-neon-gold);
++  stroke-width: 4.5;
++  stroke-dasharray: 1000;
++  stroke-dashoffset: 1000;
++  animation: draw-line-unlock 1.2s forwards cubic-bezier(0.4, 0, 0.2, 1);
++  pointer-events: none;
++}
++
++@keyframes draw-line-unlock {
++  to {
++    stroke-dashoffset: 0;
++  }
++}
++
++.pulse-unlock-neon {
++  animation: pulse-node-glow 0.8s ease-in-out infinite alternate;
++}
++
++@keyframes pulse-node-glow {
++  0% {
++    transform: scale(1);
++    filter: drop-shadow(0 0 4px var(--neon-color));
++  }
++  100% {
++    transform: scale(1.25);
++    filter: drop-shadow(0 0 20px var(--neon-color));
++  }
++}
++
++.pulse-path-unlock {
++  animation: pulse-path-glow 0.8s ease-in-out infinite alternate;
++}
++
++@keyframes pulse-path-glow {
++  0% {
++    fill: rgba(var(--neon-color-rgb), 0.05);
++    stroke: rgba(var(--neon-color-rgb), 0.4);
++    stroke-width: 2.2;
++  }
++  100% {
++    fill: rgba(var(--neon-color-rgb), 0.25);
++    stroke: var(--neon-color);
++    stroke-width: 4.5;
++    filter: drop-shadow(0 0 15px var(--neon-color));
++  }
++}
+ </style>
+diff --git a/src/components/game/MapaMisiones.vue b/src/components/game/MapaMisiones.vue
+index 754c02d..81c5831 100644
+--- a/src/components/game/MapaMisiones.vue
++++ b/src/components/game/MapaMisiones.vue
+@@ -86,14 +86,14 @@
+           <button 
+             class="btn-vista" 
+             :class="{ 'activo': vistaActiva === 'mapa' }"
+-            @click="vistaActiva = 'mapa'"
++            @click="vistaActiva = 'mapa'; reproducirEfecto('boton')"
+           >
+             🗺️ Mapa Interactivo
+           </button>
+           <button 
+             class="btn-vista" 
+             :class="{ 'activo': vistaActiva === 'tarjetas' }"
+-            @click="vistaActiva = 'tarjetas'"
++            @click="vistaActiva = 'tarjetas'; reproducirEfecto('boton')"
+           >
+             🎴 Vista de Tarjetas
+           </button>
+@@ -348,6 +348,7 @@
+             </header>
+ 
+             <form class="formulario-edicion" @submit.prevent="guardarEdicion" novalidate>
++              <div class="form-campos-scroll">
+               
+               <!-- Campo: Nombre -->
+               <div class="form-group-edicion">
+@@ -485,6 +486,8 @@
+                 />
+               </div>
+ 
++              </div>
++
+               <!-- Acciones del Formulario -->
+               <div class="acciones-edicion">
+                 <button type="button" class="btn btn-outline" @click="cerrarEditarPerfil">
+@@ -1048,6 +1051,57 @@ onMounted(async () => {
+   box-shadow: 0 0 10px var(--color-neon-green-glow);
+ }
+ 
++/* --- Selector de Vista Mapa vs Tarjetas (Neon Glassmorphism) --- */
++.selector-vista-mapa {
++  display: flex;
++  background: rgba(13, 17, 33, 0.65);
++  border: 1px solid rgba(255, 255, 255, 0.08);
++  border-radius: var(--radius-xl);
++  padding: 4px;
++  margin-bottom: var(--space-4);
++  gap: 4px;
++  width: fit-content;
++  backdrop-filter: blur(12px);
++  -webkit-backdrop-filter: blur(12px);
++  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.02);
++}
++
++.btn-vista {
++  background: transparent;
++  border: 1px solid transparent;
++  color: var(--color-text-secondary);
++  padding: var(--space-2) var(--space-5);
++  border-radius: var(--radius-lg);
++  font-family: var(--font-display);
++  font-size: var(--text-sm);
++  font-weight: var(--font-bold);
++  cursor: pointer;
++  transition: all var(--transition-base);
++  display: flex;
++  align-items: center;
++  gap: var(--space-2);
++  outline: none;
++}
++
++.btn-vista:hover {
++  color: var(--color-text-primary);
++  background: rgba(255, 255, 255, 0.03);
++}
++
++.btn-vista.activo {
++  background: rgba(0, 200, 255, 0.08);
++  border-color: rgba(0, 200, 255, 0.3);
++  color: var(--color-neon-blue);
++  box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
++  text-shadow: 0 0 8px rgba(0, 200, 255, 0.4);
++}
++
++.modo-diurno-mapa .btn-vista.activo {
++  background: rgba(0, 200, 255, 0.04);
++  border-color: rgba(0, 200, 255, 0.15);
++  box-shadow: none;
++}
++
+ /* --- Contenido mapa grid --- */
+ .contenido-mapa-grid {
+   display: grid;
+@@ -1284,6 +1338,7 @@ onMounted(async () => {
+ .modal-card-edicion {
+   width: 100%;
+   max-width: 500px;
++  max-height: 85vh;
+   background: var(--gradient-card);
+   border: 1px solid var(--color-border);
+   border-radius: var(--radius-xl);
+@@ -1292,6 +1347,7 @@ onMounted(async () => {
+   display: flex;
+   flex-direction: column;
+   gap: var(--space-4);
++  overflow: hidden;
+ }
+ 
+ .edicion-header h3 {
+@@ -1311,6 +1367,33 @@ onMounted(async () => {
+   display: flex;
+   flex-direction: column;
+   gap: var(--space-4);
++  flex: 1;
++  overflow: hidden;
++}
++
++.form-campos-scroll {
++  flex: 1;
++  overflow-y: auto;
++  padding-right: var(--space-3);
++  padding-bottom: var(--space-12); /* Safe spacing so bottom dropdowns do not get cut off */
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-4);
++}
++
++/* Custom scrollbar for form campos */
++.form-campos-scroll::-webkit-scrollbar {
++  width: 6px;
++}
++.form-campos-scroll::-webkit-scrollbar-track {
++  background: transparent;
++}
++.form-campos-scroll::-webkit-scrollbar-thumb {
++  background: rgba(255, 255, 255, 0.12);
++  border-radius: var(--radius-full);
++}
++.form-campos-scroll::-webkit-scrollbar-thumb:hover {
++  background: rgba(255, 255, 255, 0.25);
+ }
+ 
+ .form-group-edicion {
+@@ -1373,7 +1456,13 @@ onMounted(async () => {
+   display: flex;
+   gap: var(--space-3);
+   justify-content: flex-end;
+-  margin-top: var(--space-2);
++  margin-top: auto;
++  padding-top: var(--space-4);
++  border-top: 1px solid rgba(255, 255, 255, 0.08);
++  background: #0d091a; /* solid color matching the bottom gradient shade */
++  position: sticky;
++  bottom: 0;
++  z-index: 10;
+ }
+ 
+ /* --- Loading y Error --- */
+diff --git a/src/components/game/PantallaInicio.vue b/src/components/game/PantallaInicio.vue
+index 98cb48c..84071b5 100644
+--- a/src/components/game/PantallaInicio.vue
++++ b/src/components/game/PantallaInicio.vue
+@@ -1,6 +1,4 @@
+ <template>
+-  <!-- PantallaInicio: pantalla inicial del juego -->
+-  <!-- Ciclo de vida: onMounted para iniciar la animación de entrada y música de menú -->
+   <section class="pantalla-inicio" aria-label="Pantalla de inicio de Ruta Tica">
+ 
+     <!-- Partículas de fondo decorativas -->
+@@ -227,7 +225,7 @@ function estiloParticula(n) {
+ </script>
+ 
+ <style scoped>
+-/* --- Contenedor principal --- */
++/* --- Contenedor principal con gradiente neón animado --- */
+ .pantalla-inicio {
+   position: relative;
+   min-height: calc(100vh - 64px);
+@@ -236,31 +234,70 @@ function estiloParticula(n) {
+   justify-content: center;
+   padding: var(--space-8) var(--space-4);
+   overflow: hidden;
++  background: linear-gradient(135deg, #05040f 0%, #060c20 35%, #120726 70%, #03040a 100%);
++  background-size: 400% 400%;
++  animation: inicioGradientBG 18s ease infinite;
+ }
+ 
+-/* --- Partículas flotantes --- */
++/* Fondo decorativo con ondas de energía futuristas */
++.pantalla-inicio::before {
++  content: '';
++  position: absolute;
++  inset: 0;
++  background: radial-gradient(circle at 30% 20%, rgba(0, 200, 255, 0.03) 0%, transparent 50%),
++              radial-gradient(circle at 80% 70%, rgba(184, 79, 255, 0.04) 0%, transparent 60%);
++  pointer-events: none;
++  z-index: 0;
++}
++
++@keyframes inicioGradientBG {
++  0% { background-position: 0% 50%; }
++  50% { background-position: 100% 50%; }
++  100% { background-position: 0% 50%; }
++}
++
++/* --- Partículas flotantes de energía --- */
+ .particulas {
+   position: absolute;
+   inset: 0;
+   pointer-events: none;
++  z-index: 0;
+ }
+ 
+ .particula {
+   position: absolute;
+   border-radius: 50%;
+   background: var(--color-neon-green);
+-  box-shadow: 0 0 6px var(--color-neon-green-glow);
+-  animation: particle-drift linear infinite;
++  box-shadow: 0 0 8px var(--color-neon-green-glow);
++  animation: particle-float linear infinite;
++  will-change: transform, opacity;
+ }
+ 
+ .particula:nth-child(odd) {
+   background: var(--color-neon-blue);
+-  box-shadow: 0 0 6px var(--color-neon-blue-glow);
++  box-shadow: 0 0 8px var(--color-neon-blue-glow);
+ }
+ 
+ .particula:nth-child(3n) {
+   background: var(--color-neon-purple);
+-  box-shadow: 0 0 6px var(--color-neon-purple-glow);
++  box-shadow: 0 0 8px var(--color-neon-purple-glow);
++}
++
++@keyframes particle-float {
++  0% {
++    transform: translateY(120vh) translateX(0) scale(0.6);
++    opacity: 0;
++  }
++  15% {
++    opacity: 0.7;
++  }
++  85% {
++    opacity: 0.7;
++  }
++  100% {
++    transform: translateY(-20vh) translateX(40px) scale(1.1);
++    opacity: 0;
++  }
+ }
+ 
+ /* --- Contenido --- */
+@@ -270,49 +307,65 @@ function estiloParticula(n) {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+-  gap: var(--space-5);
++  gap: var(--space-6);
+   max-width: 700px;
+   width: 100%;
+   text-align: center;
+ }
+ 
+-/* --- Emblema del héroe --- */
++/* --- Emblema del héroe con Zoom y Glow Progresivo --- */
+ .emblema-heroe {
+   position: relative;
+-  width: 90px;
+-  height: 90px;
++  width: 110px;
++  height: 110px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
++  margin-bottom: var(--space-2);
++  animation: introLogoZoom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+ }
+ 
+ .anillo-emblema {
+   position: absolute;
+   border-radius: 50%;
+-  border: 2px solid transparent;
++  border: 2.5px solid transparent;
+   animation: spin-slow linear infinite;
+ }
+ 
+ .anillo-emblema--exterior {
+   inset: 0;
+   border-color: var(--color-neon-green);
+-  box-shadow: 0 0 15px var(--color-neon-green-glow),
+-              inset 0 0 15px var(--color-neon-green-glow);
+-  animation-duration: 8s;
++  box-shadow: 0 0 20px var(--color-neon-green-glow),
++              inset 0 0 12px var(--color-neon-green-glow);
++  animation-duration: 9s;
+ }
+ 
+ .anillo-emblema--interior {
+-  inset: 12px;
++  inset: 15px;
+   border-color: var(--color-neon-blue);
+-  box-shadow: 0 0 10px var(--color-neon-blue-glow);
+-  animation-duration: 5s;
++  box-shadow: 0 0 12px var(--color-neon-blue-glow);
++  animation-duration: 6s;
+   animation-direction: reverse;
+ }
+ 
+ .icono-emblema {
+-  font-size: 2.8rem;
++  font-size: 3.2rem;
+   position: relative;
+   z-index: 1;
++  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
++}
++
++@keyframes introLogoZoom {
++  0% {
++    transform: scale(0.5);
++    opacity: 0;
++    filter: brightness(2);
++  }
++  100% {
++    transform: scale(1);
++    opacity: 1;
++    filter: brightness(1);
++  }
+ }
+ 
+ /* --- Header --- */
+@@ -324,46 +377,57 @@ function estiloParticula(n) {
+ }
+ 
+ .lema-inicio {
+-  font-size: var(--text-sm);
++  font-size: var(--text-xs);
+   color: var(--color-neon-blue);
+   text-transform: uppercase;
+-  letter-spacing: 0.12em;
++  letter-spacing: 0.16em;
+   margin: 0;
+-  font-weight: var(--font-semibold);
++  font-weight: var(--font-bold);
++  text-shadow: 0 0 8px var(--color-neon-blue-glow);
+ }
+ 
+ .titulo-inicio {
+   font-family: var(--font-display);
+   margin: 0;
+   line-height: 1.1;
++  animation: introTitleGlow 1.8s ease-out forwards;
+ }
+ 
+ .titulo-ruta {
+-  font-size: clamp(2.5rem, 8vw, 4.5rem);
++  font-size: clamp(2.8rem, 8vw, 4.8rem);
+   font-weight: var(--font-extrabold);
+-  background: var(--gradient-text-neon);
++  background: linear-gradient(135deg, #00ff88, #00c8ff, #b84fff);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   background-clip: text;
+   display: block;
+-  animation: glow-text 3s ease-in-out infinite;
+-  color: var(--color-neon-green);
++  text-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+ }
+ 
+ .titulo-heroe {
+-  font-size: clamp(1.2rem, 4vw, 2rem);
++  font-size: clamp(1.2rem, 4vw, 1.8rem);
+   color: var(--color-text-secondary);
+-  font-weight: var(--font-semibold);
+-  letter-spacing: 0.05em;
++  font-weight: var(--font-bold);
++  letter-spacing: 0.08em;
+   text-transform: uppercase;
+ }
+ 
+ .divisor-titulo {
+-  width: 80px;
+-  height: 2px;
+-  background: var(--gradient-btn);
++  width: 120px;
++  height: 3px;
++  background: linear-gradient(90deg, transparent, var(--color-neon-green), var(--color-neon-blue), transparent);
+   border-radius: var(--radius-full);
+-  box-shadow: 0 0 10px var(--color-neon-green-glow);
++  box-shadow: 0 0 12px var(--color-neon-green-glow);
++  margin-top: var(--space-2);
++}
++
++@keyframes introTitleGlow {
++  0% {
++    filter: drop-shadow(0 0 0px transparent);
++  }
++  100% {
++    filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.25));
++  }
+ }
+ 
+ /* --- Descripción --- */
+@@ -371,37 +435,42 @@ function estiloParticula(n) {
+   display: flex;
+   flex-direction: column;
+   gap: var(--space-4);
+-  max-width: 560px;
++  max-width: 580px;
+ }
+ 
+ .descripcion-principal {
+   font-size: var(--text-lg);
+   color: var(--color-text-primary);
+-  line-height: 1.6;
++  line-height: 1.65;
+   margin: 0;
++  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+ }
+ 
+ .descripcion-mision {
+-  font-size: var(--text-base);
++  font-size: var(--text-sm);
+   color: var(--color-text-secondary);
+   line-height: 1.7;
+-  background: rgba(0,200,255,0.06);
+-  border: 1px solid rgba(0,200,255,0.15);
++  background: rgba(13, 20, 41, 0.6);
++  border: 1px solid rgba(0, 200, 255, 0.18);
+   border-radius: var(--radius-lg);
+   padding: var(--space-4) var(--space-5);
+   margin: 0;
++  backdrop-filter: blur(4px);
++  box-shadow: inset 0 0 15px rgba(0, 200, 255, 0.05);
+ }
+ 
+ /* --- Stats decorativas --- */
+ .estadisticas-inicio {
+   display: flex;
+   align-items: center;
+-  gap: var(--space-5);
+-  background: var(--color-bg-glass);
+-  border: 1px solid var(--color-border);
++  gap: var(--space-6);
++  background: rgba(15, 10, 30, 0.55);
++  border: 1px solid rgba(255, 255, 255, 0.06);
+   border-radius: var(--radius-xl);
+   padding: var(--space-4) var(--space-8);
+-  backdrop-filter: blur(8px);
++  backdrop-filter: blur(12px);
++  -webkit-backdrop-filter: blur(12px);
++  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+ }
+ 
+ .estadistica-inicio {
+@@ -416,7 +485,7 @@ function estiloParticula(n) {
+   font-size: var(--text-3xl);
+   font-weight: var(--font-extrabold);
+   color: var(--color-neon-green);
+-  text-shadow: 0 0 10px var(--color-neon-green-glow);
++  text-shadow: 0 0 12px var(--color-neon-green-glow);
+   line-height: 1;
+ }
+ 
+@@ -424,26 +493,57 @@ function estiloParticula(n) {
+   font-size: var(--text-xs);
+   color: var(--color-text-muted);
+   text-transform: uppercase;
+-  letter-spacing: 0.06em;
++  letter-spacing: 0.08em;
+ }
+ 
+ .divisor-estadistica {
+   width: 1px;
+   height: 40px;
+-  background: var(--color-border);
++  background: rgba(255, 255, 255, 0.08);
+ }
+ 
+-/* --- CTA --- */
++/* --- CTA con Pulso Neón --- */
+ .llamada-accion {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: var(--space-3);
++  width: 100%;
++}
++
++.llamada-accion .btn-primary {
++  padding: var(--space-4) var(--space-8);
++  font-size: var(--text-lg);
++  letter-spacing: 0.05em;
++  background: linear-gradient(135deg, var(--color-neon-green) 0%, #009955 100%);
++  border: 1px solid rgba(0, 255, 136, 0.5);
++  box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
++  animation: pulseNeonCTA 2s infinite ease-in-out;
++}
++
++.llamada-accion .btn-primary:hover {
++  background: linear-gradient(135deg, #00ffaa 0%, #00b362 100%);
++  box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
++  transform: scale(1.05) translateY(-2px);
++}
++
++@keyframes pulseNeonCTA {
++  0% {
++    box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
++  }
++  50% {
++    box-shadow: 0 0 30px rgba(0, 255, 136, 0.55), 0 0 10px rgba(0, 200, 255, 0.3);
++  }
++  100% {
++    box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
++  }
+ }
+ 
+ .sugerencia-cta {
+-  font-size: var(--text-sm);
++  font-size: var(--text-xs);
+   color: var(--color-text-muted);
++  text-transform: uppercase;
++  letter-spacing: 0.06em;
+   margin: 0;
+ }
+ 
+@@ -454,6 +554,7 @@ function estiloParticula(n) {
+   max-width: 480px;
+   line-height: 1.5;
+   margin: 0;
++  opacity: 0.8;
+ }
+ 
+ /* --- Responsive --- */
+@@ -482,9 +583,9 @@ function estiloParticula(n) {
+   position: fixed;
+   inset: 0;
+   z-index: var(--z-modal);
+-  background: rgba(5, 8, 20, 0.85);
+-  backdrop-filter: blur(8px);
+-  -webkit-backdrop-filter: blur(8px);
++  background: rgba(4, 5, 12, 0.9);
++  backdrop-filter: blur(12px);
++  -webkit-backdrop-filter: blur(12px);
+ }
+ 
+ .modal-wrapper {
+@@ -513,7 +614,13 @@ function estiloParticula(n) {
+ 
+ .modal-icon {
+   font-size: 2.8rem;
+-  animation: pulse-neon 2.5s infinite;
++  animation: pulse-neon-purple 2.5s infinite;
++}
++
++@keyframes pulse-neon-purple {
++  0% { filter: drop-shadow(0 0 4px rgba(184, 79, 255, 0.3)); }
++  50% { filter: drop-shadow(0 0 15px rgba(184, 79, 255, 0.8)); }
++  100% { filter: drop-shadow(0 0 4px rgba(184, 79, 255, 0.3)); }
+ }
+ 
+ .modal-title {
+diff --git a/src/components/game/PantallaJuego.vue b/src/components/game/PantallaJuego.vue
+index c486526..2435dbd 100644
+--- a/src/components/game/PantallaJuego.vue
++++ b/src/components/game/PantallaJuego.vue
+@@ -21,6 +21,16 @@
+ 
+       <!-- ================= CHECKPOINT 1 ================= -->
+       <div v-else-if="subEstadoPantalla === 'checkpoint_1'" class="tarjeta-narrativa card text-center checkpoint-card animate-fade-in">
++        <!-- Confeti/Destellos neón de logro -->
++        <div class="particulas-logro-contenedor" aria-hidden="true">
++          <div 
++            v-for="n in 30" 
++            :key="n" 
++            class="particula-logro" 
++            :style="generarEstilosParticulaLogro(n)"
++          ></div>
++        </div>
++
+         <span class="icono-narrativa animate-float">🎉</span>
+         <h2 class="titulo-narrativa text-neon-green">CHECKPOINT DESBLOQUEADO</h2>
+         <h3 class="subtitulo-checkpoint">🍻 BRINDIS TICO</h3>
+@@ -48,6 +58,16 @@
+ 
+       <!-- ================= CHECKPOINT 2 ================= -->
+       <div v-else-if="subEstadoPantalla === 'checkpoint_2'" class="tarjeta-narrativa card text-center checkpoint-card animate-fade-in">
++        <!-- Confeti/Destellos neón de logro -->
++        <div class="particulas-logro-contenedor" aria-hidden="true">
++          <div 
++            v-for="n in 30" 
++            :key="n" 
++            class="particula-logro" 
++            :style="generarEstilosParticulaLogro(n)"
++          ></div>
++        </div>
++
+         <span class="icono-narrativa animate-float">🏆</span>
+         <h2 class="titulo-narrativa text-neon-purple">CHECKPOINT DESBLOQUEADO</h2>
+         <h3 class="subtitulo-checkpoint">🎉 AFTER SEGURO</h3>
+@@ -100,6 +120,16 @@
+ 
+       <!-- ================= NARRATIVA FINAL ================= -->
+       <div v-else-if="subEstadoPantalla === 'narrativa_final'" class="tarjeta-narrativa card text-center victoria-card animate-fade-in">
++        <!-- Confeti/Destellos neón de logro -->
++        <div class="particulas-logro-contenedor" aria-hidden="true">
++          <div 
++            v-for="n in 30" 
++            :key="n" 
++            class="particula-logro" 
++            :style="generarEstilosParticulaLogro(n)"
++          ></div>
++        </div>
++
+         <span class="icono-narrativa animate-float">🍻</span>
+         <h2 class="titulo-narrativa text-neon-green">MISIÓN COMPLETADA</h2>
+         <h3 class="subtitulo-victoria">{{ provinciaActiva?.nombre }}</h3>
+@@ -169,7 +199,13 @@
+ 
+         <!-- Área de pregunta -->
+         <div class="area-pregunta" v-if="preguntaActualDatos">
+-          <div class="tarjeta-pregunta card animate-fade-in">
++          <div 
++            class="tarjeta-pregunta card animate-fade-in"
++            :class="{
++              'pregunta-glow-verde': respuestaSeleccionada !== null && esCorrecta,
++              'pregunta-shake-rojo': respuestaSeleccionada !== null && !esCorrecta
++            }"
++          >
+             <!-- Barra de tiempo de la pregunta -->
+             <div class="pista-tiempo-pregunta">
+               <div 
+@@ -494,6 +530,7 @@ function alAgotarTiempo() {
+ // --- Seleccionar una respuesta ---
+ function seleccionarRespuesta(idx) {
+   if (respuestaSeleccionada.value !== null) return
++  reproducirEfecto('boton')
+   pausar() // Pausar temporizador
+   respuestaSeleccionada.value = idx
+   
+@@ -616,6 +653,36 @@ function finalizarMisionAventura() {
+   })
+ }
+ 
++// --- Confeti y destellos de neón en Checkpoints ---
++function generarEstilosParticulaLogro(n) {
++  const colores = ['#00c8ff', '#00ff88', '#ff007f', '#ffb700', '#b026ff']
++  const color = colores[n % colores.length]
++  const size = Math.random() * 8 + 4 // 4px a 12px
++  const delay = Math.random() * 0.8 // 0s a 0.8s
++  const duration = Math.random() * 1.5 + 1.2 // 1.2s a 2.7s
++  
++  // Ángulo y distancia aleatoria para explosión
++  const angulo = Math.random() * 360
++  const distancia = Math.random() * 140 + 40 // 40px a 180px
++  const x = Math.cos(angulo * Math.PI / 180) * distancia
++  const y = Math.sin(angulo * Math.PI / 180) * distancia
++  
++  return {
++    backgroundColor: color,
++    width: `${size}px`,
++    height: `${size}px`,
++    borderRadius: n % 2 === 0 ? '50%' : '20%',
++    boxShadow: `0 0 8px ${color}`,
++    animationDelay: `${delay}s`,
++    animationDuration: `${duration}s`,
++    transform: 'translate(0, 0)',
++    '--tx': `${x}px`,
++    '--ty': `${y}px`,
++    left: '50%',
++    top: '40%'
++  }
++}
++
+ // --- Salir al mapa ---
+ function alSalir() {
+   pausar()
+diff --git a/src/components/game/PantallaResultado.vue b/src/components/game/PantallaResultado.vue
+index 2b90d34..58afb36 100644
+--- a/src/components/game/PantallaResultado.vue
++++ b/src/components/game/PantallaResultado.vue
+@@ -206,7 +206,7 @@ const {
+ const misionAprob = computed(() => misionAprobada.value)
+ 
+ // --- Audio ---
+-const { reproducirMusica } = useAudio()
++const { reproducirMusica, reproducirEfecto } = useAudio()
+ 
+ // --- Computed: emoji y título según puntaje de misión ---
+ const emojiResultado = computed(() => {
+@@ -292,9 +292,10 @@ function alReintentarMision() {
+ 
+ onMounted(() => {
+   if (misionAprobada.value) {
+-    reproducirMusica('victoria')
++    reproducirMusica('victoria', false)
++    reproducirEfecto('logro')
+   } else {
+-    reproducirMusica('derrota')
++    reproducirMusica('derrota', false)
+   }
+ })
+ </script>
+diff --git a/src/components/game/PantallaTransformacion.vue b/src/components/game/PantallaTransformacion.vue
+index 488b47d..f060ff5 100644
+--- a/src/components/game/PantallaTransformacion.vue
++++ b/src/components/game/PantallaTransformacion.vue
+@@ -202,6 +202,18 @@ function iniciarMisionNocturna() {
+   font-weight: var(--font-bold);
+   color: var(--color-neon-blue);
+   text-shadow: 0 0 10px var(--color-neon-blue-glow);
++  animation: pulseNeonTime 1.5s ease-in-out infinite alternate;
++}
++
++@keyframes pulseNeonTime {
++  0% {
++    color: var(--color-neon-blue);
++    text-shadow: 0 0 8px var(--color-neon-blue-glow);
++  }
++  100% {
++    color: #ffffff;
++    text-shadow: 0 0 20px var(--color-neon-blue-glow), 0 0 10px #00c8ff;
++  }
+ }
+ 
+ .divisoria-neon {
+@@ -255,8 +267,30 @@ function iniciarMisionNocturna() {
+ }
+ 
+ .emblema-heroe-revelado {
+-  font-size: 3.5rem;
++  font-size: 4rem;
+   line-height: 1;
++  width: 90px;
++  height: 90px;
++  background: rgba(184, 79, 255, 0.08);
++  border: 2px solid var(--color-neon-purple);
++  border-radius: 50%;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  box-shadow: 0 0 20px var(--color-neon-purple-glow),
++              inset 0 0 10px var(--color-neon-purple-glow);
++  animation: pulseEnergyHalo 2s ease-in-out infinite alternate;
++}
++
++@keyframes pulseEnergyHalo {
++  0% {
++    box-shadow: 0 0 15px var(--color-neon-purple-glow), inset 0 0 8px var(--color-neon-purple-glow);
++    border-color: rgba(184, 79, 255, 0.6);
++  }
++  100% {
++    box-shadow: 0 0 35px var(--color-neon-purple-glow), inset 0 0 18px var(--color-neon-purple-glow);
++    border-color: #ffffff;
++  }
+ }
+ 
+ .alias-revelado {
+diff --git a/src/components/game/PantallaTransicionNoche.vue b/src/components/game/PantallaTransicionNoche.vue
+index d186fb3..053032f 100644
+--- a/src/components/game/PantallaTransicionNoche.vue
++++ b/src/components/game/PantallaTransicionNoche.vue
+@@ -1,11 +1,11 @@
+ <template>
+   <!-- PantallaTransicionNoche: transición cinemática de atardecer a noche -->
+-  <section class="pantalla-transicion-noche" aria-label="Transición al anochecer">
++  <section class="pantalla-transicion-noche" :style="estiloCieloDinamico" aria-label="Transición al anochecer">
+     <div class="contenedor-cinematico card text-center animate-fade-in-scale">
+       
+       <!-- Reloj Cinemático Animado -->
+       <div class="reloj-cinematico">
+-        <div class="circulo-reloj">
++        <div class="circulo-reloj" :class="{ 'tick-pulse': tickActive }">
+           <!-- Aguja de la hora -->
+           <div class="aguja aguja-hora" :style="{ transform: `rotate(${anguloHora}deg)` }"></div>
+           <!-- Aguja de los minutos -->
+@@ -64,6 +64,7 @@ const { reproducirEfecto, reproducirMusica } = useAudio()
+ const horaActualVal = ref(17) // Comienza a las 5 PM (17:00)
+ const minutosActualVal = ref(0)
+ const tiempoCompletado = ref(false)
++const tickActive = ref(false)
+ let timerId = null
+ 
+ // --- Mensajes narrativos según la hora ---
+@@ -103,6 +104,34 @@ const porcentajeProgreso = computed(() => {
+   return Math.min(100, Math.round((minutosTotales / 300) * 100))
+ })
+ 
++// --- Interpolación dinámica de colores de fondo del cielo (día -> atardecer -> noche) ---
++const estiloCieloDinamico = computed(() => {
++  const p = porcentajeProgreso.value / 100
++  if (p < 0.5) {
++    const factor = p / 0.5
++    const r1 = 255
++    const g1 = Math.round(208 - factor * 114) // 208 -> 94
++    const b1 = 0
++    const r2 = Math.round(factor * 62)
++    const g2 = Math.round(200 - factor * 200)
++    const b2 = Math.round(255 - factor * 148)
++    return {
++      background: `radial-gradient(circle at center, rgb(${r1}, ${g1}, ${b1}) 0%, rgb(${r2}, ${g2}, ${b2}) 100%)`
++    }
++  } else {
++    const factor = (p - 0.5) / 0.5
++    const r1 = Math.round(255 - factor * 240)
++    const g1 = Math.round(94 - factor * 92)
++    const b1 = Math.round(factor * 28)
++    const r2 = Math.round(62 - factor * 58)
++    const g2 = 0
++    const b2 = Math.round(107 - factor * 99)
++    return {
++      background: `radial-gradient(circle at center, rgb(${r1}, ${g1}, ${b1}) 0%, rgb(${r2}, ${g2}, ${b2}) 100%)`
++    }
++  }
++})
++
+ // --- Avanzar reloj automáticamente ---
+ function iniciarSimulacionReloj() {
+   const intervaloMs = 25 // Avanza 5 minutos simulados cada 25ms (~1.5s de duración total)
+@@ -119,6 +148,10 @@ function iniciarSimulacionReloj() {
+       minutosActualVal.value = 0
+       horaActualVal.value += 1
+       reproducirEfecto('click')
++      tickActive.value = true
++      setTimeout(() => {
++        tickActive.value = false
++      }, 150)
+     }
+   }, intervaloMs)
+ }
+@@ -129,7 +162,10 @@ function alContinuar() {
+ }
+ 
+ onMounted(() => {
++  // Disparar sonido de transición ambiental
++  reproducirEfecto('transicion')
+   // Mantener música relajada o de campus en transición
++  reproducirMusica('campus')
+   iniciarSimulacionReloj()
+ })
+ 
+@@ -182,6 +218,14 @@ onUnmounted(() => {
+               inset 0 0 15px var(--color-neon-blue-glow);
+   position: relative;
+   background: rgba(0, 0, 0, 0.3);
++  transition: transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.15s ease, border-color 0.15s ease;
++}
++
++.circulo-reloj.tick-pulse {
++  transform: scale(1.08);
++  box-shadow: 0 0 25px var(--color-neon-blue),
++              inset 0 0 20px var(--color-neon-blue);
++  border-color: #ffffff;
+ }
+ 
+ .aguja {
+diff --git a/src/components/game/PantallaVidaUniversitaria.vue b/src/components/game/PantallaVidaUniversitaria.vue
+index a107e08..63bf94a 100644
+--- a/src/components/game/PantallaVidaUniversitaria.vue
++++ b/src/components/game/PantallaVidaUniversitaria.vue
+@@ -289,7 +289,7 @@ const actividades = [
+ 
+ // --- Métodos de Sospecha e Interacción ---
+ function seleccionarOpcionEvento(opcion) {
+-  reproducirEfecto('click')
++  reproducirEfecto('boton')
+   consecuenciaTexto.value = opcion.consecuencia
+   
+   // Aplicar consecuencias en estadísticas
+@@ -334,7 +334,7 @@ function emojiStat(stat) {
+ }
+ 
+ function seleccionarActividad(act) {
+-  reproducirEfecto('click')
++  reproducirEfecto('boton')
+   if (seleccionadas.value.includes(act.id)) {
+     seleccionadas.value = seleccionadas.value.filter(id => id !== act.id)
+   } else if (seleccionadas.value.length < 2) {
+diff --git a/src/components/game/PantallaVuelo.vue b/src/components/game/PantallaVuelo.vue
+index b9b63c6..a042a5e 100644
+--- a/src/components/game/PantallaVuelo.vue
++++ b/src/components/game/PantallaVuelo.vue
+@@ -1,7 +1,7 @@
+ <template>
+   <!-- PantallaVuelo: Cinemática corta de vuelo antes de iniciar la misión -->
+   <section class="pantalla-vuelo" aria-label="Pantalla de vuelo hacia la misión">
+-    <div class="contenedor-vuelo card text-center animate-fade-in-scale">
++    <div class="contenedor-vuelo card text-center animate-fade-in-scale" :class="{ 'fade-out-final': estaDesvaneciendo }">
+       
+       <!-- Icono de vuelo neón animado -->
+       <div class="vuelo-avatar-container">
+@@ -16,6 +16,55 @@
+         <span>Destino: 📍 <strong>{{ provinciaActiva.nombre }}</strong></span>
+       </div>
+ 
++      <!-- Trayectoria del Vuelo Animada -->
++      <div class="mapa-trayectoria-container">
++        <svg class="linea-trayectoria-svg" viewBox="0 0 400 120" width="100%" height="120">
++          <defs>
++            <linearGradient id="gradient-vuelo" x1="0%" y1="0%" x2="100%" y2="0%">
++              <stop offset="0%" stop-color="#00c8ff" />
++              <stop offset="100%" stop-color="#b026ff" />
++            </linearGradient>
++            <filter id="neon-glow-blue" x="-20%" y="-20%" width="140%" height="140%">
++              <feGaussianBlur stdDeviation="4" result="blur" />
++              <feMerge>
++                <feMergeNode in="blur" />
++                <feMergeNode in="SourceGraphic" />
++              </feMerge>
++            </filter>
++          </defs>
++          
++          <!-- Línea base (camino punteado gris) -->
++          <path d="M 40,80 Q 200,20 360,80" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="4" stroke-dasharray="6 6" />
++          
++          <!-- Línea de progreso (color neón) -->
++          <path 
++            d="M 40,80 Q 200,20 360,80" 
++            fill="none" 
++            stroke="url(#gradient-vuelo)" 
++            stroke-width="4" 
++            stroke-dasharray="350" 
++            :stroke-dashoffset="350 - (progreso / 100) * 350" 
++            filter="url(#neon-glow-blue)"
++          />
++          
++          <!-- Puntos extremos -->
++          <!-- Campus -->
++          <circle cx="40" cy="80" r="8" fill="#00c8ff" filter="drop-shadow(0 0 6px #00c8ff)" />
++          <text x="40" y="105" text-anchor="middle" fill="#00c8ff" font-size="10" font-weight="bold">Campus</text>
++          
++          <!-- Destino -->
++          <circle cx="360" cy="80" r="8" :fill="pasoActual === 4 ? '#39ff14' : '#ff007f'" :filter="`drop-shadow(0 0 6px ${pasoActual === 4 ? '#39ff14' : '#ff007f'})`" />
++          <text x="360" y="105" text-anchor="middle" :fill="pasoActual === 4 ? '#39ff14' : '#ff007f'" font-size="10" font-weight="bold">
++            {{ provinciaActiva?.nombre || 'Destino' }}
++          </text>
++        </svg>
++        
++        <!-- Héroe volando (siguiendo la curva) -->
++        <div class="heroe-volador" :style="estiloHeroeVolador">
++          ⚡🦸‍♂️
++        </div>
++      </div>
++
+       <!-- Barra de Progreso del Vuelo -->
+       <div class="progreso-vuelo-container">
+         <div class="barra-vuelo">
+@@ -70,8 +119,23 @@ const emit = defineEmits(['completar'])
+ // --- Estado local ---
+ const progreso = ref(0)
+ const pasoActual = ref(1)
++const estaDesvaneciendo = ref(false)
+ let timerProgreso = null
+ 
++// Héroe volando (siguiendo la curva cuadrática de Bezier)
++const estiloHeroeVolador = computed(() => {
++  const t = progreso.value / 100
++  // P0 = (40, 80), P1 = (200, 20), P2 = (360, 80)
++  const x = (1 - t) * (1 - t) * 40 + 2 * (1 - t) * t * 200 + t * t * 360
++  const y = (1 - t) * (1 - t) * 80 + 2 * (1 - t) * t * 20 + t * t * 80
++  
++  return {
++    left: `${(x / 400) * 100}%`,
++    top: `${(y / 120) * 100}%`,
++    transform: 'translate(-50%, -50%)'
++  }
++})
++
+ // Narrativas contextuales del vuelo
+ const mensajeNarrativo = computed(() => {
+   if (pasoActual.value === 1) {
+@@ -97,8 +161,8 @@ onMounted(() => {
+   }
+ 
+   // Reproducir música o efectos
+-  reproducirMusica('juego')
+-  reproducirEfecto('desbloquear')
++  reproducirMusica('transformacion')
++  reproducirEfecto('vuelo')
+ 
+   // Iniciar temporizador de la cinemática (3.5 segundos en total)
+   const duracionTotal = 3500
+@@ -121,10 +185,11 @@ onMounted(() => {
+ 
+     if (progreso.value >= 100) {
+       clearInterval(timerProgreso)
++      estaDesvaneciendo.value = true
+       setTimeout(() => {
+         navegarA(PANTALLAS.JUEGO)
+         emit('completar')
+-      }, 300)
++      }, 500)
+     }
+   }, intervaloMs)
+ })
+@@ -225,19 +290,31 @@ onUnmounted(() => {
+ 
+ .barra-vuelo {
+   width: 100%;
+-  height: 8px;
++  height: 10px;
+   background: rgba(255, 255, 255, 0.05);
+   border-radius: var(--radius-full);
+-  overflow: hidden;
++  overflow: visible;
+   border: 1px solid rgba(255, 255, 255, 0.03);
++  position: relative;
+ }
+ 
+ .barra-vuelo-relleno {
+   height: 100%;
+   background: linear-gradient(90deg, var(--color-neon-blue), var(--color-neon-purple));
+-  box-shadow: 0 0 12px var(--color-neon-blue);
++  box-shadow: 0 0 15px var(--color-neon-blue);
+   border-radius: var(--radius-full);
+   transition: width 0.05s linear;
++  position: relative;
++}
++
++.barra-vuelo-relleno::after {
++  content: '⚡';
++  position: absolute;
++  right: -10px;
++  top: -8px;
++  font-size: 1.1rem;
++  animation: float 1s infinite alternate;
++  text-shadow: 0 0 8px var(--color-neon-blue);
+ }
+ 
+ .progreso-texto {
+@@ -310,4 +387,40 @@ onUnmounted(() => {
+   font-style: italic;
+   max-width: 420px;
+ }
++
++/* --- Estilos del Trayecto Animado --- */
++.contenedor-vuelo {
++  transition: opacity 0.5s ease, transform 0.5s ease;
++}
++
++.contenedor-vuelo.fade-out-final {
++  opacity: 0;
++  transform: scale(0.95);
++}
++
++.mapa-trayectoria-container {
++  position: relative;
++  width: 100%;
++  max-width: 440px;
++  height: 120px;
++  margin: var(--space-4) auto;
++  background: rgba(255, 255, 255, 0.02);
++  border-radius: var(--radius-lg);
++  border: 1px solid rgba(255, 255, 255, 0.05);
++  padding: 10px;
++  overflow: visible;
++}
++
++.linea-trayectoria-svg {
++  overflow: visible;
++}
++
++.heroe-volador {
++  position: absolute;
++  font-size: 2.2rem;
++  z-index: 10;
++  pointer-events: none;
++  filter: drop-shadow(0 0 8px var(--color-neon-blue));
++  transition: left 0.05s linear, top 0.05s linear;
++}
+ </style>
+diff --git a/src/components/game/SelectorPersonalizado.vue b/src/components/game/SelectorPersonalizado.vue
+index ffb4c50..6bc1723 100644
+--- a/src/components/game/SelectorPersonalizado.vue
++++ b/src/components/game/SelectorPersonalizado.vue
+@@ -58,6 +58,9 @@
+ 
+ <script setup>
+ import { ref, computed, onMounted, onUnmounted } from 'vue'
++import { useAudio } from '../../composables/useAudio.js'
++
++const { reproducirEfecto } = useAudio()
+ 
+ // --- Props ---
+ const props = defineProps({
+@@ -132,6 +135,7 @@ function seleccionarOpcion(opcion) {
+   emit('update:modelValue', opcion.value)
+   emit('cambio', opcion.value)
+   emit('cerrar')
++  reproducirEfecto('boton')
+ }
+ 
+ // --- Manejo del teclado (A11y) ---
+diff --git a/src/composables/useAudio.js b/src/composables/useAudio.js
+index 43894f7..622be11 100644
+--- a/src/composables/useAudio.js
++++ b/src/composables/useAudio.js
+@@ -1,16 +1,43 @@
+ // =========================================================
+-// useAudio.js — Composable para manejo de audio del juego
+-// Preparado para cargar archivos desde public/audio/
++// useAudio.js — Composable para el manejo global de audio
++// Soporta volumen independiente (música/sfx), muteo y persistencia
+ // =========================================================
+ 
+-import { ref, onUnmounted } from 'vue'
++import { ref, computed } from 'vue'
+ 
+-// --- Estado del audio ---
+-const estaSilenciado           = ref(false)
+-const volumen                  = ref(0.6)
+-const musicaFondoActual        = ref(null)   // Audio de fondo activo
++const KEY_MUSICA_HABILITADA   = 'rutaTicaAudioMusicaHabilitada'
++const KEY_EFECTOS_HABILITADOS  = 'rutaTicaAudioEfectosHabilitados'
++const KEY_VOLUMEN_MUSICA      = 'rutaTicaAudioVolumenMusica'
++const KEY_VOLUMEN_EFECTOS     = 'rutaTicaAudioVolumenEfectos'
++const KEY_ESTA_SILENCIADO      = 'rutaTicaAudioEstaSilenciado'
++
++// --- Helper local de localStorage ---
++function getStorageBool(key, def) {
++  if (typeof window === 'undefined') return def
++  const val = localStorage.getItem(key)
++  return val !== null ? val === 'true' : def
++}
++
++function getStorageNum(key, def) {
++  if (typeof window === 'undefined') return def
++  const val = localStorage.getItem(key)
++  return val !== null ? parseFloat(val) : def
++}
++
++// --- Estado reactivo global persistente ---
++const musicaHabilitada         = ref(getStorageBool(KEY_MUSICA_HABILITADA, true))
++const efectosHabilitados       = ref(getStorageBool(KEY_EFECTOS_HABILITADOS, true))
++const volumenMusica            = ref(getStorageNum(KEY_VOLUMEN_MUSICA, 0.35)) // Default 35%
++const volumenEfectos           = ref(getStorageNum(KEY_VOLUMEN_EFECTOS, 0.60)) // Default 60%
++const estaSilenciado           = ref(getStorageBool(KEY_ESTA_SILENCIADO, false))
+ const audioHabilitadoPorUsuario = ref(false)
+-const musicaSolicitada          = ref(null)   // Guarda la última pista solicitada para reproducir tras la primera interacción
++
++// Si volumen de música llega a 0%, tratarlo como música silenciada (computado para conveniencia)
++const musicaSilenciada = computed(() => !musicaHabilitada.value || estaSilenciado.value || volumenMusica.value === 0)
++const efectosSilenciados = computed(() => !efectosHabilitados.value || estaSilenciado.value || volumenEfectos.value === 0)
++
++const musicaFondoActual        = ref(null)   // Audio de fondo activo
++const musicaSolicitada          = ref(null)   // Guarda la última pista solicitada
+ 
+ // Registro de instancias de Audio para limpieza
+ const instanciasAudio = new Map()
+@@ -22,30 +49,46 @@ const RUTAS_AUDIO = {
+   musica: {
+     menu:           '/audio/bgm_menu.mp3',
+     campus:         '/audio/bgm_campus.mp3',
+-    amanecer:       '/audio/bgm_sunrise.mp3',
+-    transformacion: '/audio/bgm_transformation.mp3',
+-    mapa:           '/audio/bgm_map.mp3',
+-    juego:          '/audio/bgm_game.mp3',
+-    desafio:        '/audio/bgm_boss.mp3',
+-    victoria:       '/audio/bgm_victory.mp3',
+-    derrota:        '/audio/bgm_defeat.mp3'
++    amanecer:       '/audio/bgm_amanecer.mp3',
++    transformacion: '/audio/bgm_transformacion.mp3',
++    mapa:           '/audio/bgm_mapa.mp3',
++    juego:          '/audio/bgm_juego.mp3',
++    desafio:        '/audio/bgm_desafio.mp3',
++    victoria:       '/audio/bgm_victoria.mp3',
++    derrota:        '/audio/bgm_derrota.mp3'
+   },
+   efecto: {
+-    click:     '/audio/sfx_click.mp3',
+-    correcto:  '/audio/sfx_correct.mp3',
+-    incorrecto: '/audio/sfx_wrong.mp3',
+-    subirNivel: '/audio/sfx_levelup.mp3',
+-    desbloquear:'/audio/sfx_unlock.mp3'
++    acierto:        '/audio/sfx_acierto.mp3',
++    correcto:       '/audio/sfx_acierto.mp3',
++    error:          '/audio/sfx_error.mp3',
++    incorrecto:     '/audio/sfx_error.mp3',
++    checkpoint:     '/audio/sfx_checkpoint.mp3',
++    desbloquear:    '/audio/sfx_checkpoint.mp3',
++    logro:          '/audio/sfx_logro.mp3',
++    subirNivel:     '/audio/sfx_logro.mp3',
++    boton:          '/audio/sfx_boton.mp3',
++    click:          '/audio/sfx_boton.mp3',
++    vuelo:          '/audio/sfx_vuelo.mp3',
++    transicion:     '/audio/sfx_transicion.mp3'
+   }
+ }
+ 
++function obtenerVolumenPista(clave) {
++  if (clave === 'juego') {
++    return volumenMusica.value * 0.12 // 12% del volumen de música
++  }
++  if (clave === 'desafio') {
++    return volumenMusica.value * 0.18 // 18% del volumen de música
++  }
++  return volumenMusica.value
++}
++
+ /** Habilita la reproducción de audio tras interactuar con la pantalla */
+ function habilitarAudio() {
+   if (audioHabilitadoPorUsuario.value) return
+   audioHabilitadoPorUsuario.value = true
+   console.info('[useAudio] Audio habilitado por interacción del usuario.')
+-  // Si había música solicitada en cola, la reproducimos ahora
+-  if (musicaSolicitada.value) {
++  if (musicaSolicitada.value && !musicaSilenciada.value) {
+     reproducirMusica(musicaSolicitada.value)
+   }
+ }
+@@ -70,7 +113,7 @@ if (typeof window !== 'undefined') {
+  * @param {string} clave - Clave del efecto en RUTAS_AUDIO.efecto
+  */
+ function reproducirEfecto(clave) {
+-  if (estaSilenciado.value || !audioHabilitadoPorUsuario.value) return
++  if (efectosSilenciados.value || !audioHabilitadoPorUsuario.value) return
+ 
+   const ruta = RUTAS_AUDIO.efecto[clave]
+   if (!ruta) {
+@@ -78,11 +121,9 @@ function reproducirEfecto(clave) {
+     return
+   }
+ 
+-  // Se crea una nueva instancia cada vez para permitir solapamiento
+   const audio = new Audio(ruta)
+-  audio.volume = Math.min(volumen.value * 1.2, 1)
++  audio.volume = volumenEfectos.value
+   audio.play().catch(err => {
+-    // Silenciar error y mostrar advertencia en consola
+     console.warn(`[useAudio] Advertencia: No se pudo reproducir el efecto '${clave}' en ${ruta}:`, err.message)
+   })
+ }
+@@ -91,12 +132,11 @@ function reproducirEfecto(clave) {
+  * Inicia la música de fondo (BGM) con loop.
+  * Si hay música activa, la detiene primero.
+  * @param {string} clave - Clave de la música en RUTAS_AUDIO.musica
++ * @param {boolean} loop - Si la música debe repetirse
+  */
+-function reproducirMusica(clave) {
++function reproducirMusica(clave, loop = true) {
+   musicaSolicitada.value = clave
+ 
+-  if (estaSilenciado.value) return
+-
+   if (!audioHabilitadoPorUsuario.value) {
+     console.info(`[useAudio] Pista '${clave}' en cola hasta que el usuario interactúe.`)
+     return
+@@ -104,6 +144,16 @@ function reproducirMusica(clave) {
+ 
+   // Evitar reiniciar si ya está sonando la misma pista
+   if (musicaFondoActual.value && musicaFondoActual.value.dataset && musicaFondoActual.value.dataset.clave === clave) {
++    musicaFondoActual.value.loop = loop
++    if (musicaSilenciada.value) {
++      musicaFondoActual.value.volume = 0
++      musicaFondoActual.value.pause()
++    } else {
++      musicaFondoActual.value.volume = obtenerVolumenPista(clave)
++      musicaFondoActual.value.play().catch(err => {
++        console.warn(`[useAudio] Error al reproducir música existente:`, err.message)
++      })
++    }
+     return
+   }
+ 
+@@ -116,16 +166,20 @@ function reproducirMusica(clave) {
+   }
+ 
+   const audio = new Audio(ruta)
+-  audio.volume = volumen.value
+-  audio.loop    = true
++  audio.loop    = loop
+   audio.dataset.clave = clave
+-  
+-  audio.play().catch(err => {
+-    console.warn(`[useAudio] Advertencia: No se pudo reproducir la música '${clave}' en ${ruta}:`, err.message)
+-  })
+-
+   musicaFondoActual.value = audio
+   instanciasAudio.set('musica', audio)
++
++  if (musicaSilenciada.value) {
++    audio.volume = 0
++    // Queda cargada y pausada
++  } else {
++    audio.volume = obtenerVolumenPista(clave)
++    audio.play().catch(err => {
++      console.warn(`[useAudio] Advertencia: No se pudo reproducir la música '${clave}' en ${ruta}:`, err.message)
++    })
++  }
+ }
+ 
+ /** Detiene la música de fondo */
+@@ -144,19 +198,79 @@ function detenerMusica() {
+   instanciasAudio.delete('musica')
+ }
+ 
+-/** Alterna el modo silencio */
+-function alternarSilencio() {
+-  estaSilenciado.value = !estaSilenciado.value
++/** Habilita o deshabilita la música globalmente */
++function establecerMusicaHabilitada(val) {
++  musicaHabilitada.value = val
++  if (typeof window !== 'undefined') {
++    localStorage.setItem(KEY_MUSICA_HABILITADA, val ? 'true' : 'false')
++  }
++  
++  if (musicaFondoActual.value) {
++    if (musicaSilenciada.value) {
++      musicaFondoActual.value.volume = 0
++      musicaFondoActual.value.pause()
++    } else {
++      musicaFondoActual.value.volume = obtenerVolumenPista(musicaFondoActual.value.dataset.clave)
++      musicaFondoActual.value.play().catch(() => {})
++    }
++  } else if (!musicaSilenciada.value && musicaSolicitada.value) {
++    reproducirMusica(musicaSolicitada.value)
++  }
++}
++
++/** Habilita o deshabilita los efectos globalmente */
++function establecerEfectosHabilitados(val) {
++  efectosHabilitados.value = val
++  if (typeof window !== 'undefined') {
++    localStorage.setItem(KEY_EFECTOS_HABILITADOS, val ? 'true' : 'false')
++  }
++}
++
++/** Ajusta el volumen de la música (0.0 - 1.0) */
++function establecerVolumenMusica(val) {
++  volumenMusica.value = Math.max(0, Math.min(1, val))
++  if (typeof window !== 'undefined') {
++    localStorage.setItem(KEY_VOLUMEN_MUSICA, volumenMusica.value.toString())
++  }
++  
+   if (musicaFondoActual.value) {
+-    musicaFondoActual.value.volume = estaSilenciado.value ? 0 : volumen.value
++    if (musicaSilenciada.value) {
++      musicaFondoActual.value.volume = 0
++      musicaFondoActual.value.pause()
++    } else {
++      musicaFondoActual.value.volume = obtenerVolumenPista(musicaFondoActual.value.dataset.clave)
++      musicaFondoActual.value.play().catch(() => {})
++    }
++  } else if (!musicaSilenciada.value && musicaSolicitada.value) {
++    reproducirMusica(musicaSolicitada.value)
++  }
++}
++
++/** Ajusta el volumen de los efectos (0.0 - 1.0) */
++function establecerVolumenEfectos(val) {
++  volumenEfectos.value = Math.max(0, Math.min(1, val))
++  if (typeof window !== 'undefined') {
++    localStorage.setItem(KEY_VOLUMEN_EFECTOS, volumenEfectos.value.toString())
+   }
+ }
+ 
+-/** Ajusta el volumen global (0.0 - 1.0) */
+-function establecerVolumen(nuevoVolumen) {
+-  volumen.value = Math.max(0, Math.min(1, nuevoVolumen))
++/** Alterna el modo silencio */
++function alternarSilencio() {
++  estaSilenciado.value = !estaSilenciado.value
++  if (typeof window !== 'undefined') {
++    localStorage.setItem(KEY_ESTA_SILENCIADO, estaSilenciado.value ? 'true' : 'false')
++  }
++  
+   if (musicaFondoActual.value) {
+-    musicaFondoActual.value.volume = volumen.value
++    if (musicaSilenciada.value) {
++      musicaFondoActual.value.volume = 0
++      musicaFondoActual.value.pause()
++    } else {
++      musicaFondoActual.value.volume = obtenerVolumenPista(musicaFondoActual.value.dataset.clave)
++      musicaFondoActual.value.play().catch(() => {})
++    }
++  } else if (!musicaSilenciada.value && musicaSolicitada.value) {
++    reproducirMusica(musicaSolicitada.value)
+   }
+ }
+ 
+@@ -177,9 +291,14 @@ function limpiarAudio() {
+ // =========================================================
+ export function useAudio() {
+   return {
+-    // Estado
++    // Estado reactivo
++    musicaHabilitada,
++    efectosHabilitados,
++    volumenMusica,
++    volumenEfectos,
+     estaSilenciado,
+-    volumen,
++    musicaSilenciada,
++    efectosSilenciados,
+     musicaFondoActual,
+     audioHabilitadoPorUsuario,
+ 
+@@ -187,8 +306,11 @@ export function useAudio() {
+     reproducirEfecto,
+     reproducirMusica,
+     detenerMusica,
++    establecerMusicaHabilitada,
++    establecerEfectosHabilitados,
++    establecerVolumenMusica,
++    establecerVolumenEfectos,
+     alternarSilencio,
+-    establecerVolumen,
+     limpiarAudio,
+     habilitarAudio,
+ 
+diff --git a/src/composables/useEstadoJuego.js b/src/composables/useEstadoJuego.js
+index 39f64eb..8cbb611 100644
+--- a/src/composables/useEstadoJuego.js
++++ b/src/composables/useEstadoJuego.js
+@@ -73,6 +73,17 @@ const provinciaActiva = ref(null)
+ // ref: historial de misiones completadas
+ const misionesCompletadas = ref([])
+ 
++// --- RUTA ORDENADA DE PROVINCIAS ---
++const rutaOrdenada = ['san-jose', 'heredia', 'cartago', 'alajuela', 'guanacaste', 'puntarenas', 'limon']
++
++// ref: provincia desbloqueada en la misión actual para animación de progreso
++const provinciaRecienDesbloqueada = ref(null)
++
++// ref: registro de detalles del último patrullaje para Centro del Héroe
++const ultimaMisionNombre = ref('')
++const ultimaMisionResultado = ref('')
++const ultimaRecompensa = ref('')
++
+ // --- NUEVOS ESTADOS FASE 2 PREP ---
+ // Checkpoints (Hitos de aventura) - Vinculados a la recompensa secundaria
+ const checkpointsDesbloqueados = ref([])
+@@ -176,7 +187,13 @@ function aplicarBonificacionesIniciales(estilo) {
+ 
+ /** Cambia la pantalla activa */
+ function navegarA(pantalla) {
+-  pantallaActual.value = pantalla
++  const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
++  if (!pantalla || !PANTALLAS_VALIDAS.includes(pantalla)) {
++    console.warn(`[useEstadoJuego] Intento de navegar a pantalla inválida o nula: "${pantalla}". Redirigiendo a INICIO.`)
++    pantallaActual.value = PANTALLAS.INICIO
++  } else {
++    pantallaActual.value = pantalla
++  }
+ }
+ 
+ function aplicarBonificacionesCarrera(carrera) {
+@@ -266,6 +283,17 @@ function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCou
+   respuestasCorrectasMision.value = correctasCount
+   totalPreguntasMision.value = totalPreguntasCount
+ 
++  // Registrar detalles del último patrullaje
++  ultimaMisionNombre.value = provinciaActiva.value?.nombre || idProvincia
++  ultimaMisionResultado.value = `${correctasCount}/${totalPreguntasCount}`
++  if (aprobado && provinciaActiva.value?.recompensaPrincipal) {
++    ultimaRecompensa.value = `${provinciaActiva.value.recompensaPrincipal.emoji} ${provinciaActiva.value.recompensaPrincipal.nombre}`
++  } else if (aprobado) {
++    ultimaRecompensa.value = 'Ninguna'
++  } else {
++    ultimaRecompensa.value = 'Sin recompensa (reprobado)'
++  }
++
+   const yaCompletada = misionesCompletadas.value.includes(idProvincia)
+ 
+   // 2. Si aprueba:
+@@ -276,6 +304,14 @@ function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCou
+     if (!yaCompletada) {
+       misionesCompletadas.value.push(idProvincia)
+ 
++      // Registrar provincia recién desbloqueada para animación en el mapa
++      const idx = rutaOrdenada.indexOf(idProvincia)
++      if (idx !== -1 && idx + 1 < rutaOrdenada.length) {
++        const siguienteProvId = rutaOrdenada[idx + 1]
++        provinciaRecienDesbloqueada.value = siguienteProvId
++        console.info(`[useEstadoJuego] Nueva provincia desbloqueada para animación: ${siguienteProvId}`)
++      }
++
+       // Otorgar recompensas basadas en la provincia activa
+       if (provinciaActiva.value) {
+         const recompensaPri = provinciaActiva.value.recompensaPrincipal
+@@ -395,7 +431,11 @@ function guardarProgreso() {
+       inventarioHeroe: [...inventarioHeroe.value],
+       logrosHeroe: [...logrosHeroe.value],
+       pantallaActual: pantallaActual.value,
+-      esModoNocturno: esModoNocturno.value
++      esModoNocturno: esModoNocturno.value,
++      provinciaRecienDesbloqueada: provinciaRecienDesbloqueada.value,
++      ultimaMisionNombre: ultimaMisionNombre.value,
++      ultimaMisionResultado: ultimaMisionResultado.value,
++      ultimaRecompensa: ultimaRecompensa.value
+     }
+     localStorage.setItem(SAVE_KEY, JSON.stringify(data))
+     console.info('[RutaTica] Progreso guardado correctamente.')
+@@ -420,17 +460,32 @@ function cargarProgreso() {
+     if (data.inventarioHeroe) inventarioHeroe.value = data.inventarioHeroe
+     if (data.logrosHeroe) logrosHeroe.value = data.logrosHeroe
+     if (data.esModoNocturno !== undefined) esModoNocturno.value = data.esModoNocturno
++    if (data.provinciaRecienDesbloqueada !== undefined) provinciaRecienDesbloqueada.value = data.provinciaRecienDesbloqueada
++    if (data.ultimaMisionNombre !== undefined) ultimaMisionNombre.value = data.ultimaMisionNombre
++    if (data.ultimaMisionResultado !== undefined) ultimaMisionResultado.value = data.ultimaMisionResultado
++    if (data.ultimaRecompensa !== undefined) ultimaRecompensa.value = data.ultimaRecompensa
+     
+     // Si la pantalla guardada era juego, mandamos a mapa para evitar inconsistencias
+-    if (data.pantallaActual && data.pantallaActual !== PANTALLAS.JUEGO) {
+-      pantallaActual.value = data.pantallaActual
++    const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
++    if (data.pantallaActual && PANTALLAS_VALIDAS.includes(data.pantallaActual)) {
++      if (data.pantallaActual === PANTALLAS.JUEGO) {
++        pantallaActual.value = PANTALLAS.MAPA
++      } else {
++        pantallaActual.value = data.pantallaActual
++      }
+     } else {
+       pantallaActual.value = PANTALLAS.MAPA
+     }
+     console.info('[RutaTica] Progreso cargado correctamente.')
+     return true
+   } catch (error) {
+-    console.error('[RutaTica] Error al cargar progreso:', error)
++    console.error('[RutaTica] Error al cargar progreso (posible formato incompatible). Limpiando datos corruptos:', error)
++    try {
++      localStorage.removeItem(SAVE_KEY)
++      reiniciarJuego()
++    } catch (cleanErr) {
++      console.error('[RutaTica] Error secundario al intentar borrar save corrupto:', cleanErr)
++    }
+     return false
+   }
+ }
+@@ -478,6 +533,10 @@ function reiniciarJuego() {
+   eventoSospechaMostradoHoy.value = false
+   esModoNocturno.value = false
+   mensajeAlertaMapa.value = ''
++  provinciaRecienDesbloqueada.value = null
++  ultimaMisionNombre.value = ''
++  ultimaMisionResultado.value = ''
++  ultimaRecompensa.value = ''
+   Object.assign(identidadHeroe, { 
+     nombre: '', 
+     edad: '', 
+@@ -523,6 +582,10 @@ export function useEstadoJuego() {
+     respuestasCorrectasMision,
+     totalPreguntasMision,
+     eventoSospechaMostradoHoy,
++    provinciaRecienDesbloqueada,
++    ultimaMisionNombre,
++    ultimaMisionResultado,
++    ultimaRecompensa,
+ 
+     // Computed
+     identidadCompleta,

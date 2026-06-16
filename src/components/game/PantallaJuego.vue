@@ -21,6 +21,16 @@
 
       <!-- ================= CHECKPOINT 1 ================= -->
       <div v-else-if="subEstadoPantalla === 'checkpoint_1'" class="tarjeta-narrativa card text-center checkpoint-card animate-fade-in">
+        <!-- Confeti/Destellos neón de logro -->
+        <div class="particulas-logro-contenedor" aria-hidden="true">
+          <div 
+            v-for="n in 30" 
+            :key="n" 
+            class="particula-logro" 
+            :style="generarEstilosParticulaLogro(n)"
+          ></div>
+        </div>
+
         <span class="icono-narrativa animate-float">🎉</span>
         <h2 class="titulo-narrativa text-neon-green">CHECKPOINT DESBLOQUEADO</h2>
         <h3 class="subtitulo-checkpoint">🍻 BRINDIS TICO</h3>
@@ -48,6 +58,16 @@
 
       <!-- ================= CHECKPOINT 2 ================= -->
       <div v-else-if="subEstadoPantalla === 'checkpoint_2'" class="tarjeta-narrativa card text-center checkpoint-card animate-fade-in">
+        <!-- Confeti/Destellos neón de logro -->
+        <div class="particulas-logro-contenedor" aria-hidden="true">
+          <div 
+            v-for="n in 30" 
+            :key="n" 
+            class="particula-logro" 
+            :style="generarEstilosParticulaLogro(n)"
+          ></div>
+        </div>
+
         <span class="icono-narrativa animate-float">🏆</span>
         <h2 class="titulo-narrativa text-neon-purple">CHECKPOINT DESBLOQUEADO</h2>
         <h3 class="subtitulo-checkpoint">🎉 AFTER SEGURO</h3>
@@ -100,6 +120,16 @@
 
       <!-- ================= NARRATIVA FINAL ================= -->
       <div v-else-if="subEstadoPantalla === 'narrativa_final'" class="tarjeta-narrativa card text-center victoria-card animate-fade-in">
+        <!-- Confeti/Destellos neón de logro -->
+        <div class="particulas-logro-contenedor" aria-hidden="true">
+          <div 
+            v-for="n in 30" 
+            :key="n" 
+            class="particula-logro" 
+            :style="generarEstilosParticulaLogro(n)"
+          ></div>
+        </div>
+
         <span class="icono-narrativa animate-float">🍻</span>
         <h2 class="titulo-narrativa text-neon-green">MISIÓN COMPLETADA</h2>
         <h3 class="subtitulo-victoria">{{ provinciaActiva?.nombre }}</h3>
@@ -169,7 +199,13 @@
 
         <!-- Área de pregunta -->
         <div class="area-pregunta" v-if="preguntaActualDatos">
-          <div class="tarjeta-pregunta card animate-fade-in">
+          <div 
+            class="tarjeta-pregunta card animate-fade-in"
+            :class="{
+              'pregunta-glow-verde': respuestaSeleccionada !== null && esCorrecta,
+              'pregunta-shake-rojo': respuestaSeleccionada !== null && !esCorrecta
+            }"
+          >
             <!-- Barra de tiempo de la pregunta -->
             <div class="pista-tiempo-pregunta">
               <div 
@@ -494,6 +530,7 @@ function alAgotarTiempo() {
 // --- Seleccionar una respuesta ---
 function seleccionarRespuesta(idx) {
   if (respuestaSeleccionada.value !== null) return
+  reproducirEfecto('boton')
   pausar() // Pausar temporizador
   respuestaSeleccionada.value = idx
   
@@ -614,6 +651,36 @@ function finalizarMisionAventura() {
     correctas: respuestasCorrectasCount.value,
     total: totalPreguntas.value
   })
+}
+
+// --- Confeti y destellos de neón en Checkpoints ---
+function generarEstilosParticulaLogro(n) {
+  const colores = ['#00c8ff', '#00ff88', '#ff007f', '#ffb700', '#b026ff']
+  const color = colores[n % colores.length]
+  const size = Math.random() * 8 + 4 // 4px a 12px
+  const delay = Math.random() * 0.8 // 0s a 0.8s
+  const duration = Math.random() * 1.5 + 1.2 // 1.2s a 2.7s
+  
+  // Ángulo y distancia aleatoria para explosión
+  const angulo = Math.random() * 360
+  const distancia = Math.random() * 140 + 40 // 40px a 180px
+  const x = Math.cos(angulo * Math.PI / 180) * distancia
+  const y = Math.sin(angulo * Math.PI / 180) * distancia
+  
+  return {
+    backgroundColor: color,
+    width: `${size}px`,
+    height: `${size}px`,
+    borderRadius: n % 2 === 0 ? '50%' : '20%',
+    boxShadow: `0 0 8px ${color}`,
+    animationDelay: `${delay}s`,
+    animationDuration: `${duration}s`,
+    transform: 'translate(0, 0)',
+    '--tx': `${x}px`,
+    '--ty': `${y}px`,
+    left: '50%',
+    top: '40%'
+  }
 }
 
 // --- Salir al mapa ---

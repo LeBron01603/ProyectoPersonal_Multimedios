@@ -206,7 +206,7 @@ const {
 const misionAprob = computed(() => misionAprobada.value)
 
 // --- Audio ---
-const { reproducirMusica } = useAudio()
+const { reproducirMusica, reproducirEfecto } = useAudio()
 
 // --- Computed: emoji y título según puntaje de misión ---
 const emojiResultado = computed(() => {
@@ -292,9 +292,10 @@ function alReintentarMision() {
 
 onMounted(() => {
   if (misionAprobada.value) {
-    reproducirMusica('victoria')
+    reproducirMusica('victoria', false)
+    reproducirEfecto('logro')
   } else {
-    reproducirMusica('derrota')
+    reproducirMusica('derrota', false)
   }
 })
 </script>

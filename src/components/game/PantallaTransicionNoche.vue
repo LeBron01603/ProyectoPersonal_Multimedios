@@ -1,11 +1,11 @@
 <template>
   <!-- PantallaTransicionNoche: transición cinemática de atardecer a noche -->
-  <section class="pantalla-transicion-noche" aria-label="Transición al anochecer">
+  <section class="pantalla-transicion-noche" :style="estiloCieloDinamico" aria-label="Transición al anochecer">
     <div class="contenedor-cinematico card text-center animate-fade-in-scale">
       
       <!-- Reloj Cinemático Animado -->
       <div class="reloj-cinematico">
-        <div class="circulo-reloj">
+        <div class="circulo-reloj" :class="{ 'tick-pulse': tickActive }">
           <!-- Aguja de la hora -->
           <div class="aguja aguja-hora" :style="{ transform: `rotate(${anguloHora}deg)` }"></div>
           <!-- Aguja de los minutos -->
@@ -64,6 +64,7 @@ const { reproducirEfecto, reproducirMusica } = useAudio()
 const horaActualVal = ref(17) // Comienza a las 5 PM (17:00)
 const minutosActualVal = ref(0)
 const tiempoCompletado = ref(false)
+const tickActive = ref(false)
 let timerId = null
 
 // --- Mensajes narrativos según la hora ---
@@ -103,6 +104,34 @@ const porcentajeProgreso = computed(() => {
   return Math.min(100, Math.round((minutosTotales / 300) * 100))
 })
 
+// --- Interpolación dinámica de colores de fondo del cielo (día -> atardecer -> noche) ---
+const estiloCieloDinamico = computed(() => {
+  const p = porcentajeProgreso.value / 100
+  if (p < 0.5) {
+    const factor = p / 0.5
+    const r1 = 255
+    const g1 = Math.round(208 - factor * 114) // 208 -> 94
+    const b1 = 0
+    const r2 = Math.round(factor * 62)
+    const g2 = Math.round(200 - factor * 200)
+    const b2 = Math.round(255 - factor * 148)
+    return {
+      background: `radial-gradient(circle at center, rgb(${r1}, ${g1}, ${b1}) 0%, rgb(${r2}, ${g2}, ${b2}) 100%)`
+    }
+  } else {
+    const factor = (p - 0.5) / 0.5
+    const r1 = Math.round(255 - factor * 240)
+    const g1 = Math.round(94 - factor * 92)
+    const b1 = Math.round(factor * 28)
+    const r2 = Math.round(62 - factor * 58)
+    const g2 = 0
+    const b2 = Math.round(107 - factor * 99)
+    return {
+      background: `radial-gradient(circle at center, rgb(${r1}, ${g1}, ${b1}) 0%, rgb(${r2}, ${g2}, ${b2}) 100%)`
+    }
+  }
+})
+
 // --- Avanzar reloj automáticamente ---
 function iniciarSimulacionReloj() {
   const intervaloMs = 25 // Avanza 5 minutos simulados cada 25ms (~1.5s de duración total)
@@ -119,6 +148,10 @@ function iniciarSimulacionReloj() {
       minutosActualVal.value = 0
       horaActualVal.value += 1
       reproducirEfecto('click')
+      tickActive.value = true
+      setTimeout(() => {
+        tickActive.value = false
+      }, 150)
     }
   }, intervaloMs)
 }
@@ -129,7 +162,10 @@ function alContinuar() {
 }
 
 onMounted(() => {
+  // Disparar sonido de transición ambiental
+  reproducirEfecto('transicion')
   // Mantener música relajada o de campus en transición
+  reproducirMusica('campus')
   iniciarSimulacionReloj()
 })
 
@@ -182,6 +218,14 @@ onUnmounted(() => {
               inset 0 0 15px var(--color-neon-blue-glow);
   position: relative;
   background: rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.circulo-reloj.tick-pulse {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px var(--color-neon-blue),
+              inset 0 0 20px var(--color-neon-blue);
+  border-color: #ffffff;
 }
 
 .aguja {

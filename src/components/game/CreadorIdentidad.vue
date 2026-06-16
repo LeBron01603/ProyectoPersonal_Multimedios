@@ -1,5 +1,5 @@
 <template>
-  <!-- CreadorIdentidad: formulario para crear la identidad del héroe universitario -->
+  
   <section class="pantalla-identidad" aria-label="Creador de identidad del héroe">
     <div class="contenedor-identidad animate-fade-in-scale">
 
@@ -309,6 +309,12 @@ watch(() => formulario.universidad, (nuevaU) => {
   const existeSede = listaValidaSedes.some(s => s.value === formulario.sedeUniversitaria)
   if (!existeSede) {
     formulario.sedeUniversitaria = ''
+  }
+})
+
+watch(() => formulario.personalidad, (nuevaP) => {
+  if (nuevaP) {
+    reproducirEfecto('boton')
   }
 })
 

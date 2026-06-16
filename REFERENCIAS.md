@@ -45,19 +45,45 @@
 
 ## 4. Recursos multimedia usados
 
-> _Pendiente de completar. Se actualizará conforme se agreguen imágenes y audio._
+### Mapas (Vectores SVG)
 
-### Imágenes
+| Recurso | Creador / Fuente | Licencia | URL | Modificaciones / Notas |
+|---------|------------------|----------|-----|-------------------------|
+| `mapa-costa-rica.svg` (Principal) | Pareto Software, LLC (Simplemaps.com) | Licencia: Simplemaps Free SVG Map License
+URL: https://simplemaps.com/resources/svg-license | Redimensionado a viewBox `0 0 1000 1000` y mapeo de IDs a provincias para interacción Vue. |
+| `mapa-costarica.svg` (Respaldo) | MapSVG (mapsvg.com) | Licencia: Según términos de uso de MapSVG
+URL: https://mapsvg.com| http://mapsvg.com | Incluye el contorno de la Laguna de Arenal. |
 
-| Recurso | Fuente | Licencia | URL |
-|---------|--------|----------|-----|
-| — | — | — | — |
+### Audio / Música (BGM)
 
-### Audio / Música
+Todas las pistas de música de fondo son de uso libre y seguro para la web. Se ha optimizado la tasa de bits (bitrate) para mantener archivos menores a 1MB y acelerar la carga web.
 
-| Recurso | Artista | Fuente | Licencia | URL |
-|---------|---------|--------|----------|-----|
-| — | — | — | — | — |
+| Recurso (Destino) | Nombre Original | Artista | Licencia | Fuente / URL |
+|-------------------|-----------------|---------|----------|--------------|
+| `bgm_menu.mp3` | `bgm_menu.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_campus.mp3` | `bgm_action_3.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_amanecer.mp3` | `bgm_action_5.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_transformacion.mp3` | `bgm_action_1.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_mapa.mp3` | `bgm_action_4.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_juego.mp3` | `bgm_action_2.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_desafio.mp3` | `bgm_action_1.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_victoria.mp3` | `bgm_menu.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+| `bgm_derrota.mp3` | `bgm_action_5.mp3` | CodeManu | CC-BY 3.0 (Atribución) | [OpenGameArt - 8-bit Music Pack](https://opengameart.org/content/8-bit-music-pack-loopable) |
+
+**Atribución completa requerida (CC-BY 3.0):**
+Música de fondo por CodeManu (https://www.codemanu.com/) obtenida desde OpenGameArt (https://opengameart.org/content/8-bit-music-pack-loopable). Licencia de uso: Creative Commons Attribution 3.0 Unported.
+
+### Efectos de Sonido (SFX)
+
+Efectos de sonido ultralivianos (menores a 100KB) para reproducción con baja latencia.
+
+| Recurso (Destino) | Nombre Original | Artista | Licencia | Fuente / URL |
+|-------------------|-----------------|---------|----------|--------------|
+| `sfx_acierto.mp3` | `success_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
+| `sfx_error.mp3` | `bell1_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
+| `sfx_checkpoint.mp3` | `coin1_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
+| `sfx_logro.mp3` | `coin2_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
+| `sfx_boton.mp3` | `button_0.mp3` | n4 | CC0 (Dominio Público) | [OpenGameArt - Basic Sound Effects](https://opengameart.org/content/basic-sound-effects) |
 
 ### Fuentes tipográficas
 
@@ -75,7 +101,16 @@
 
 | Herramienta | Uso | Fecha | Descripción |
 |------------|-----|-------|-------------|
-| Antigravity (Google DeepMind) | Generación de estructura base del proyecto | 2026-06 | Creación inicial de componentes, composables, estilos y documentación de la Fase 1 del proyecto bajo la dirección y revisión del estudiante. |
+|Herramientas de IA utilizadas:
+- Antigravity (Google DeepMind)
+- ChatGPT (OpenAI)
+
+Uso:
+- Apoyo en diseño de arquitectura.
+- Revisión de flujo de juego.
+- Generación de documentación.
+- Propuestas de mejoras UX/UI.
+- Asistencia en depuración y planificación. | Generación de estructura base del proyecto | 2026-06 | Creación inicial de componentes, composables, estilos y documentación de la Fase 1 del proyecto bajo la dirección y revisión del estudiante. |
 
 **Nota:** El uso de IA fue supervisado y revisado en todo momento. El estudiante comprende y puede explicar todo el código generado.
 

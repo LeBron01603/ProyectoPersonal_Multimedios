@@ -23,7 +23,7 @@
                 :key="tab.id"
                 class="tab-btn"
                 :class="{ activo: tabActiva === tab.id }"
-                @click="tabActiva = tab.id"
+                @click="tabActiva = tab.id; reproducirEfecto('boton')"
               >
                 <span class="tab-icono">{{ tab.icono }}</span>
                 <span class="tab-etiqueta">{{ tab.label }}</span>
@@ -86,6 +86,16 @@
                       <div class="advertencia-sospecha-centro" :class="sospechaRangoInfo.clase">
                         <p>{{ mensajeSospechaHeroe }}</p>
                       </div>
+                    </div>
+                  </div>
+
+                  <!-- Bloque Resumen de Último Patrullaje -->
+                  <div class="tarjeta-info mision-reciente">
+                    <h3>⚡ Último Patrullaje Registrado</h3>
+                    <div class="detalles-info grid-mision-reciente">
+                      <p><strong>Misión patrullada:</strong> {{ ultimaMisionNombre || 'Ninguna' }}</p>
+                      <p><strong>Resultado obtenido:</strong> {{ ultimaMisionResultado || 'Sin registrar' }}</p>
+                      <p><strong>Recompensa desbloqueada:</strong> {{ ultimaRecompensa || 'Ninguna' }}</p>
                     </div>
                   </div>
 
@@ -308,6 +318,78 @@
                 </div>
               </div>
 
+              <!-- ================= PESTAÑA: AUDIO ================= -->
+              <div v-if="tabActiva === 'audio'" class="seccion-audio animate-fade-in">
+                <div class="audio-config-card">
+                  <p class="audio-intro">Personaliza el ambiente sonoro de tu patrullaje y vida universitaria:</p>
+
+                  <div class="control-grupo-audio">
+                    <!-- Configuración Música -->
+                    <div class="control-columna-audio">
+                      <div class="control-fila">
+                        <div class="control-info">
+                          <span class="control-icono">🎵</span>
+                          <div class="control-texto">
+                            <label class="control-label">Música de fondo</label>
+                            <span class="control-subtexto">Banda sonora (Nivel: {{ Math.round(volumenMusica * 100) }}%)</span>
+                          </div>
+                        </div>
+                        <label class="switch-neon">
+                          <input type="checkbox" :checked="musicaHabilitada" @change="alCambiarMusica">
+                          <span class="slider-neon"></span>
+                        </label>
+                      </div>
+                      <div class="slider-contenedor-neon" :class="{ 'deshabilitado-opaco': !musicaHabilitada }">
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.05"
+                          :value="volumenMusica"
+                          @input="alCambiarVolumenMusica"
+                          class="rango-neon"
+                          aria-label="Volumen de música"
+                          :disabled="!musicaHabilitada"
+                        >
+                        <div class="barra-progreso-rango" :style="{ width: (volumenMusica * 100) + '%' }"></div>
+                      </div>
+                    </div>
+
+                    <!-- Configuración Efectos -->
+                    <div class="control-columna-audio">
+                      <div class="control-fila">
+                        <div class="control-info">
+                          <span class="control-icono">⚡</span>
+                          <div class="control-texto">
+                            <label class="control-label">Efectos de sonido</label>
+                            <span class="control-subtexto">SFX y botones (Nivel: {{ Math.round(volumenEfectos * 100) }}%)</span>
+                          </div>
+                        </div>
+                        <label class="switch-neon">
+                          <input type="checkbox" :checked="efectosHabilitados" @change="alCambiarEfectos">
+                          <span class="slider-neon"></span>
+                        </label>
+                      </div>
+                      <div class="slider-contenedor-neon" :class="{ 'deshabilitado-opaco': !efectosHabilitados }">
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.05"
+                          :value="volumenEfectos"
+                          @input="alCambiarVolumenEfectos"
+                          @change="reproducirEfecto('boton')"
+                          class="rango-neon"
+                          aria-label="Volumen de efectos"
+                          :disabled="!efectosHabilitados"
+                        >
+                        <div class="barra-progreso-rango" :style="{ width: (volumenEfectos * 100) + '%' }"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -362,7 +444,10 @@ const {
   cargarProgreso,
   borrarProgreso,
   hayProgresoGuardado,
-  tituloFinal
+  tituloFinal,
+  ultimaMisionNombre,
+  ultimaMisionResultado,
+  ultimaRecompensa
 } = useEstadoJuego()
 
 const sospechaRangoInfo = computed(() => {
@@ -388,7 +473,17 @@ function nombreSedeLegible(uni, value) {
   return found ? found.label : value
 }
 
-const { reproducirEfecto } = useAudio()
+const {
+  musicaHabilitada,
+  efectosHabilitados,
+  volumenMusica,
+  volumenEfectos,
+  establecerMusicaHabilitada,
+  establecerEfectosHabilitados,
+  establecerVolumenMusica,
+  establecerVolumenEfectos,
+  reproducirEfecto
+} = useAudio()
 
 // --- Estado local ---
 const tabActiva = ref('perfil')
@@ -398,10 +493,33 @@ const mensajeFeedback = ref('')
 const feedbackExitoso = ref(true)
 const mostrarConfirmarBorrar = ref(false)
 
+function alCambiarMusica(e) {
+  establecerMusicaHabilitada(e.target.checked)
+  if (e.target.checked) reproducirEfecto('boton')
+}
+
+function alCambiarEfectos(e) {
+  establecerEfectosHabilitados(e.target.checked)
+  if (e.target.checked) reproducirEfecto('boton')
+}
+
+// @input → actualiza el volumen en tiempo real (el watcher en useAudio lo aplica)
+function alCambiarVolumenMusica(e) {
+  const val = parseFloat(e.target.value)
+  establecerVolumenMusica(val)
+}
+
+// @input → persiste en tiempo real para efectos
+function alCambiarVolumenEfectos(e) {
+  const val = parseFloat(e.target.value)
+  establecerVolumenEfectos(val)
+}
+
 const tabs = [
   { id: 'perfil', icono: '👤', label: 'Perfil' },
   { id: 'progreso', icono: '🚩', label: 'Progreso' },
   { id: 'mochila', icono: '🎒', label: 'Mochila' },
+  { id: 'audio', icono: '🔊', label: 'Audio' },
   { id: 'opciones', icono: '⚙️', label: 'Guardado' }
 ]
 
@@ -647,6 +765,7 @@ function cerrar() {
   flex-direction: column;
   gap: var(--space-5);
   color: var(--color-text-primary);
+  overflow: hidden;
 }
 
 .btn-cerrar-modal {
@@ -727,18 +846,28 @@ function cerrar() {
 /* --- Contenido --- */
 .contenido-tab {
   flex: 1;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   min-height: 280px;
-  max-height: 50vh;
-  padding-right: var(--space-2);
+  overflow: hidden;
 }
 
 /* --- Pestaña: Perfil --- */
+.seccion-perfil {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
 .perfil-info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
+  flex: 1;
+  overflow-y: auto;
+  padding-right: var(--space-2);
 }
 
 .tarjeta-info {
@@ -779,6 +908,25 @@ function cerrar() {
 .detalles-info p {
   margin: 0;
   line-height: 1.4;
+}
+
+.tarjeta-info.mision-reciente {
+  grid-column: span 2;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  background: rgba(255, 215, 0, 0.02);
+  box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.03);
+}
+
+.tarjeta-info.mision-reciente h3 {
+  color: var(--color-neon-gold) !important;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  padding-bottom: var(--space-2);
+}
+
+.grid-mision-reciente {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-2);
 }
 
 .progreso-sospecha {
@@ -882,15 +1030,18 @@ function cerrar() {
   flex-direction: column;
   gap: var(--space-4);
   text-align: left;
+  flex: 1;
+  overflow: hidden;
 }
 
 .form-scroll {
-  max-height: 38vh;
+  flex: 1;
   overflow-y: auto;
   padding-right: var(--space-2);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  padding-bottom: var(--space-12);
 }
 
 .form-group-edicion {
@@ -943,6 +1094,11 @@ function cerrar() {
   justify-content: flex-end;
   border-top: 1px solid var(--color-border);
   padding-top: var(--space-4);
+  position: sticky;
+  bottom: 0;
+  background: #0d091a;
+  z-index: 10;
+  margin-top: auto;
 }
 
 /* --- Pestaña: Progreso --- */
@@ -952,6 +1108,9 @@ function cerrar() {
   flex-direction: column;
   gap: var(--space-6);
   text-align: left;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: var(--space-2);
 }
 
 .progreso-provincias-ruta h4,
@@ -1079,6 +1238,9 @@ function cerrar() {
   max-width: 360px;
   margin-inline: auto;
   padding-block: var(--space-4);
+  flex: 1;
+  overflow-y: auto;
+  padding-right: var(--space-2);
 }
 
 .opciones-intro {
@@ -1135,6 +1297,209 @@ function cerrar() {
   background: rgba(255, 70, 70, 0.08);
   border: 1px solid rgba(255, 70, 70, 0.3);
   color: #ff4646;
+}
+
+/* --- Pestaña: Audio --- */
+.seccion-audio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+  overflow-y: auto;
+  padding-right: var(--space-2);
+}
+
+.audio-config-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.audio-intro {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-2) 0;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.control-grupo-audio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.control-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.control-columna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+}
+
+.control-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: left;
+}
+
+.control-icono {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.control-texto {
+  display: flex;
+  flex-direction: column;
+}
+
+.control-label {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.control-subtexto {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+/* Switches Neón */
+.switch-neon {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.switch-neon input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-neon {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider-neon:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--color-text-secondary);
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.switch-neon input:checked + .slider-neon {
+  border-color: var(--color-neon-purple);
+  box-shadow: 0 0 8px var(--color-neon-purple);
+}
+
+.switch-neon input:checked + .slider-neon:before {
+  transform: translateX(24px);
+  background-color: var(--color-neon-purple);
+  box-shadow: 0 0 6px var(--color-neon-purple);
+}
+
+/* Sliders de Volumen Neón */
+.slider-contenedor-neon {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.deshabilitado-opaco {
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.rango-neon {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.rango-neon::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-neon-blue);
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--color-neon-blue);
+  transition: transform 0.1s ease;
+}
+
+.rango-neon::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.rango-neon::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-neon-blue);
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--color-neon-blue);
+  transition: transform 0.1s ease;
+}
+
+.rango-neon::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
+.barra-progreso-rango {
+  position: absolute;
+  left: 0;
+  height: 8px;
+  background: var(--color-neon-blue);
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: 0 0 6px var(--color-neon-blue);
 }
 
 /* --- Responsive --- */

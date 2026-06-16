@@ -202,6 +202,18 @@ function iniciarMisionNocturna() {
   font-weight: var(--font-bold);
   color: var(--color-neon-blue);
   text-shadow: 0 0 10px var(--color-neon-blue-glow);
+  animation: pulseNeonTime 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseNeonTime {
+  0% {
+    color: var(--color-neon-blue);
+    text-shadow: 0 0 8px var(--color-neon-blue-glow);
+  }
+  100% {
+    color: #ffffff;
+    text-shadow: 0 0 20px var(--color-neon-blue-glow), 0 0 10px #00c8ff;
+  }
 }
 
 .divisoria-neon {
@@ -255,8 +267,30 @@ function iniciarMisionNocturna() {
 }
 
 .emblema-heroe-revelado {
-  font-size: 3.5rem;
+  font-size: 4rem;
   line-height: 1;
+  width: 90px;
+  height: 90px;
+  background: rgba(184, 79, 255, 0.08);
+  border: 2px solid var(--color-neon-purple);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px var(--color-neon-purple-glow),
+              inset 0 0 10px var(--color-neon-purple-glow);
+  animation: pulseEnergyHalo 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulseEnergyHalo {
+  0% {
+    box-shadow: 0 0 15px var(--color-neon-purple-glow), inset 0 0 8px var(--color-neon-purple-glow);
+    border-color: rgba(184, 79, 255, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 35px var(--color-neon-purple-glow), inset 0 0 18px var(--color-neon-purple-glow);
+    border-color: #ffffff;
+  }
 }
 
 .alias-revelado {

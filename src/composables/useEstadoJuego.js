@@ -4,7 +4,7 @@
 // inventario, logros, colección de recuerdos y checkpoints.
 // =========================================================
 
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useAudio } from './useAudio.js'
 
 // --- Tipos de pantallas del juego ---
@@ -26,6 +26,15 @@ const pantallaActual = ref(PANTALLAS.INICIO)
 const estaCargando   = ref(false)
 const esModoNocturno = ref(false)
 const mensajeAlertaMapa = ref('')
+
+// Watcher to guarantee pantallaActual is always valid and fallback to INICIO if invalid
+watch(pantallaActual, (nueva) => {
+  const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
+  if (!nueva || !PANTALLAS_VALIDAS.includes(nueva)) {
+    console.warn(`[useEstadoJuego] pantallaActual con valor inválido ("${nueva}"). Restaurando a INICIO.`)
+    pantallaActual.value = PANTALLAS.INICIO
+  }
+})
 
 // reactive: para el objeto de identidad del héroe
 const identidadHeroe = reactive({
@@ -72,6 +81,17 @@ const provinciaActiva = ref(null)
 
 // ref: historial de misiones completadas
 const misionesCompletadas = ref([])
+
+// --- RUTA ORDENADA DE PROVINCIAS ---
+const rutaOrdenada = ['san-jose', 'heredia', 'cartago', 'alajuela', 'guanacaste', 'puntarenas', 'limon']
+
+// ref: provincia desbloqueada en la misión actual para animación de progreso
+const provinciaRecienDesbloqueada = ref(null)
+
+// ref: registro de detalles del último patrullaje para Centro del Héroe
+const ultimaMisionNombre = ref('')
+const ultimaMisionResultado = ref('')
+const ultimaRecompensa = ref('')
 
 // --- NUEVOS ESTADOS FASE 2 PREP ---
 // Checkpoints (Hitos de aventura) - Vinculados a la recompensa secundaria
@@ -176,7 +196,13 @@ function aplicarBonificacionesIniciales(estilo) {
 
 /** Cambia la pantalla activa */
 function navegarA(pantalla) {
-  pantallaActual.value = pantalla
+  const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
+  if (!pantalla || !PANTALLAS_VALIDAS.includes(pantalla)) {
+    console.warn(`[useEstadoJuego] Intento de navegar a pantalla inválida o nula: "${pantalla}". Redirigiendo a INICIO.`)
+    pantallaActual.value = PANTALLAS.INICIO
+  } else {
+    pantallaActual.value = pantalla
+  }
 }
 
 function aplicarBonificacionesCarrera(carrera) {
@@ -202,6 +228,7 @@ function confirmarIdentidad(identidad) {
 
   aplicarBonificacionesIniciales(identidad.personalidad)
   aplicarBonificacionesCarrera(identidad.carrera)
+  esModoNocturno.value = false
   navegarA(PANTALLAS.MAPA)
   guardarProgreso()
 }
@@ -266,6 +293,17 @@ function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCou
   respuestasCorrectasMision.value = correctasCount
   totalPreguntasMision.value = totalPreguntasCount
 
+  // Registrar detalles del último patrullaje
+  ultimaMisionNombre.value = provinciaActiva.value?.nombre || idProvincia
+  ultimaMisionResultado.value = `${correctasCount}/${totalPreguntasCount}`
+  if (aprobado && provinciaActiva.value?.recompensaPrincipal) {
+    ultimaRecompensa.value = `${provinciaActiva.value.recompensaPrincipal.emoji} ${provinciaActiva.value.recompensaPrincipal.nombre}`
+  } else if (aprobado) {
+    ultimaRecompensa.value = 'Ninguna'
+  } else {
+    ultimaRecompensa.value = 'Sin recompensa (reprobado)'
+  }
+
   const yaCompletada = misionesCompletadas.value.includes(idProvincia)
 
   // 2. Si aprueba:
@@ -275,6 +313,14 @@ function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCou
     // Si no estaba completada, la agregamos al progreso y otorgamos las recompensas únicas
     if (!yaCompletada) {
       misionesCompletadas.value.push(idProvincia)
+
+      // Registrar provincia recién desbloqueada para animación en el mapa
+      const idx = rutaOrdenada.indexOf(idProvincia)
+      if (idx !== -1 && idx + 1 < rutaOrdenada.length) {
+        const siguienteProvId = rutaOrdenada[idx + 1]
+        provinciaRecienDesbloqueada.value = siguienteProvId
+        console.info(`[useEstadoJuego] Nueva provincia desbloqueada para animación: ${siguienteProvId}`)
+      }
 
       // Otorgar recompensas basadas en la provincia activa
       if (provinciaActiva.value) {
@@ -395,7 +441,11 @@ function guardarProgreso() {
       inventarioHeroe: [...inventarioHeroe.value],
       logrosHeroe: [...logrosHeroe.value],
       pantallaActual: pantallaActual.value,
-      esModoNocturno: esModoNocturno.value
+      esModoNocturno: esModoNocturno.value,
+      provinciaRecienDesbloqueada: provinciaRecienDesbloqueada.value,
+      ultimaMisionNombre: ultimaMisionNombre.value,
+      ultimaMisionResultado: ultimaMisionResultado.value,
+      ultimaRecompensa: ultimaRecompensa.value
     }
     localStorage.setItem(SAVE_KEY, JSON.stringify(data))
     console.info('[RutaTica] Progreso guardado correctamente.')
@@ -420,17 +470,46 @@ function cargarProgreso() {
     if (data.inventarioHeroe) inventarioHeroe.value = data.inventarioHeroe
     if (data.logrosHeroe) logrosHeroe.value = data.logrosHeroe
     if (data.esModoNocturno !== undefined) esModoNocturno.value = data.esModoNocturno
+    if (data.provinciaRecienDesbloqueada !== undefined) provinciaRecienDesbloqueada.value = data.provinciaRecienDesbloqueada
+    if (data.ultimaMisionNombre !== undefined) ultimaMisionNombre.value = data.ultimaMisionNombre
+    if (data.ultimaMisionResultado !== undefined) ultimaMisionResultado.value = data.ultimaMisionResultado
+    if (data.ultimaRecompensa !== undefined) ultimaRecompensa.value = data.ultimaRecompensa
     
     // Si la pantalla guardada era juego, mandamos a mapa para evitar inconsistencias
-    if (data.pantallaActual && data.pantallaActual !== PANTALLAS.JUEGO) {
-      pantallaActual.value = data.pantallaActual
+    const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
+    const tieneIdentidadValida = data.identidadHeroe && 
+      data.identidadHeroe.nombre && 
+      data.identidadHeroe.nombre.trim() !== '' &&
+      data.identidadHeroe.universidad &&
+      data.identidadHeroe.carrera &&
+      data.identidadHeroe.personalidad &&
+      data.identidadHeroe.aliasHeroe &&
+      data.identidadHeroe.aliasHeroe.trim() !== ''
+
+    if (tieneIdentidadValida) {
+      if (data.pantallaActual && PANTALLAS_VALIDAS.includes(data.pantallaActual)) {
+        if (data.pantallaActual === PANTALLAS.JUEGO) {
+          pantallaActual.value = PANTALLAS.MAPA
+        } else {
+          pantallaActual.value = data.pantallaActual
+        }
+      } else {
+        pantallaActual.value = PANTALLAS.MAPA
+      }
     } else {
-      pantallaActual.value = PANTALLAS.MAPA
+      console.warn('[useEstadoJuego] Partida guardada incompatible o identidad incompleta. Redirigiendo a INICIO.')
+      pantallaActual.value = PANTALLAS.INICIO
     }
     console.info('[RutaTica] Progreso cargado correctamente.')
     return true
   } catch (error) {
-    console.error('[RutaTica] Error al cargar progreso:', error)
+    console.error('[RutaTica] Error al cargar progreso (posible formato incompatible). Limpiando datos corruptos:', error)
+    try {
+      localStorage.removeItem(SAVE_KEY)
+      reiniciarJuego()
+    } catch (cleanErr) {
+      console.error('[RutaTica] Error secundario al intentar borrar save corrupto:', cleanErr)
+    }
     return false
   }
 }
@@ -478,6 +557,10 @@ function reiniciarJuego() {
   eventoSospechaMostradoHoy.value = false
   esModoNocturno.value = false
   mensajeAlertaMapa.value = ''
+  provinciaRecienDesbloqueada.value = null
+  ultimaMisionNombre.value = ''
+  ultimaMisionResultado.value = ''
+  ultimaRecompensa.value = ''
   Object.assign(identidadHeroe, { 
     nombre: '', 
     edad: '', 
@@ -523,6 +606,10 @@ export function useEstadoJuego() {
     respuestasCorrectasMision,
     totalPreguntasMision,
     eventoSospechaMostradoHoy,
+    provinciaRecienDesbloqueada,
+    ultimaMisionNombre,
+    ultimaMisionResultado,
+    ultimaRecompensa,
 
     // Computed
     identidadCompleta,

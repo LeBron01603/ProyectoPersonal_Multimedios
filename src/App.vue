@@ -12,81 +12,65 @@
     <!-- Área principal de contenido -->
     <!-- transition: animación entre cambios de pantalla -->
     <main class="game-main">
-      <transition name="screen-transition">
-
-        <!-- Pantalla: Inicio -->
+      <transition name="screen-transition" mode="out-in" :duration="300">
         <PantallaInicio
           v-if="pantallaActual === PANTALLAS.INICIO"
           key="inicio"
           @iniciar="navegarA(PANTALLAS.IDENTIDAD)"
         />
-
-        <!-- Pantalla: Creador de identidad -->
         <CreadorIdentidad
           v-else-if="pantallaActual === PANTALLAS.IDENTIDAD"
           key="identidad"
           @confirmar="alConfirmarIdentidad"
           @volver="navegarA(PANTALLAS.INICIO)"
         />
-
-        <!-- Pantalla: Mapa de misiones -->
         <MapaMisiones
           v-else-if="pantallaActual === PANTALLAS.MAPA"
           key="mapa"
           @iniciar-mision="navegarA(PANTALLAS.VUELO)"
         />
-
-        <!-- Pantalla: Vuelo Nocturno -->
         <PantallaVuelo
           v-else-if="pantallaActual === PANTALLAS.VUELO"
           key="vuelo"
           @completar="navegarA(PANTALLAS.JUEGO)"
         />
-
-        <!-- Pantalla: Vida Universitaria -->
         <PantallaVidaUniversitaria
           v-else-if="pantallaActual === PANTALLAS.ACTIVIDADES"
           key="actividades"
           @completar="navegarA(PANTALLAS.TRANSICION_NOCHE)"
           @salir="navegarA(PANTALLAS.MAPA)"
         />
-
-        <!-- Pantalla: Transición horaria cinemática -->
         <PantallaTransicionNoche
           v-else-if="pantallaActual === PANTALLAS.TRANSICION_NOCHE"
           key="transicion_noche"
           @continuar="navegarA(PANTALLAS.TRANSFORMACION)"
         />
-
-        <!-- Pantalla: Transformación -->
         <PantallaTransformacion
           v-else-if="pantallaActual === PANTALLAS.TRANSFORMACION"
           key="transformacion"
           @continuar="navegarA(PANTALLAS.MAPA)"
         />
-
-        <!-- Pantalla: Juego activo -->
         <PantallaJuego
           v-else-if="pantallaActual === PANTALLAS.JUEGO"
           key="juego"
           @salir="navegarA(PANTALLAS.MAPA)"
           @completar="navegarA(PANTALLAS.RESULTADO)"
         />
-
-        <!-- Pantalla: Resultados -->
         <PantallaResultado
           v-else-if="pantallaActual === PANTALLAS.RESULTADO"
           key="resultado"
           @volver-al-campus="navegarA(PANTALLAS.NUEVO_DIA)"
         />
-
-        <!-- Pantalla: Nuevo Día -->
         <PantallaNuevoDia
           v-else-if="pantallaActual === PANTALLAS.NUEVO_DIA"
           key="nuevo_dia"
           @comenzar="navegarA(PANTALLAS.ACTIVIDADES)"
         />
-
+        <PantallaInicio
+          v-else
+          key="inicio-fallback"
+          @iniciar="navegarA(PANTALLAS.IDENTIDAD)"
+        />
       </transition>
     </main>
 
@@ -162,13 +146,16 @@ onMounted(() => {
 }
 
 /* --- Transición entre pantallas --- */
-.screen-transition-enter-active {
-  animation: fadeInScale 0.35s ease both;
-}
+.screen-transition-enter-active,
 .screen-transition-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+.screen-transition-enter-from {
+  opacity: 0;
+  transform: scale(0.97);
 }
 .screen-transition-leave-to {
   opacity: 0;
+  transform: scale(1.03);
 }
 </style>

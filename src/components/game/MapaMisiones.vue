@@ -1,5 +1,5 @@
 <template>
-  <!-- MapaMisiones: pantalla del mapa de misiones por provincia -->
+  
   <section class="mapa-misiones" aria-label="Mapa de misiones de Costa Rica">
 
     <!-- Header del mapa -->
@@ -86,14 +86,14 @@
           <button 
             class="btn-vista" 
             :class="{ 'activo': vistaActiva === 'mapa' }"
-            @click="vistaActiva = 'mapa'"
+            @click="vistaActiva = 'mapa'; reproducirEfecto('boton')"
           >
             🗺️ Mapa Interactivo
           </button>
           <button 
             class="btn-vista" 
             :class="{ 'activo': vistaActiva === 'tarjetas' }"
-            @click="vistaActiva = 'tarjetas'"
+            @click="vistaActiva = 'tarjetas'; reproducirEfecto('boton')"
           >
             🎴 Vista de Tarjetas
           </button>
@@ -348,6 +348,7 @@
             </header>
 
             <form class="formulario-edicion" @submit.prevent="guardarEdicion" novalidate>
+              <div class="form-campos-scroll">
               
               <!-- Campo: Nombre -->
               <div class="form-group-edicion">
@@ -483,6 +484,8 @@
                   maxlength="20"
                   style="margin-top: 10px;"
                 />
+              </div>
+
               </div>
 
               <!-- Acciones del Formulario -->
@@ -751,7 +754,7 @@ const listaEstadisticasHeroe = computed(() => [
   { key: 'conocimiento',    etiqueta: 'Conocimiento',    valor: estadisticasHeroe.conocimiento,    icono: '📚', color: 'blue'   },
   { key: 'diversion',       etiqueta: 'Diversión',       valor: estadisticasHeroe.diversion,       icono: '🎉', color: 'purple' },
   { key: 'responsabilidad', etiqueta: 'Resp.',            valor: estadisticasHeroe.responsabilidad, icono: '🎓', color: 'green'  },
-  { key: 'reputacionNocturna', etiqueta: 'Reputación',      valor: estadisticasHeroe.reputacionNocturna, icono: '🤝', color: 'cyan'   }
+  { key: 'reputacionNocturna', etiqueta: 'Reputación',      valor: estadisticasHeroe.reputacionNocturna, icono: '🤝', color: 'blue'   }
 ])
 
 const formularioEdicionValido = computed(() => {
@@ -1048,6 +1051,57 @@ onMounted(async () => {
   box-shadow: 0 0 10px var(--color-neon-green-glow);
 }
 
+/* --- Selector de Vista Mapa vs Tarjetas (Neon Glassmorphism) --- */
+.selector-vista-mapa {
+  display: flex;
+  background: rgba(13, 17, 33, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  padding: 4px;
+  margin-bottom: var(--space-4);
+  gap: 4px;
+  width: fit-content;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.02);
+}
+
+.btn-vista {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  outline: none;
+}
+
+.btn-vista:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-vista.activo {
+  background: rgba(0, 200, 255, 0.08);
+  border-color: rgba(0, 200, 255, 0.3);
+  color: var(--color-neon-blue);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
+  text-shadow: 0 0 8px rgba(0, 200, 255, 0.4);
+}
+
+.modo-diurno-mapa .btn-vista.activo {
+  background: rgba(0, 200, 255, 0.04);
+  border-color: rgba(0, 200, 255, 0.15);
+  box-shadow: none;
+}
+
 /* --- Contenido mapa grid --- */
 .contenido-mapa-grid {
   display: grid;
@@ -1284,6 +1338,7 @@ onMounted(async () => {
 .modal-card-edicion {
   width: 100%;
   max-width: 500px;
+  max-height: 85vh;
   background: var(--gradient-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
@@ -1292,6 +1347,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  overflow: hidden;
 }
 
 .edicion-header h3 {
@@ -1311,6 +1367,33 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  flex: 1;
+  overflow: hidden;
+}
+
+.form-campos-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: var(--space-3);
+  padding-bottom: var(--space-12); /* Safe spacing so bottom dropdowns do not get cut off */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Custom scrollbar for form campos */
+.form-campos-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.form-campos-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.form-campos-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+}
+.form-campos-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .form-group-edicion {
@@ -1373,7 +1456,13 @@ onMounted(async () => {
   display: flex;
   gap: var(--space-3);
   justify-content: flex-end;
-  margin-top: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d091a; /* solid color matching the bottom gradient shade */
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
 /* --- Loading y Error --- */

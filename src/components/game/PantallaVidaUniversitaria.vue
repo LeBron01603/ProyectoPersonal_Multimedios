@@ -289,7 +289,7 @@ const actividades = [
 
 // --- Métodos de Sospecha e Interacción ---
 function seleccionarOpcionEvento(opcion) {
-  reproducirEfecto('click')
+  reproducirEfecto('boton')
   consecuenciaTexto.value = opcion.consecuencia
   
   // Aplicar consecuencias en estadísticas
@@ -334,7 +334,7 @@ function emojiStat(stat) {
 }
 
 function seleccionarActividad(act) {
-  reproducirEfecto('click')
+  reproducirEfecto('boton')
   if (seleccionadas.value.includes(act.id)) {
     seleccionadas.value = seleccionadas.value.filter(id => id !== act.id)
   } else if (seleccionadas.value.length < 2) {

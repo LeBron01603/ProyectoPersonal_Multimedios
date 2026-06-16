@@ -61,7 +61,7 @@ Vercel detecta automáticamente proyectos Vite. Solo se requiere:
 3. El directorio de salida es: `dist`
 
 ---
-
+  
 ## Estructura del proyecto
 
 ```

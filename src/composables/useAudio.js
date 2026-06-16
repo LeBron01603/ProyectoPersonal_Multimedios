@@ -1,56 +1,135 @@
 // =========================================================
-// useAudio.js — Composable para manejo de audio del juego
-// Preparado para cargar archivos desde public/audio/
+// useAudio.js — Composable para el manejo global de audio
+// Volumen real en tiempo real, mute/unmute sin perder slider,
+// persistencia en localStorage.
 // =========================================================
 
-import { ref, onUnmounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 
-// --- Estado del audio ---
-const estaSilenciado           = ref(false)
-const volumen                  = ref(0.6)
-const musicaFondoActual        = ref(null)   // Audio de fondo activo
+const KEY_MUSICA_HABILITADA   = 'rutaTicaAudioMusicaHabilitada'
+const KEY_EFECTOS_HABILITADOS  = 'rutaTicaAudioEfectosHabilitados'
+const KEY_VOLUMEN_MUSICA      = 'rutaTicaAudioVolumenMusica'
+const KEY_VOLUMEN_EFECTOS     = 'rutaTicaAudioVolumenEfectos'
+const KEY_ESTA_SILENCIADO      = 'rutaTicaAudioEstaSilenciado'
+
+function getStorageBool(key, def) {
+  if (typeof window === 'undefined') return def
+  const val = localStorage.getItem(key)
+  return val !== null ? val === 'true' : def
+}
+
+function getStorageNum(key, def) {
+  if (typeof window === 'undefined') return def
+  const val = localStorage.getItem(key)
+  return val !== null ? parseFloat(val) : def
+}
+
+// --- Estado reactivo global persistente ---
+const musicaHabilitada         = ref(getStorageBool(KEY_MUSICA_HABILITADA, true))
+const efectosHabilitados       = ref(getStorageBool(KEY_EFECTOS_HABILITADOS, true))
+const volumenMusica            = ref(getStorageNum(KEY_VOLUMEN_MUSICA, 0.35))
+const volumenEfectos           = ref(getStorageNum(KEY_VOLUMEN_EFECTOS, 0.60))
+const estaSilenciado           = ref(getStorageBool(KEY_ESTA_SILENCIADO, false))
 const audioHabilitadoPorUsuario = ref(false)
-const musicaSolicitada          = ref(null)   // Guarda la última pista solicitada para reproducir tras la primera interacción
 
-// Registro de instancias de Audio para limpieza
+// Computed: la música está efectivamente silenciada
+const musicaSilenciada = computed(() => !musicaHabilitada.value || estaSilenciado.value)
+const efectosSilenciados = computed(() => !efectosHabilitados.value || estaSilenciado.value)
+
+const musicaFondoActual        = ref(null)
+const musicaSolicitada          = ref(null)
+
 const instanciasAudio = new Map()
 
 // =========================================================
-// Rutas de audio públicas (mapean a la carpeta public/audio/)
+// Rutas de audio públicas
 // =========================================================
 const RUTAS_AUDIO = {
   musica: {
     menu:           '/audio/bgm_menu.mp3',
     campus:         '/audio/bgm_campus.mp3',
-    amanecer:       '/audio/bgm_sunrise.mp3',
-    transformacion: '/audio/bgm_transformation.mp3',
-    mapa:           '/audio/bgm_map.mp3',
-    juego:          '/audio/bgm_game.mp3',
-    desafio:        '/audio/bgm_boss.mp3',
-    victoria:       '/audio/bgm_victory.mp3',
-    derrota:        '/audio/bgm_defeat.mp3'
+    amanecer:       '/audio/bgm_amanecer.mp3',
+    transformacion: '/audio/bgm_transformacion.mp3',
+    mapa:           '/audio/bgm_mapa.mp3',
+    juego:          '/audio/bgm_juego.mp3',
+    desafio:        '/audio/bgm_desafio.mp3',
+    victoria:       '/audio/bgm_victoria.mp3',
+    derrota:        '/audio/bgm_derrota.mp3'
   },
   efecto: {
-    click:     '/audio/sfx_click.mp3',
-    correcto:  '/audio/sfx_correct.mp3',
-    incorrecto: '/audio/sfx_wrong.mp3',
-    subirNivel: '/audio/sfx_levelup.mp3',
-    desbloquear:'/audio/sfx_unlock.mp3'
+    acierto:        '/audio/sfx_acierto.mp3',
+    correcto:       '/audio/sfx_acierto.mp3',
+    error:          '/audio/sfx_error.mp3',
+    incorrecto:     '/audio/sfx_error.mp3',
+    checkpoint:     '/audio/sfx_checkpoint.mp3',
+    desbloquear:    '/audio/sfx_checkpoint.mp3',
+    logro:          '/audio/sfx_logro.mp3',
+    subirNivel:     '/audio/sfx_logro.mp3',
+    boton:          '/audio/sfx_boton.mp3',
+    click:          '/audio/sfx_boton.mp3',
+    vuelo:          '/audio/sfx_vuelo.mp3',
+    transicion:     '/audio/sfx_transicion.mp3'
   }
 }
 
-/** Habilita la reproducción de audio tras interactuar con la pantalla */
+/** Calcula el volumen efectivo de la pista BGM actual */
+function obtenerVolumenPista(clave) {
+  const base = volumenMusica.value
+  if (clave === 'juego')   return base * 0.12
+  if (clave === 'desafio') return base * 0.18
+  return base
+}
+
+// =========================================================
+// Watcher: actualiza el volumen del elemento de audio activo
+// en tiempo real cuando el slider cambia (sin restart).
+// =========================================================
+watch(volumenMusica, (nuevo) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(KEY_VOLUMEN_MUSICA, nuevo.toString())
+  }
+  if (musicaFondoActual.value) {
+    const clave = musicaFondoActual.value.dataset?.clave || ''
+    if (musicaSilenciada.value) {
+      musicaFondoActual.value.volume = 0
+    } else {
+      musicaFondoActual.value.volume = obtenerVolumenPista(clave)
+    }
+  }
+})
+
+watch(volumenEfectos, (nuevo) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(KEY_VOLUMEN_EFECTOS, nuevo.toString())
+  }
+})
+
+watch(musicaSilenciada, (silenciada) => {
+  if (!musicaFondoActual.value) return
+  const clave = musicaFondoActual.value.dataset?.clave || ''
+  if (silenciada) {
+    musicaFondoActual.value.volume = 0
+    musicaFondoActual.value.pause()
+  } else {
+    musicaFondoActual.value.volume = obtenerVolumenPista(clave)
+    musicaFondoActual.value.play().catch(() => {})
+  }
+})
+
+watch(efectosSilenciados, () => {
+  // SFX se aplican al reproducirse, no hay instancia persistente.
+})
+
+/** Habilita la reproducción de audio tras la primera interacción */
 function habilitarAudio() {
   if (audioHabilitadoPorUsuario.value) return
   audioHabilitadoPorUsuario.value = true
   console.info('[useAudio] Audio habilitado por interacción del usuario.')
-  // Si había música solicitada en cola, la reproducimos ahora
-  if (musicaSolicitada.value) {
+  if (musicaSolicitada.value && !musicaSilenciada.value) {
     reproducirMusica(musicaSolicitada.value)
   }
 }
 
-// Registro global de primera interacción (click o tecla)
 if (typeof window !== 'undefined') {
   const activarEnPrimerClick = () => {
     habilitarAudio()
@@ -62,15 +141,10 @@ if (typeof window !== 'undefined') {
 }
 
 // =========================================================
-// Funciones de audio
+// Reproducción de SFX
 // =========================================================
-
-/**
- * Reproduce un efecto de sonido (SFX) una sola vez.
- * @param {string} clave - Clave del efecto en RUTAS_AUDIO.efecto
- */
 function reproducirEfecto(clave) {
-  if (estaSilenciado.value || !audioHabilitadoPorUsuario.value) return
+  if (efectosSilenciados.value || !audioHabilitadoPorUsuario.value) return
 
   const ruta = RUTAS_AUDIO.efecto[clave]
   if (!ruta) {
@@ -78,32 +152,36 @@ function reproducirEfecto(clave) {
     return
   }
 
-  // Se crea una nueva instancia cada vez para permitir solapamiento
   const audio = new Audio(ruta)
-  audio.volume = Math.min(volumen.value * 1.2, 1)
+  audio.volume = volumenEfectos.value   // Aplica volumen actual de efectos
   audio.play().catch(err => {
-    // Silenciar error y mostrar advertencia en consola
-    console.warn(`[useAudio] Advertencia: No se pudo reproducir el efecto '${clave}' en ${ruta}:`, err.message)
+    console.warn(`[useAudio] No se pudo reproducir efecto '${clave}':`, err.message)
   })
 }
 
-/**
- * Inicia la música de fondo (BGM) con loop.
- * Si hay música activa, la detiene primero.
- * @param {string} clave - Clave de la música en RUTAS_AUDIO.musica
- */
-function reproducirMusica(clave) {
+// =========================================================
+// Reproducción de música BGM
+// =========================================================
+function reproducirMusica(clave, loop = true) {
   musicaSolicitada.value = clave
 
-  if (estaSilenciado.value) return
-
   if (!audioHabilitadoPorUsuario.value) {
-    console.info(`[useAudio] Pista '${clave}' en cola hasta que el usuario interactúe.`)
+    console.info(`[useAudio] Pista '${clave}' en cola hasta interacción del usuario.`)
     return
   }
 
   // Evitar reiniciar si ya está sonando la misma pista
-  if (musicaFondoActual.value && musicaFondoActual.value.dataset && musicaFondoActual.value.dataset.clave === clave) {
+  if (musicaFondoActual.value?.dataset?.clave === clave) {
+    musicaFondoActual.value.loop = loop
+    if (musicaSilenciada.value) {
+      musicaFondoActual.value.volume = 0
+      musicaFondoActual.value.pause()
+    } else {
+      musicaFondoActual.value.volume = obtenerVolumenPista(clave)
+      if (musicaFondoActual.value.paused) {
+        musicaFondoActual.value.play().catch(() => {})
+      }
+    }
     return
   }
 
@@ -111,88 +189,121 @@ function reproducirMusica(clave) {
 
   const ruta = RUTAS_AUDIO.musica[clave]
   if (!ruta) {
-    console.warn(`[useAudio] Música de fondo no encontrada: ${clave}`)
+    console.warn(`[useAudio] Música no encontrada: ${clave}`)
     return
   }
 
   const audio = new Audio(ruta)
-  audio.volume = volumen.value
-  audio.loop    = true
+  audio.loop = loop
   audio.dataset.clave = clave
-  
-  audio.play().catch(err => {
-    console.warn(`[useAudio] Advertencia: No se pudo reproducir la música '${clave}' en ${ruta}:`, err.message)
-  })
-
   musicaFondoActual.value = audio
   instanciasAudio.set('musica', audio)
+
+  if (musicaSilenciada.value) {
+    audio.volume = 0
+    // No se reproduce: queda pausada
+  } else {
+    audio.volume = obtenerVolumenPista(clave)
+    audio.play().catch(err => {
+      console.warn(`[useAudio] No se pudo reproducir música '${clave}':`, err.message)
+    })
+  }
 }
 
 /** Detiene la música de fondo */
 function detenerMusica() {
   if (!musicaFondoActual.value) return
-
-  const audio = musicaFondoActual.value
   try {
-    audio.pause()
-    audio.currentTime = 0
-  } catch (err) {
-    console.warn('[useAudio] Error al detener música:', err.message)
-  }
-
+    musicaFondoActual.value.pause()
+    musicaFondoActual.value.currentTime = 0
+  } catch {}
   musicaFondoActual.value = null
   instanciasAudio.delete('musica')
 }
 
-/** Alterna el modo silencio */
+// =========================================================
+// Controles expuestos al UI — guardan en localStorage
+// =========================================================
+
+/** Toggle música ON/OFF — no borra el slider, solo pausa/reanuda */
+function establecerMusicaHabilitada(val) {
+  musicaHabilitada.value = val
+  localStorage.setItem(KEY_MUSICA_HABILITADA, val ? 'true' : 'false')
+  // El watcher de musicaSilenciada aplica la pausa/reanudación automáticamente
+  if (!musicaSilenciada.value && musicaSolicitada.value && !musicaFondoActual.value) {
+    reproducirMusica(musicaSolicitada.value)
+  }
+}
+
+/** Toggle efectos ON/OFF */
+function establecerEfectosHabilitados(val) {
+  efectosHabilitados.value = val
+  localStorage.setItem(KEY_EFECTOS_HABILITADOS, val ? 'true' : 'false')
+}
+
+/**
+ * Ajusta el volumen de la música (0.0 – 1.0).
+ * El watcher de volumenMusica aplica el cambio en tiempo real.
+ */
+function establecerVolumenMusica(val) {
+  volumenMusica.value = Math.max(0, Math.min(1, val))
+  // Si volumen > 0 y había música en cola pero pausada por silencio anterior, reanudar
+  if (volumenMusica.value > 0 && !musicaSilenciada.value && musicaSolicitada.value) {
+    if (!musicaFondoActual.value) {
+      reproducirMusica(musicaSolicitada.value)
+    } else if (musicaFondoActual.value.paused) {
+      musicaFondoActual.value.play().catch(() => {})
+    }
+  }
+}
+
+/** Ajusta el volumen de los efectos (0.0 – 1.0). El watcher guarda en localStorage. */
+function establecerVolumenEfectos(val) {
+  volumenEfectos.value = Math.max(0, Math.min(1, val))
+}
+
+/** Alterna mute global — NO modifica los sliders */
 function alternarSilencio() {
   estaSilenciado.value = !estaSilenciado.value
-  if (musicaFondoActual.value) {
-    musicaFondoActual.value.volume = estaSilenciado.value ? 0 : volumen.value
-  }
+  localStorage.setItem(KEY_ESTA_SILENCIADO, estaSilenciado.value ? 'true' : 'false')
+  // El watcher de musicaSilenciada maneja pausa/reanudación automáticamente
 }
 
-/** Ajusta el volumen global (0.0 - 1.0) */
-function establecerVolumen(nuevoVolumen) {
-  volumen.value = Math.max(0, Math.min(1, nuevoVolumen))
-  if (musicaFondoActual.value) {
-    musicaFondoActual.value.volume = volumen.value
-  }
-}
-
-/** Limpia todos los recursos de audio (llamar en onUnmounted) */
+/** Limpia todos los recursos de audio */
 function limpiarAudio() {
   detenerMusica()
   instanciasAudio.forEach(audio => {
-    try {
-      audio.pause()
-      audio.src = ''
-    } catch (e) {}
+    try { audio.pause(); audio.src = '' } catch {}
   })
   instanciasAudio.clear()
 }
 
 // =========================================================
-// Export del composable
+// Export
 // =========================================================
 export function useAudio() {
   return {
-    // Estado
+    musicaHabilitada,
+    efectosHabilitados,
+    volumenMusica,
+    volumenEfectos,
     estaSilenciado,
-    volumen,
+    musicaSilenciada,
+    efectosSilenciados,
     musicaFondoActual,
     audioHabilitadoPorUsuario,
 
-    // Acciones
     reproducirEfecto,
     reproducirMusica,
     detenerMusica,
+    establecerMusicaHabilitada,
+    establecerEfectosHabilitados,
+    establecerVolumenMusica,
+    establecerVolumenEfectos,
     alternarSilencio,
-    establecerVolumen,
     limpiarAudio,
     habilitarAudio,
 
-    // Rutas
     RUTAS_AUDIO
   }
 }

@@ -1,6 +1,4 @@
 <template>
-  <!-- PantallaInicio: pantalla inicial del juego -->
-  <!-- Ciclo de vida: onMounted para iniciar la animación de entrada y música de menú -->
   <section class="pantalla-inicio" aria-label="Pantalla de inicio de Ruta Tica">
 
     <!-- Partículas de fondo decorativas -->
@@ -227,7 +225,7 @@ function estiloParticula(n) {
 </script>
 
 <style scoped>
-/* --- Contenedor principal --- */
+/* --- Contenedor principal con gradiente neón animado --- */
 .pantalla-inicio {
   position: relative;
   min-height: calc(100vh - 64px);
@@ -236,31 +234,70 @@ function estiloParticula(n) {
   justify-content: center;
   padding: var(--space-8) var(--space-4);
   overflow: hidden;
+  background: linear-gradient(135deg, #05040f 0%, #060c20 35%, #120726 70%, #03040a 100%);
+  background-size: 400% 400%;
+  animation: inicioGradientBG 18s ease infinite;
 }
 
-/* --- Partículas flotantes --- */
+/* Fondo decorativo con ondas de energía futuristas */
+.pantalla-inicio::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(0, 200, 255, 0.03) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(184, 79, 255, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes inicioGradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- Partículas flotantes de energía --- */
 .particulas {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 0;
 }
 
 .particula {
   position: absolute;
   border-radius: 50%;
   background: var(--color-neon-green);
-  box-shadow: 0 0 6px var(--color-neon-green-glow);
-  animation: particle-drift linear infinite;
+  box-shadow: 0 0 8px var(--color-neon-green-glow);
+  animation: particle-float linear infinite;
+  will-change: transform, opacity;
 }
 
 .particula:nth-child(odd) {
   background: var(--color-neon-blue);
-  box-shadow: 0 0 6px var(--color-neon-blue-glow);
+  box-shadow: 0 0 8px var(--color-neon-blue-glow);
 }
 
 .particula:nth-child(3n) {
   background: var(--color-neon-purple);
-  box-shadow: 0 0 6px var(--color-neon-purple-glow);
+  box-shadow: 0 0 8px var(--color-neon-purple-glow);
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(120vh) translateX(0) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-20vh) translateX(40px) scale(1.1);
+    opacity: 0;
+  }
 }
 
 /* --- Contenido --- */
@@ -270,49 +307,65 @@ function estiloParticula(n) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-5);
+  gap: var(--space-6);
   max-width: 700px;
   width: 100%;
   text-align: center;
 }
 
-/* --- Emblema del héroe --- */
+/* --- Emblema del héroe con Zoom y Glow Progresivo --- */
 .emblema-heroe {
   position: relative;
-  width: 90px;
-  height: 90px;
+  width: 110px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: var(--space-2);
+  animation: introLogoZoom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .anillo-emblema {
   position: absolute;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 2.5px solid transparent;
   animation: spin-slow linear infinite;
 }
 
 .anillo-emblema--exterior {
   inset: 0;
   border-color: var(--color-neon-green);
-  box-shadow: 0 0 15px var(--color-neon-green-glow),
-              inset 0 0 15px var(--color-neon-green-glow);
-  animation-duration: 8s;
+  box-shadow: 0 0 20px var(--color-neon-green-glow),
+              inset 0 0 12px var(--color-neon-green-glow);
+  animation-duration: 9s;
 }
 
 .anillo-emblema--interior {
-  inset: 12px;
+  inset: 15px;
   border-color: var(--color-neon-blue);
-  box-shadow: 0 0 10px var(--color-neon-blue-glow);
-  animation-duration: 5s;
+  box-shadow: 0 0 12px var(--color-neon-blue-glow);
+  animation-duration: 6s;
   animation-direction: reverse;
 }
 
 .icono-emblema {
-  font-size: 2.8rem;
+  font-size: 3.2rem;
   position: relative;
   z-index: 1;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes introLogoZoom {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+    filter: brightness(2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
 }
 
 /* --- Header --- */
@@ -324,46 +377,57 @@ function estiloParticula(n) {
 }
 
 .lema-inicio {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--color-neon-blue);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   margin: 0;
-  font-weight: var(--font-semibold);
+  font-weight: var(--font-bold);
+  text-shadow: 0 0 8px var(--color-neon-blue-glow);
 }
 
 .titulo-inicio {
   font-family: var(--font-display);
   margin: 0;
   line-height: 1.1;
+  animation: introTitleGlow 1.8s ease-out forwards;
 }
 
 .titulo-ruta {
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-size: clamp(2.8rem, 8vw, 4.8rem);
   font-weight: var(--font-extrabold);
-  background: var(--gradient-text-neon);
+  background: linear-gradient(135deg, #00ff88, #00c8ff, #b84fff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: block;
-  animation: glow-text 3s ease-in-out infinite;
-  color: var(--color-neon-green);
+  text-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
 }
 
 .titulo-heroe {
-  font-size: clamp(1.2rem, 4vw, 2rem);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
   color: var(--color-text-secondary);
-  font-weight: var(--font-semibold);
-  letter-spacing: 0.05em;
+  font-weight: var(--font-bold);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .divisor-titulo {
-  width: 80px;
-  height: 2px;
-  background: var(--gradient-btn);
+  width: 120px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-neon-green), var(--color-neon-blue), transparent);
   border-radius: var(--radius-full);
-  box-shadow: 0 0 10px var(--color-neon-green-glow);
+  box-shadow: 0 0 12px var(--color-neon-green-glow);
+  margin-top: var(--space-2);
+}
+
+@keyframes introTitleGlow {
+  0% {
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.25));
+  }
 }
 
 /* --- Descripción --- */
@@ -371,37 +435,42 @@ function estiloParticula(n) {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  max-width: 560px;
+  max-width: 580px;
 }
 
 .descripcion-principal {
   font-size: var(--text-lg);
   color: var(--color-text-primary);
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .descripcion-mision {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--color-text-secondary);
   line-height: 1.7;
-  background: rgba(0,200,255,0.06);
-  border: 1px solid rgba(0,200,255,0.15);
+  background: rgba(13, 20, 41, 0.6);
+  border: 1px solid rgba(0, 200, 255, 0.18);
   border-radius: var(--radius-lg);
   padding: var(--space-4) var(--space-5);
   margin: 0;
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 15px rgba(0, 200, 255, 0.05);
 }
 
 /* --- Stats decorativas --- */
 .estadisticas-inicio {
   display: flex;
   align-items: center;
-  gap: var(--space-5);
-  background: var(--color-bg-glass);
-  border: 1px solid var(--color-border);
+  gap: var(--space-6);
+  background: rgba(15, 10, 30, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-xl);
   padding: var(--space-4) var(--space-8);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .estadistica-inicio {
@@ -416,7 +485,7 @@ function estiloParticula(n) {
   font-size: var(--text-3xl);
   font-weight: var(--font-extrabold);
   color: var(--color-neon-green);
-  text-shadow: 0 0 10px var(--color-neon-green-glow);
+  text-shadow: 0 0 12px var(--color-neon-green-glow);
   line-height: 1;
 }
 
@@ -424,26 +493,57 @@ function estiloParticula(n) {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .divisor-estadistica {
   width: 1px;
   height: 40px;
-  background: var(--color-border);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* --- CTA --- */
+/* --- CTA con Pulso Neón --- */
 .llamada-accion {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
+  width: 100%;
+}
+
+.llamada-accion .btn-primary {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-lg);
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, var(--color-neon-green) 0%, #009955 100%);
+  border: 1px solid rgba(0, 255, 136, 0.5);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
+  animation: pulseNeonCTA 2s infinite ease-in-out;
+}
+
+.llamada-accion .btn-primary:hover {
+  background: linear-gradient(135deg, #00ffaa 0%, #00b362 100%);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+  transform: scale(1.05) translateY(-2px);
+}
+
+@keyframes pulseNeonCTA {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.55), 0 0 10px rgba(0, 200, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
+  }
 }
 
 .sugerencia-cta {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
@@ -454,6 +554,7 @@ function estiloParticula(n) {
   max-width: 480px;
   line-height: 1.5;
   margin: 0;
+  opacity: 0.8;
 }
 
 /* --- Responsive --- */
@@ -482,9 +583,9 @@ function estiloParticula(n) {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
-  background: rgba(5, 8, 20, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(4, 5, 12, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .modal-wrapper {
@@ -513,7 +614,13 @@ function estiloParticula(n) {
 
 .modal-icon {
   font-size: 2.8rem;
-  animation: pulse-neon 2.5s infinite;
+  animation: pulse-neon-purple 2.5s infinite;
+}
+
+@keyframes pulse-neon-purple {
+  0% { filter: drop-shadow(0 0 4px rgba(184, 79, 255, 0.3)); }
+  50% { filter: drop-shadow(0 0 15px rgba(184, 79, 255, 0.8)); }
+  100% { filter: drop-shadow(0 0 4px rgba(184, 79, 255, 0.3)); }
 }
 
 .modal-title {
