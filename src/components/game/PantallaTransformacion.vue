@@ -9,17 +9,17 @@
           <span class="emoji-luna">🌙</span>
           <div class="info-tiempo-noche">
             <span class="dia-noche">{{ diaDeSemana }}</span>
-            <span class="hora-noche">8:00 PM</span>
+            <span class="hora-noche">10:00 PM</span>
           </div>
         </div>
 
         <div class="divisoria-neon blue"></div>
 
         <p class="texto-transicion-civil">
-          Has terminado tus deberes de estudiante y tus clases del día en la universidad.
+          Tu jornada universitaria terminó.
         </p>
         <p class="texto-transicion-heroico">
-          Las luces de la ciudad comienzan a encenderse... Los estudiantes josefinos necesitan ayuda en Montes de Oca.
+          Ahora es momento de proteger a quienes siguen explorando la noche.
         </p>
 
         <button class="btn btn-hero btn-lg" @click="siguienteFase">
@@ -59,14 +59,19 @@
               <span class="stat-rev-etiq">Sospecha</span>
             </div>
           </div>
+
+          <!-- Alerta de sospecha interactiva narrada -->
+          <div class="advertencia-sospecha-transformacion" :class="claseSospecha(estadisticasHeroe.sospechaIdentidad)">
+            <p>{{ mensajeSospechaTransformacion }}</p>
+          </div>
         </div>
 
         <p class="texto-llamado-noche">
-          El after party seguro en Costa Rica depende de tus conocimientos.
+          Costa Rica necesita ayuda. ¿Dónde realizarás tu patrullaje esta noche?
         </p>
 
         <button class="btn btn-hero btn-lg btn-danger btn-iniciar-noche animate-pulse" @click="iniciarMisionNocturna">
-          🗺️ Elegir próxima misión
+          Activar patrullaje ⚡
         </button>
       </div>
 
@@ -76,15 +81,15 @@
 
 <script setup>
 // --- Importaciones de Vue 3 ---
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 // --- Composables ---
 import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 import { useAudio } from '../../composables/useAudio.js'
 
 // --- Estado global del juego ---
-const { navegarA, identidadHeroe, estadisticasHeroe, nivelHeroe, misionesCompletadas, PANTALLAS } = useEstadoJuego()
-const { reproducirEfecto } = useAudio()
+const { navegarA, identidadHeroe, estadisticasHeroe, nivelHeroe, misionesCompletadas, esModoNocturno, PANTALLAS } = useEstadoJuego()
+const { reproducirEfecto, reproducirMusica } = useAudio()
 
 // --- Emits ---
 const emit = defineEmits(['continuar'])
@@ -99,6 +104,25 @@ const diaDeSemana = computed(() => {
   return dias[count % 7]
 })
 
+const mensajeSospechaTransformacion = computed(() => {
+  const s = estadisticasHeroe.sospechaIdentidad
+  if (s <= 25) return 'Tu doble identidad está a salvo. Eres un estudiante ejemplar ante los ojos de todos. 🟢'
+  if (s <= 50) return 'Se escuchan susurros. Algunos compañeros comentan que te ven salir tarde del campus. 🟡'
+  if (s <= 75) return 'El director de carrera te citó por ausencias misteriosas. La facultad sospecha de tus escapadas nocturnas. 🟠'
+  return '¡Alerta roja! Profesores y administradores buscan confirmar quién es la sombra del campus. 🔴'
+})
+
+function claseSospecha(val) {
+  if (val <= 25) return 'segura'
+  if (val <= 50) return 'rumores'
+  if (val <= 75) return 'alta'
+  return 'investigacion'
+}
+
+onMounted(() => {
+  reproducirMusica('transformacion')
+})
+
 function siguienteFase() {
   reproducirEfecto('desbloquear')
   fase.value = 2
@@ -106,6 +130,7 @@ function siguienteFase() {
 
 function iniciarMisionNocturna() {
   reproducirEfecto('subirNivel')
+  esModoNocturno.value = true
   navegarA(PANTALLAS.MAPA)
   emit('continuar')
 }
@@ -291,6 +316,39 @@ function iniciarMisionNocturna() {
 
 .btn-iniciar-noche:hover {
   box-shadow: 0 0 25px rgba(255, 70, 70, 0.45);
+}
+
+.advertencia-sospecha-transformacion {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  border: 1px solid transparent;
+  width: 100%;
+}
+.advertencia-sospecha-transformacion p {
+  margin: 0;
+}
+.advertencia-sospecha-transformacion.segura {
+  background: rgba(0, 255, 136, 0.05);
+  border-color: rgba(0, 255, 136, 0.2);
+  color: var(--color-neon-green);
+}
+.advertencia-sospecha-transformacion.rumores {
+  background: rgba(255, 215, 0, 0.05);
+  border-color: rgba(255, 215, 0, 0.2);
+  color: var(--color-neon-gold);
+}
+.advertencia-sospecha-transformacion.alta {
+  background: rgba(255, 140, 0, 0.05);
+  border-color: rgba(255, 140, 0, 0.2);
+  color: #ff8c00;
+}
+.advertencia-sospecha-transformacion.investigacion {
+  background: rgba(255, 70, 70, 0.05);
+  border-color: rgba(255, 70, 70, 0.2);
+  color: #ff4646;
 }
 
 /* Animations */

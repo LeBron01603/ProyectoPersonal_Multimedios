@@ -44,7 +44,12 @@
                       <p><strong>Nombre:</strong> {{ identidadHeroe.nombre }}</p>
                       <p><strong>Edad:</strong> {{ identidadHeroe.edad }} años</p>
                       <p><strong>Universidad:</strong> {{ identidadHeroe.universidad }}</p>
+                      <p><strong>Sede:</strong> {{ nombreSedeLegible(identidadHeroe.universidad, identidadHeroe.sedeUniversitaria) }}</p>
                       <p><strong>Carrera:</strong> {{ nombreCarreraLegible(identidadHeroe.carrera) }}</p>
+                      <p><strong>Semestre:</strong> {{ identidadHeroe.semestre }}°</p>
+                      <p><strong>Promedio Ponderado:</strong> {{ identidadHeroe.promedio }}</p>
+                      <p><strong>Créditos Aprobados:</strong> {{ identidadHeroe.creditosAprobados }}</p>
+                      <p><strong>Club Universitario:</strong> {{ identidadHeroe.clubUniversitario || 'Ninguno' }}</p>
                       <p><strong>Actividad física:</strong> {{ deporteLegible(identidadHeroe.deporte) }}</p>
                     </div>
                   </div>
@@ -57,15 +62,29 @@
                       <p><strong>Nivel:</strong> {{ nivelHeroe }}</p>
                       <p><strong>Experiencia:</strong> {{ experienciaHeroe }} XP</p>
                       <p><strong>Reputación Nocturna:</strong> {{ estadisticasHeroe.reputacionNocturna }}</p>
+                      
+                      <div class="titulo-heroico-contenedor" v-if="tituloFinal">
+                        <p><strong>Título Heroico:</strong> <span class="titulo-nombre-val">{{ tituloFinal.emoji }} {{ tituloFinal.nombre }}</span></p>
+                        <p class="titulo-desc">{{ tituloFinal.descripcion }}</p>
+                      </div>
+
                       <div class="progreso-sospecha">
-                        <span><strong>Sospecha:</strong> {{ estadisticasHeroe.sospechaIdentidad }}%</span>
+                        <div class="sospecha-meta">
+                          <span><strong>Sospecha:</strong> {{ estadisticasHeroe.sospechaIdentidad }}%</span>
+                          <span class="sospecha-rango-badge" :class="sospechaRangoInfo.clase">{{ sospechaRangoInfo.label }}</span>
+                        </div>
                         <div class="barra-sospecha-centro">
                           <div
                             class="barra-sospecha-relleno"
                             :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }"
-                            :class="{ 'urgente': estadisticasHeroe.sospechaIdentidad > 50 }"
+                            :class="sospechaRangoInfo.clase"
                           ></div>
                         </div>
+                      </div>
+
+                      <!-- Alerta de sospecha interactiva narrada -->
+                      <div class="advertencia-sospecha-centro" :class="sospechaRangoInfo.clase">
+                        <p>{{ mensajeSospechaHeroe }}</p>
                       </div>
                     </div>
                   </div>
@@ -152,6 +171,21 @@
               <div v-if="tabActiva === 'progreso'" class="seccion-progreso animate-fade-in">
                 <div class="seccion-progreso-scroll">
                   
+                  <!-- Calendario Académico Básico -->
+                  <div class="progreso-bloque">
+                    <h4>📅 Calendario Académico</h4>
+                    <div class="calendario-basico">
+                      <p><strong>Progreso del Semestre:</strong> Semana {{ identidadHeroe.semanaAcademica || 1 }} de 16</p>
+                      <div class="barra-calendario-semana">
+                        <div
+                          class="barra-calendario-relleno"
+                          :style="{ width: ((identidadHeroe.semanaAcademica || 1) / 16 * 100) + '%' }"
+                        ></div>
+                      </div>
+                      <p class="nota-calendario">Completa misiones para avanzar el ciclo académico y consolidar tus estudios.</p>
+                    </div>
+                  </div>
+
                   <!-- Ruta Geográfica de Provincias -->
                   <div class="progreso-provincias-ruta">
                     <h4>🗺️ Progreso Geográfico de Provincias</h4>
@@ -299,6 +333,7 @@ import { ref, reactive, computed, watch } from 'vue'
 import { useEstadoJuego, PANTALLAS } from '../../composables/useEstadoJuego.js'
 import { useAudio } from '../../composables/useAudio.js'
 import ModalConfirmacion from './ModalConfirmacion.vue'
+import { RELACION_U_SEDES } from '../../data/carrerasUniversitarias.js'
 
 // --- Props ---
 const props = defineProps({
@@ -326,8 +361,32 @@ const {
   guardarProgreso,
   cargarProgreso,
   borrarProgreso,
-  hayProgresoGuardado
+  hayProgresoGuardado,
+  tituloFinal
 } = useEstadoJuego()
+
+const sospechaRangoInfo = computed(() => {
+  const s = estadisticasHeroe.sospechaIdentidad
+  if (s <= 25) return { label: 'Identidad segura 🟢', clase: 'segura' }
+  if (s <= 50) return { label: 'Rumores 🟡', clase: 'rumores' }
+  if (s <= 75) return { label: 'Sospecha alta 🟠', clase: 'alta' }
+  return { label: 'Investigación activa 🔴', clase: 'investigacion' }
+})
+
+const mensajeSospechaHeroe = computed(() => {
+  const s = estadisticasHeroe.sospechaIdentidad
+  if (s <= 25) return 'Tu doble identidad está a salvo. Eres un estudiante ejemplar ante los ojos de todos. 🟢'
+  if (s <= 50) return 'Se escuchan susurros. Algunos compañeros comentan que te ven salir tarde del campus. 🟡'
+  if (s <= 75) return 'El director de carrera te citó por ausencias misteriosas. La facultad sospecha de tus escapadas nocturnas. 🟠'
+  return '¡Alerta roja! Profesores y administradores buscan confirmar quién es la sombra del campus. 🔴'
+})
+
+function nombreSedeLegible(uni, value) {
+  if (!uni || !value) return '—'
+  const list = RELACION_U_SEDES[uni] || []
+  const found = list.find(s => s.value === value)
+  return found ? found.label : value
+}
 
 const { reproducirEfecto } = useAudio()
 
@@ -412,7 +471,7 @@ function deporteLegible(deporte) {
     Gimnasio: '💪 Gimnasio',
     Voleibol: '🏐 Voleibol',
     Boxeo: '🥊 Boxeo / Kickboxing',
-    Yoga: '🧘 Yoga / Pilares',
+    Basketball: '🏀 Baloncesto / Basketball',
     Correr: '🏃 Running',
     Surf: '🏄 Surf',
     Escalada: '🧗 Escalada',
@@ -738,13 +797,78 @@ function cerrar() {
 
 .barra-sospecha-relleno {
   height: 100%;
-  background: var(--color-neon-purple);
   border-radius: var(--radius-full);
+  transition: width 0.5s ease;
 }
 
-.barra-sospecha-relleno.urgente {
-  background: #ff4646;
-  box-shadow: 0 0 5px #ff4646;
+.barra-sospecha-relleno.segura { background: var(--color-neon-green); }
+.barra-sospecha-relleno.rumores { background: var(--color-neon-gold); }
+.barra-sospecha-relleno.alta { background: #ff8c00; }
+.barra-sospecha-relleno.investigacion { background: #ff4646; }
+
+.sospecha-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.sospecha-rango-badge {
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+.sospecha-rango-badge.segura { background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); color: var(--color-neon-green); }
+.sospecha-rango-badge.rumores { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); color: var(--color-neon-gold); }
+.sospecha-rango-badge.alta { background: rgba(255, 140, 0, 0.1); border: 1px solid rgba(255, 140, 0, 0.3); color: #ff8c00; }
+.sospecha-rango-badge.investigacion { background: rgba(255, 70, 70, 0.1); border: 1px solid rgba(255, 70, 70, 0.3); color: #ff4646; }
+
+/* Título heroico */
+.titulo-heroico-contenedor {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: rgba(255, 215, 0, 0.02);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: var(--radius-md);
+}
+.titulo-nombre-val {
+  color: var(--color-neon-gold);
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+}
+.titulo-desc {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+  margin: 4px 0 0;
+  font-style: italic;
+}
+
+/* Calendario Académico */
+.calendario-basico {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+}
+.barra-calendario-semana {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-block: var(--space-3);
+}
+.barra-calendario-relleno {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-neon-blue), var(--color-neon-purple));
+  border-radius: var(--radius-full);
+}
+.nota-calendario {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin: 0;
 }
 
 .btn-editar-perfil-centro {
@@ -1032,5 +1156,38 @@ function cerrar() {
   .tab-btn {
     padding-block: var(--space-2);
   }
+}
+
+.advertencia-sospecha-centro {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  border: 1px solid transparent;
+  width: 100%;
+}
+.advertencia-sospecha-centro p {
+  margin: 0;
+}
+.advertencia-sospecha-centro.segura {
+  background: rgba(0, 255, 136, 0.05);
+  border-color: rgba(0, 255, 136, 0.2);
+  color: var(--color-neon-green);
+}
+.advertencia-sospecha-centro.rumores {
+  background: rgba(255, 215, 0, 0.05);
+  border-color: rgba(255, 215, 0, 0.2);
+  color: var(--color-neon-gold);
+}
+.advertencia-sospecha-centro.alta {
+  background: rgba(255, 140, 0, 0.05);
+  border-color: rgba(255, 140, 0, 0.2);
+  color: #ff8c00;
+}
+.advertencia-sospecha-centro.investigacion {
+  background: rgba(255, 70, 70, 0.05);
+  border-color: rgba(255, 70, 70, 0.2);
+  color: #ff4646;
 }
 </style>

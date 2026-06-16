@@ -33,15 +33,29 @@
         <MapaMisiones
           v-else-if="pantallaActual === PANTALLAS.MAPA"
           key="mapa"
-          @iniciar-mision="navegarA(PANTALLAS.JUEGO)"
+          @iniciar-mision="navegarA(PANTALLAS.VUELO)"
+        />
+
+        <!-- Pantalla: Vuelo Nocturno -->
+        <PantallaVuelo
+          v-else-if="pantallaActual === PANTALLAS.VUELO"
+          key="vuelo"
+          @completar="navegarA(PANTALLAS.JUEGO)"
         />
 
         <!-- Pantalla: Vida Universitaria -->
         <PantallaVidaUniversitaria
           v-else-if="pantallaActual === PANTALLAS.ACTIVIDADES"
           key="actividades"
-          @completar="navegarA(PANTALLAS.TRANSFORMACION)"
+          @completar="navegarA(PANTALLAS.TRANSICION_NOCHE)"
           @salir="navegarA(PANTALLAS.MAPA)"
+        />
+
+        <!-- Pantalla: Transición horaria cinemática -->
+        <PantallaTransicionNoche
+          v-else-if="pantallaActual === PANTALLAS.TRANSICION_NOCHE"
+          key="transicion_noche"
+          @continuar="navegarA(PANTALLAS.TRANSFORMACION)"
         />
 
         <!-- Pantalla: Transformación -->
@@ -99,7 +113,9 @@ import PantallaInicio            from './components/game/PantallaInicio.vue'
 import CreadorIdentidad          from './components/game/CreadorIdentidad.vue'
 import MapaMisiones              from './components/game/MapaMisiones.vue'
 import PantallaVidaUniversitaria from './components/game/PantallaVidaUniversitaria.vue'
+import PantallaTransicionNoche   from './components/game/PantallaTransicionNoche.vue'
 import PantallaTransformacion    from './components/game/PantallaTransformacion.vue'
+import PantallaVuelo             from './components/game/PantallaVuelo.vue'
 import PantallaJuego             from './components/game/PantallaJuego.vue'
 import PantallaResultado         from './components/game/PantallaResultado.vue'
 import PantallaNuevoDia          from './components/game/PantallaNuevoDia.vue'

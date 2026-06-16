@@ -1,35 +1,64 @@
 // =========================================================
 // useAudio.js — Composable para manejo de audio del juego
-// Preparado para cargar archivos desde src/assets/audio/
+// Preparado para cargar archivos desde public/audio/
 // =========================================================
 
 import { ref, onUnmounted } from 'vue'
 
 // --- Estado del audio ---
-const estaSilenciado       = ref(false)
-const volumen              = ref(0.6)
-const musicaFondoActual    = ref(null)   // Audio de fondo activo
+const estaSilenciado           = ref(false)
+const volumen                  = ref(0.6)
+const musicaFondoActual        = ref(null)   // Audio de fondo activo
+const audioHabilitadoPorUsuario = ref(false)
+const musicaSolicitada          = ref(null)   // Guarda la última pista solicitada para reproducir tras la primera interacción
 
 // Registro de instancias de Audio para limpieza
 const instanciasAudio = new Map()
 
 // =========================================================
-// Rutas de audio (se poblará en fases posteriores)
+// Rutas de audio públicas (mapean a la carpeta public/audio/)
 // =========================================================
 const RUTAS_AUDIO = {
   musica: {
-    menu:     '/src/assets/audio/bgm_menu.mp3',
-    mapa:     '/src/assets/audio/bgm_map.mp3',
-    juego:    '/src/assets/audio/bgm_game.mp3',
-    victoria: '/src/assets/audio/bgm_victory.mp3'
+    menu:           '/audio/bgm_menu.mp3',
+    campus:         '/audio/bgm_campus.mp3',
+    amanecer:       '/audio/bgm_sunrise.mp3',
+    transformacion: '/audio/bgm_transformation.mp3',
+    mapa:           '/audio/bgm_map.mp3',
+    juego:          '/audio/bgm_game.mp3',
+    desafio:        '/audio/bgm_boss.mp3',
+    victoria:       '/audio/bgm_victory.mp3',
+    derrota:        '/audio/bgm_defeat.mp3'
   },
   efecto: {
-    click:     '/src/assets/audio/sfx_click.mp3',
-    correcto:  '/src/assets/audio/sfx_correct.mp3',
-    incorrecto: '/src/assets/audio/sfx_wrong.mp3',
-    subirNivel: '/src/assets/audio/sfx_levelup.mp3',
-    desbloquear:'/src/assets/audio/sfx_unlock.mp3'
+    click:     '/audio/sfx_click.mp3',
+    correcto:  '/audio/sfx_correct.mp3',
+    incorrecto: '/audio/sfx_wrong.mp3',
+    subirNivel: '/audio/sfx_levelup.mp3',
+    desbloquear:'/audio/sfx_unlock.mp3'
   }
+}
+
+/** Habilita la reproducción de audio tras interactuar con la pantalla */
+function habilitarAudio() {
+  if (audioHabilitadoPorUsuario.value) return
+  audioHabilitadoPorUsuario.value = true
+  console.info('[useAudio] Audio habilitado por interacción del usuario.')
+  // Si había música solicitada en cola, la reproducimos ahora
+  if (musicaSolicitada.value) {
+    reproducirMusica(musicaSolicitada.value)
+  }
+}
+
+// Registro global de primera interacción (click o tecla)
+if (typeof window !== 'undefined') {
+  const activarEnPrimerClick = () => {
+    habilitarAudio()
+    window.removeEventListener('click', activarEnPrimerClick)
+    window.removeEventListener('keydown', activarEnPrimerClick)
+  }
+  window.addEventListener('click', activarEnPrimerClick)
+  window.addEventListener('keydown', activarEnPrimerClick)
 }
 
 // =========================================================
@@ -41,7 +70,7 @@ const RUTAS_AUDIO = {
  * @param {string} clave - Clave del efecto en RUTAS_AUDIO.efecto
  */
 function reproducirEfecto(clave) {
-  if (estaSilenciado.value) return
+  if (estaSilenciado.value || !audioHabilitadoPorUsuario.value) return
 
   const ruta = RUTAS_AUDIO.efecto[clave]
   if (!ruta) {
@@ -51,10 +80,10 @@ function reproducirEfecto(clave) {
 
   // Se crea una nueva instancia cada vez para permitir solapamiento
   const audio = new Audio(ruta)
-  audio.volumen = Math.min(volumen.value * 1.2, 1)
+  audio.volume = Math.min(volumen.value * 1.2, 1)
   audio.play().catch(err => {
-    // Silenciar error de autoplay policy del navegador
-    console.warn('[useAudio] No se pudo reproducir el efecto de sonido:', err.message)
+    // Silenciar error y mostrar advertencia en consola
+    console.warn(`[useAudio] Advertencia: No se pudo reproducir el efecto '${clave}' en ${ruta}:`, err.message)
   })
 }
 
@@ -64,8 +93,21 @@ function reproducirEfecto(clave) {
  * @param {string} clave - Clave de la música en RUTAS_AUDIO.musica
  */
 function reproducirMusica(clave) {
-  detenerMusica()
+  musicaSolicitada.value = clave
+
   if (estaSilenciado.value) return
+
+  if (!audioHabilitadoPorUsuario.value) {
+    console.info(`[useAudio] Pista '${clave}' en cola hasta que el usuario interactúe.`)
+    return
+  }
+
+  // Evitar reiniciar si ya está sonando la misma pista
+  if (musicaFondoActual.value && musicaFondoActual.value.dataset && musicaFondoActual.value.dataset.clave === clave) {
+    return
+  }
+
+  detenerMusica()
 
   const ruta = RUTAS_AUDIO.musica[clave]
   if (!ruta) {
@@ -74,31 +116,29 @@ function reproducirMusica(clave) {
   }
 
   const audio = new Audio(ruta)
-  audio.volumen = volumen.value
+  audio.volume = volumen.value
   audio.loop    = true
+  audio.dataset.clave = clave
+  
   audio.play().catch(err => {
-    console.warn('[useAudio] No se pudo reproducir la música de fondo:', err.message)
+    console.warn(`[useAudio] Advertencia: No se pudo reproducir la música '${clave}' en ${ruta}:`, err.message)
   })
 
   musicaFondoActual.value = audio
   instanciasAudio.set('musica', audio)
 }
 
-/** Detiene la música de fondo con fade out suave */
+/** Detiene la música de fondo */
 function detenerMusica() {
   if (!musicaFondoActual.value) return
 
   const audio = musicaFondoActual.value
-  // Fade out en 500ms
-  const intervaloDesvanecer = setInterval(() => {
-    if (audio.volume > 0.05) {
-      audio.volume = Math.max(0, audio.volume - 0.05)
-    } else {
-      audio.pause()
-      audio.currentTime = 0
-      clearInterval(intervaloDesvanecer)
-    }
-  }, 30)
+  try {
+    audio.pause()
+    audio.currentTime = 0
+  } catch (err) {
+    console.warn('[useAudio] Error al detener música:', err.message)
+  }
 
   musicaFondoActual.value = null
   instanciasAudio.delete('musica')
@@ -124,8 +164,10 @@ function establecerVolumen(nuevoVolumen) {
 function limpiarAudio() {
   detenerMusica()
   instanciasAudio.forEach(audio => {
-    audio.pause()
-    audio.src = ''
+    try {
+      audio.pause()
+      audio.src = ''
+    } catch (e) {}
   })
   instanciasAudio.clear()
 }
@@ -134,15 +176,12 @@ function limpiarAudio() {
 // Export del composable
 // =========================================================
 export function useAudio() {
-  onUnmounted(() => {
-    // Solo limpiar instancias secundarias, no detener la música global
-  })
-
   return {
     // Estado
     estaSilenciado,
     volumen,
     musicaFondoActual,
+    audioHabilitadoPorUsuario,
 
     // Acciones
     reproducirEfecto,
@@ -151,6 +190,7 @@ export function useAudio() {
     alternarSilencio,
     establecerVolumen,
     limpiarAudio,
+    habilitarAudio,
 
     // Rutas
     RUTAS_AUDIO

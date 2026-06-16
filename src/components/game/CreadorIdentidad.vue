@@ -67,6 +67,21 @@
           />
         </div>
 
+        <!-- Paso 2.5: Sede Universitaria -->
+        <div class="grupo-formulario animate-slide-left delay-250" v-if="formulario.universidad" :class="{ 'selector-activo': selectorAbierto === 'sede' }">
+          <label class="etiqueta-formulario">
+            📍 Sede Universitaria
+          </label>
+          <SelectorPersonalizado
+            v-model="formulario.sedeUniversitaria"
+            :opciones="sedesDisponibles"
+            placeholder="Selecciona tu sede..."
+            :esta-abierto="selectorAbierto === 'sede'"
+            @abrir="selectorAbierto = 'sede'"
+            @cerrar="selectorAbierto = null"
+          />
+        </div>
+
         <!-- Paso 3: Carrera -->
         <div class="grupo-formulario animate-slide-left delay-300" :class="{ 'selector-activo': selectorAbierto === 'carrera' }">
           <label class="etiqueta-formulario">
@@ -176,6 +191,7 @@
               <p class="preview-item"><strong>Nombre:</strong> {{ formulario.nombre || '—' }}</p>
               <p class="preview-item"><strong>Edad:</strong> {{ formulario.edad || '—' }}</p>
               <p class="preview-item"><strong>Universidad:</strong> {{ formulario.universidad || '—' }}</p>
+              <p class="preview-item"><strong>Sede:</strong> {{ nombreSedeLegible(formulario.universidad, formulario.sedeUniversitaria) }}</p>
               <p class="preview-item"><strong>Carrera:</strong> {{ formulario.carrera || '—' }}</p>
             </div>
             <!-- Columna Héroe -->
@@ -230,13 +246,14 @@ const { reproducirEfecto } = useAudio()
 const emit = defineEmits(['confirmar', 'volver'])
 
 // --- Estado para coordinar la apertura de selectores personalizados ---
-const selectorAbierto = ref(null) // Puede ser 'universidad', 'carrera', 'deporte' o null
+const selectorAbierto = ref(null) // Puede ser 'universidad', 'sede', 'carrera', 'deporte' o null
 
 // --- Estado del formulario (reactive para objeto) ---
 const formulario = reactive({
   nombre:             '',
   edad:               '',
   universidad:        '',
+  sedeUniversitaria:  '',
   carrera:            '',
   deporte:            '',
   personalidad:       '',
@@ -263,8 +280,13 @@ const universidades = [
   { value: 'Otra',     label: '🎓 Otra universidad' }
 ]
 
-import { RELACION_U_CARRERAS } from '../../data/carrerasUniversitarias.js'
+import { RELACION_U_CARRERAS, RELACION_U_SEDES } from '../../data/carrerasUniversitarias.js'
 import { watch } from 'vue'
+
+const sedesDisponibles = computed(() => {
+  if (!formulario.universidad) return []
+  return RELACION_U_SEDES[formulario.universidad] || []
+})
 
 const carrerasDisponibles = computed(() => {
   if (!formulario.universidad) return []
@@ -274,12 +296,19 @@ const carrerasDisponibles = computed(() => {
 watch(() => formulario.universidad, (nuevaU) => {
   if (!nuevaU) {
     formulario.carrera = ''
+    formulario.sedeUniversitaria = ''
     return
   }
-  const listaValida = RELACION_U_CARRERAS[nuevaU] || []
-  const existe = listaValida.some(c => c.value === formulario.carrera)
-  if (!existe) {
+  const listaValidaCarreras = RELACION_U_CARRERAS[nuevaU] || []
+  const existeCarrera = listaValidaCarreras.some(c => c.value === formulario.carrera)
+  if (!existeCarrera) {
     formulario.carrera = ''
+  }
+
+  const listaValidaSedes = RELACION_U_SEDES[nuevaU] || []
+  const existeSede = listaValidaSedes.some(s => s.value === formulario.sedeUniversitaria)
+  if (!existeSede) {
+    formulario.sedeUniversitaria = ''
   }
 })
 
@@ -290,7 +319,7 @@ const deportes = [
   { value: 'Gimnasio',  label: '💪 Gimnasio / Pesas' },
   { value: 'Voleibol',  label: '🏐 Voleibol' },
   { value: 'Boxeo',     label: '🥊 Boxeo / Artes Marciales' },
-  { value: 'Yoga',      label: '🧘 Yoga / Meditación' },
+  { value: 'Basketball',label: '🏀 Basketball / Baloncesto' },
   { value: 'Correr',    label: '🏃 Correr / Running' },
   { value: 'Surf',      label: '🏄 Surf' },
   { value: 'Escalada',  label: '🧗 Escalada' },
@@ -339,10 +368,18 @@ const formularioValido = computed(() => {
   return formulario.nombre.trim().length >= 2 &&
     edadValida &&
     formulario.universidad !== '' &&
+    formulario.sedeUniversitaria !== '' &&
     formulario.carrera !== '' &&
     formulario.personalidad !== '' &&
     aliasValido
 })
+
+function nombreSedeLegible(uni, value) {
+  if (!uni || !value) return '—'
+  const list = RELACION_U_SEDES[uni] || []
+  const found = list.find(s => s.value === value)
+  return found ? found.label : value
+}
 
 const formularioParcialmenteLleno = computed(() =>
   formulario.nombre.trim() !== '' || formulario.edad !== '' || formulario.universidad !== ''
@@ -396,6 +433,7 @@ function alConfirmar() {
     nombre: formulario.nombre.trim(),
     edad: Number(formulario.edad),
     universidad: formulario.universidad,
+    sedeUniversitaria: formulario.sedeUniversitaria,
     carrera: formulario.carrera,
     deporte: formulario.deporte,
     personalidad: formulario.personalidad,

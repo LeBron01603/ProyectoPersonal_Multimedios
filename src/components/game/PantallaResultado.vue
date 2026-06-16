@@ -291,7 +291,11 @@ function alReintentarMision() {
 }
 
 onMounted(() => {
-  reproducirMusica('victoria')
+  if (misionAprobada.value) {
+    reproducirMusica('victoria')
+  } else {
+    reproducirMusica('derrota')
+  }
 })
 </script>
 

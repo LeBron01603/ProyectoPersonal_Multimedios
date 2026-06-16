@@ -13,7 +13,9 @@ export const PANTALLAS = {
   IDENTIDAD: 'identidad',
   MAPA:      'mapa',
   ACTIVIDADES: 'actividades',
+  TRANSICION_NOCHE: 'transicion_noche',
   TRANSFORMACION: 'transformacion',
+  VUELO:     'vuelo',
   JUEGO:     'juego',
   RESULTADO: 'resultado',
   NUEVO_DIA: 'nuevo_dia'
@@ -22,17 +24,28 @@ export const PANTALLAS = {
 // --- Estado global reactivo (singleton por sesión) ---
 const pantallaActual = ref(PANTALLAS.INICIO)
 const estaCargando   = ref(false)
+const esModoNocturno = ref(false)
+const mensajeAlertaMapa = ref('')
 
 // reactive: para el objeto de identidad del héroe
 const identidadHeroe = reactive({
   nombre:       '',
   edad:         '',
   universidad:  '',
+  sedeUniversitaria: '',
   carrera:      '',
   deporte:      '',
   personalidad: '', // Representa el "Estilo inicial del héroe"
-  aliasHeroe:   ''
+  aliasHeroe:   '',
+  // Nuevos campos Fase 5
+  semestre:     1,
+  promedio:     0,
+  creditosAprobados: 0,
+  clubUniversitario: '',
+  semanaAcademica: 1
 })
+
+const eventoSospechaMostradoHoy = ref(false)
 
 // reactive: para estadísticas del juego
 const estadisticasHeroe = reactive({
@@ -82,36 +95,41 @@ const misionEsPractica = ref(false)
 const respuestasCorrectasMision = ref(0)
 const totalPreguntasMision = ref(0)
 
-// --- TÍTULOS FINALES PREVISTOS ---
+// --- TÍTULOS HEROICOS DINÁMICOS ---
 const titulosFinales = [
-  { id: 'leyenda', nombre: 'Leyenda del After Responsable', emoji: '🌙', descripcion: 'Para quienes lideran con el ejemplo y la responsabilidad.' },
-  { id: 'sabio', nombre: 'Sabio Nocturno', emoji: '📚', descripcion: 'Para quienes priorizan el conocimiento ante todo.' },
-  { id: 'aventurero', nombre: 'Aventurero Costero', emoji: '🏄', descripcion: 'Para los apasionados de explorar los litorales y la naturaleza.' },
-  { id: 'maestro', nombre: 'Maestro de la Diversión', emoji: '🎉', descripcion: 'Para quienes dominan el arte de disfrutar la fiesta al máximo.' },
-  { id: 'heroe', nombre: 'Héroe Nacional del After', emoji: '🏆', descripcion: '¡Concedido al salvar las 7 provincias de Costa Rica!' }
+  { id: 'sombra', nombre: 'Sombra Fugitiva', emoji: '👤', descripcion: 'La sospecha sobre tu identidad civil está por los cielos. Eres un misterio andante en el campus.' },
+  { id: 'leyenda', nombre: 'Leyenda del After', emoji: '🌙', descripcion: 'Los estudiantes confían plenamente en ti. Eres el rey indiscutible de las noches seguras.' },
+  { id: 'protector', nombre: 'Protector Universitario', emoji: '🛡️', descripcion: 'Priorizas la responsabilidad civil y el bienestar de los jóvenes en cada fiesta.' },
+  { id: 'centinela', nombre: 'Centinela de la Cultura', emoji: '📚', descripcion: 'Tu amplio conocimiento de la geografía, historia y costumbres del país guía tu camino.' },
+  { id: 'heroe', nombre: 'Guardián de Costa Rica', emoji: '🇨🇷', descripcion: '¡Leyenda nacional! Has resguardado las 7 provincias del territorio costarricense.' },
+  { id: 'entrenamiento', nombre: 'Héroe en Entrenamiento', emoji: '🦸‍♂️', descripcion: 'Completa misiones y ajusta tus estadísticas para definir tu título heroico definitivo.' }
 ]
 
-// Título final proyectado basado en estadísticas dominantes (Lógica de preparación)
 const tituloFinal = computed(() => {
-  if (misionesCompletadas.value.length < 7) {
-    return {
-      nombre: 'Héroe en Entrenamiento',
-      emoji: '🦸‍♂️',
-      descripcion: 'Completa todas las provincias para obtener tu título definitivo.'
-    }
+  const { reputacionNocturna, conocimiento, responsabilidad, sospechaIdentidad } = estadisticasHeroe
+
+  if (sospechaIdentidad >= 65) {
+    return titulosFinales.find(t => t.id === 'sombra')
   }
 
-  // Si completó las 7 provincias, determinar el título final basado en las estadísticas
-  const { conocimiento, diversion, responsabilidad } = estadisticasHeroe
-  if (responsabilidad >= 85 && responsabilidad >= conocimiento && responsabilidad >= diversion) {
-    return titulosFinales.find(t => t.id === 'leyenda')
-  } else if (conocimiento >= 85 && conocimiento >= responsabilidad && conocimiento >= diversion) {
-    return titulosFinales.find(t => t.id === 'sabio')
-  } else if (diversion >= 85 && diversion >= responsabilidad && diversion >= conocimiento) {
-    return titulosFinales.find(t => t.id === 'maestro')
-  } else {
+  if (misionesCompletadas.value.length === 7) {
     return titulosFinales.find(t => t.id === 'heroe')
   }
+
+  // Encontrar la estadística dominante entre las tres
+  if (reputacionNocturna >= 70 && reputacionNocturna >= conocimiento && reputacionNocturna >= responsabilidad) {
+    return titulosFinales.find(t => t.id === 'leyenda')
+  }
+
+  if (responsabilidad >= 70 && responsabilidad >= conocimiento && responsabilidad >= reputacionNocturna) {
+    return titulosFinales.find(t => t.id === 'protector')
+  }
+
+  if (conocimiento >= 70 && conocimiento >= responsabilidad && conocimiento >= reputacionNocturna) {
+    return titulosFinales.find(t => t.id === 'centinela')
+  }
+
+  return titulosFinales.find(t => t.id === 'entrenamiento')
 })
 
 // --- Computed: ¿identidad está completa? ---
@@ -172,6 +190,16 @@ function aplicarBonificacionesCarrera(carrera) {
 /** Guarda la identidad del héroe, aplica bonificaciones iniciales y va al mapa */
 function confirmarIdentidad(identidad) {
   Object.assign(identidadHeroe, identidad)
+  
+  // Generar campos expandidos iniciales Fase 5
+  identidadHeroe.semestre = Math.floor(Math.random() * 4) + 2 // Semestre 2 a 5
+  identidadHeroe.promedio = Number((Math.random() * 2 + 7.5).toFixed(1)) // Promedio 7.5 a 9.5
+  identidadHeroe.creditosAprobados = identidadHeroe.semestre * 16
+  
+  const clubes = ['Club de Ajedrez', 'Club de Debate', 'Comunidad de Software Libre', 'Voluntariado Ecológico', 'Taller de Teatro', 'Club de Astronomía']
+  identidadHeroe.clubUniversitario = clubes[Math.floor(Math.random() * clubes.length)]
+  identidadHeroe.semanaAcademica = 1
+
   aplicarBonificacionesIniciales(identidad.personalidad)
   aplicarBonificacionesCarrera(identidad.carrera)
   navegarA(PANTALLAS.MAPA)
@@ -189,7 +217,8 @@ function iniciarMision(provincia) {
   Object.assign(estadisticasPreMision, estadisticasHeroe)
   provinciaActiva.value = provincia
   misionEsPractica.value = misionesCompletadas.value.includes(provincia.id)
-  navegarA(PANTALLAS.JUEGO)
+  mensajeAlertaMapa.value = ''
+  navegarA(PANTALLAS.VUELO)
 }
 
 /** Agrega puntos de experiencia y evalúa si sube de nivel */
@@ -241,6 +270,8 @@ function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCou
 
   // 2. Si aprueba:
   if (aprobado) {
+    identidadHeroe.semanaAcademica = Math.min(16, (identidadHeroe.semanaAcademica || 1) + 1)
+
     // Si no estaba completada, la agregamos al progreso y otorgamos las recompensas únicas
     if (!yaCompletada) {
       misionesCompletadas.value.push(idProvincia)
@@ -334,6 +365,8 @@ function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCou
     estadisticasHeroe.sospechaIdentidad = Math.min(100, estadisticasHeroe.sospechaIdentidad + 8)
   }
 
+  eventoSospechaMostradoHoy.value = false
+  esModoNocturno.value = false
   navegarA(PANTALLAS.RESULTADO)
   guardarProgreso()
 }
@@ -361,7 +394,8 @@ function guardarProgreso() {
       coleccionAfter: [...coleccionAfter.value],
       inventarioHeroe: [...inventarioHeroe.value],
       logrosHeroe: [...logrosHeroe.value],
-      pantallaActual: pantallaActual.value
+      pantallaActual: pantallaActual.value,
+      esModoNocturno: esModoNocturno.value
     }
     localStorage.setItem(SAVE_KEY, JSON.stringify(data))
     console.info('[RutaTica] Progreso guardado correctamente.')
@@ -385,6 +419,7 @@ function cargarProgreso() {
     if (data.coleccionAfter) coleccionAfter.value = data.coleccionAfter
     if (data.inventarioHeroe) inventarioHeroe.value = data.inventarioHeroe
     if (data.logrosHeroe) logrosHeroe.value = data.logrosHeroe
+    if (data.esModoNocturno !== undefined) esModoNocturno.value = data.esModoNocturno
     
     // Si la pantalla guardada era juego, mandamos a mapa para evitar inconsistencias
     if (data.pantallaActual && data.pantallaActual !== PANTALLAS.JUEGO) {
@@ -440,7 +475,24 @@ function reiniciarJuego() {
   misionEsPractica.value = false
   respuestasCorrectasMision.value = 0
   totalPreguntasMision.value = 0
-  Object.assign(identidadHeroe, { nombre: '', edad: '', universidad: '', carrera: '', deporte: '', personalidad: '', aliasHeroe: '' })
+  eventoSospechaMostradoHoy.value = false
+  esModoNocturno.value = false
+  mensajeAlertaMapa.value = ''
+  Object.assign(identidadHeroe, { 
+    nombre: '', 
+    edad: '', 
+    universidad: '', 
+    sedeUniversitaria: '',
+    carrera: '', 
+    deporte: '', 
+    personalidad: '', 
+    aliasHeroe: '',
+    semestre: 1,
+    promedio: 0,
+    creditosAprobados: 0,
+    clubUniversitario: '',
+    semanaAcademica: 1
+  })
   Object.assign(estadisticasHeroe, { energia: 80, conocimiento: 10, diversion: 10, responsabilidad: 80, reputacionNocturna: 50, sospechaIdentidad: 0 })
 }
 
@@ -452,6 +504,8 @@ export function useEstadoJuego() {
     // Estado
     pantallaActual,
     estaCargando,
+    esModoNocturno,
+    mensajeAlertaMapa,
     identidadHeroe,
     estadisticasHeroe,
     estadisticasPreMision,
@@ -468,6 +522,7 @@ export function useEstadoJuego() {
     misionEsPractica,
     respuestasCorrectasMision,
     totalPreguntasMision,
+    eventoSospechaMostradoHoy,
 
     // Computed
     identidadCompleta,

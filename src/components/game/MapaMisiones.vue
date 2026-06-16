@@ -8,7 +8,11 @@
         <span class="avatar-heroe-mapa" aria-hidden="true">🦸</span>
         <div>
           <h2 class="titulo-mapa">
-            ¡Bienvenido, <span class="texto-nombre-heroe">{{ identidadHeroe.nombre }}</span>!
+            <span v-if="esModoNocturno">🛡️ Centro de Operaciones</span>
+            <span v-else>🏫 Preparación Académica</span>
+            <span class="titulo-heroico-mapa-badge" :title="tituloFinal?.descripcion" v-if="tituloFinal">
+              {{ tituloFinal?.emoji }} {{ tituloFinal?.nombre }}
+            </span>
           </h2>
           <div class="perfil-nivel-info">
             <span class="badge-nivel-mapa">⭐ Nivel {{ nivelHeroe }}</span>
@@ -18,7 +22,8 @@
             </div>
           </div>
           <p class="subtitulo-mapa">
-            Elige una provincia y comienza tu misión nocturna
+            <span v-if="esModoNocturno">Elige una provincia y comienza tu misión nocturna ⚡</span>
+            <span v-else>Panel central de preparación académica y progreso universitario ☀️</span>
           </p>
         </div>
       </div>
@@ -53,6 +58,13 @@
       </div>
     </div>
 
+    <!-- Alerta de advertencia del vuelo si no hay provincia seleccionada -->
+    <div v-if="mensajeAlertaMapa" class="alerta-error-vuelo animate-fade-in" role="alert">
+      <span class="emoji-alerta">⚠️</span>
+      <span class="mensaje-texto">{{ mensajeAlertaMapa }}</span>
+      <button class="btn-cerrar-alerta" @click="mensajeAlertaMapa = ''" aria-label="Cerrar alerta">×</button>
+    </div>
+
     <!-- Estado de carga -->
     <div v-if="estaCargando" class="carga-mapa animate-fade-in" aria-live="polite">
       <div class="spinner-carga" aria-hidden="true"></div>
@@ -67,64 +79,130 @@
 
     <!-- Contenedor principal: Mapa y Detalle -->
     <div v-else class="contenido-mapa-grid">
-      <!-- Grid de tarjetas de provincias -->
-      <div class="cuadricula-provincias">
-        <TarjetaProvincia
-          v-for="(provincia, index) in provinciasProcesadas"
-          :key="provincia.id"
-          :provincia="provincia"
-          :esta-completada="misionesCompletadas.includes(provincia.id)"
-          :esta-activa="idProvinciaActiva === provincia.id"
-          class="animate-fade-in"
-          :style="{ animationDelay: `${index * 0.08}s` }"
-          @seleccionar="alSeleccionarProvincia"
-          @iniciar-mision="alIniciarMision"
-        />
+      <!-- Selector de Vista e Visor Izquierdo -->
+      <div class="seccion-visor-izquierdo" :class="{ 'modo-diurno-mapa': !esModoNocturno }">
+        <!-- Selector de Vista del Mapa -->
+        <div class="selector-vista-mapa">
+          <button 
+            class="btn-vista" 
+            :class="{ 'activo': vistaActiva === 'mapa' }"
+            @click="vistaActiva = 'mapa'"
+          >
+            🗺️ Mapa Interactivo
+          </button>
+          <button 
+            class="btn-vista" 
+            :class="{ 'activo': vistaActiva === 'tarjetas' }"
+            @click="vistaActiva = 'tarjetas'"
+          >
+            🎴 Vista de Tarjetas
+          </button>
+        </div>
+
+        <div class="visor-provincias-vista">
+          <!-- Vista de Mapa Interactivo SVG -->
+          <MapaCostaRica
+            v-if="vistaActiva === 'mapa'"
+            :provincias="provinciasProcesadas"
+            :misiones-completadas="misionesCompletadas"
+            :provincia-seleccionada="provinciaSeleccionada"
+            @seleccionar="alSeleccionarProvincia"
+          />
+
+          <!-- Vista de Tarjetas Tradicional -->
+          <div v-else class="cuadricula-provincias">
+            <TarjetaProvincia
+              v-for="(provincia, index) in provinciasProcesadas"
+              :key="provincia.id"
+              :provincia="provincia"
+              :esta-completada="misionesCompletadas.includes(provincia.id)"
+              :esta-activa="provinciaSeleccionada?.id === provincia.id"
+              class="animate-fade-in"
+              :style="{ animationDelay: `${index * 0.08}s` }"
+              @seleccionar="alSeleccionarProvincia"
+              @iniciar-mision="alIniciarMision"
+            />
+          </div>
+        </div>
       </div>
 
-      <!-- Panel de detalle de provincia seleccionada -->
-      <transition name="slide-up">
-        <div v-if="provinciaSeleccionada && !idProvinciaActiva" class="detalle-provincia animate-fade-in">
-          <div class="tipo-mision-badge" :style="{ background: provinciaSeleccionada.color + '25', borderColor: provinciaSeleccionada.color }">
-            🏝️ {{ provinciaSeleccionada.tipoMision || 'Misión Nocturna' }}
+      <!-- Panel de preparación diurna o detalle de provincia nocturna -->
+      <div class="seccion-detalle-derecha">
+        <!-- Panel de Preparación Diurna (Modo Día) -->
+        <div v-if="!esModoNocturno" class="panel-preparacion-diurna card text-center animate-fade-in">
+          <div class="estado-dia-header">
+            <span class="emoji-sol-grande animate-float">☀️</span>
+            <h3 class="titulo-preparacion-diurna">Aún es de día</h3>
+            <span class="badge-fase-dia">Modo Diurno</span>
           </div>
-          <h3 class="titulo-detalle">{{ provinciaSeleccionada.emoji }} {{ provinciaSeleccionada.tituloMision }}</h3>
           
-          <div class="detalles-lugares">
-            <p><strong>📍 Principal:</strong> {{ provinciaSeleccionada.lugarPrincipal }}</p>
-            <p><strong>🍻 After Party:</strong> {{ provinciaSeleccionada.lugarAfter }}</p>
-          </div>
+          <p class="desc-preparacion">
+            El sol brilla en el campus de la <strong>{{ identidadHeroe.universidad }}</strong>, sede <strong>{{ nombreSedeLegible(identidadHeroe.universidad, identidadHeroe.sedeUniversitaria) }}</strong>. Asiste a tus clases y mantén tu rendimiento.
+          </p>
 
-          <p class="desc-detalle">{{ provinciaSeleccionada.descripcionMision }}</p>
-          
-          <!-- Recompensas de la misión -->
-          <div class="detalles-recompensas" v-if="provinciaSeleccionada.recompensaPrincipal">
-            <p class="titulo-recompensas-mision">🎁 Recompensas de Misión:</p>
-            <div class="recompensas-iconos-grid">
-              <span class="recompensa-item-badge" title="Recompensa Principal">
-                {{ provinciaSeleccionada.recompensaPrincipal.emoji }} {{ provinciaSeleccionada.recompensaPrincipal.nombre }}
-              </span>
-              <span class="recompensa-item-badge" title="Recompensa Secundaria">
-                {{ provinciaSeleccionada.recompensaSecundaria.emoji }} {{ provinciaSeleccionada.recompensaSecundaria.nombre }}
-              </span>
-            </div>
-          </div>
+          <div class="divisoria-neon blue"></div>
 
-          <!-- Advertencia de Práctica / Repetida -->
-          <div v-if="misionesCompletadas.includes(provinciaSeleccionada.id)" class="caja-alerta-practica">
-            <span>💡 Esta provincia ya fue completada. Puedes repetirla como práctica, pero no obtendrás recompensas únicas otra vez.</span>
+          <div class="info-preparacion-campus">
+            <p><strong>Semestre:</strong> {{ identidadHeroe.semestre }}° Semestre</p>
+            <p><strong>Semana Académica:</strong> Semana {{ identidadHeroe.semanaAcademica }} de 16</p>
+            <p><strong>Promedio:</strong> ⭐ {{ identidadHeroe.promedio }}</p>
+            <p><strong>Club:</strong> {{ identidadHeroe.clubUniversitario || 'Ninguno' }}</p>
+            <p><strong>Deporte:</strong> {{ deporteLegible(identidadHeroe.deporte) }}</p>
           </div>
 
           <button
-            class="btn btn-primary btn-lg"
-            @click="alIniciarMision(provinciaSeleccionada)"
-            :disabled="!provinciaSeleccionada.desbloqueada"
-            id="btn-iniciar-mision-mapa"
+            class="btn btn-hero btn-lg btn-iniciar-jornada animate-pulse"
+            @click="navegarA(PANTALLAS.NUEVO_DIA)"
+            id="btn-comenzar-clases"
           >
-            ⚡ Iniciar misión en {{ provinciaSeleccionada.nombre }}
+            Comenzar clases / Iniciar jornada 🏫
           </button>
         </div>
-      </transition>
+
+        <!-- Panel de detalle de provincia seleccionada (Modo Noche) -->
+        <transition name="slide-up" v-else>
+          <div v-if="provinciaSeleccionada && !idProvinciaActiva" class="detalle-provincia animate-fade-in">
+            <div class="tipo-mision-badge" :style="{ background: provinciaSeleccionada.color + '25', borderColor: provinciaSeleccionada.color }">
+              🏝️ {{ provinciaSeleccionada.tipoMision || 'Misión Nocturna' }}
+            </div>
+            <h3 class="titulo-detalle">{{ provinciaSeleccionada.emoji }} {{ provinciaSeleccionada.tituloMision }}</h3>
+            
+            <div class="detalles-lugares">
+              <p><strong>📍 Principal:</strong> {{ provinciaSeleccionada.lugarPrincipal }}</p>
+              <p><strong>🍻 After Party:</strong> {{ provinciaSeleccionada.lugarAfter }}</p>
+            </div>
+
+            <p class="desc-detalle">{{ provinciaSeleccionada.descripcionMision }}</p>
+            
+            <!-- Recompensas de la misión -->
+            <div class="detalles-recompensas" v-if="provinciaSeleccionada.recompensaPrincipal">
+              <p class="titulo-recompensas-mision">🎁 Recompensas de Misión:</p>
+              <div class="recompensas-iconos-grid">
+                <span class="recompensa-item-badge" title="Recompensa Principal">
+                  {{ provinciaSeleccionada.recompensaPrincipal.emoji }} {{ provinciaSeleccionada.recompensaPrincipal.nombre }}
+                </span>
+                <span class="recompensa-item-badge" title="Recompensa Secundaria">
+                  {{ provinciaSeleccionada.recompensaSecundaria.emoji }} {{ provinciaSeleccionada.recompensaSecundaria.nombre }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Advertencia de Práctica / Repetida -->
+            <div v-if="misionesCompletadas.includes(provinciaSeleccionada.id)" class="caja-alerta-practica">
+              <span>💡 Esta provincia ya fue completada. Puedes repetirla como práctica, pero no obtendrás recompensas únicas otra vez.</span>
+            </div>
+
+            <button
+              class="btn btn-primary btn-lg"
+              @click="alIniciarMision(provinciaSeleccionada)"
+              :disabled="!provinciaSeleccionada.desbloqueada"
+              id="btn-iniciar-mision-mapa"
+            >
+              ⚡ Iniciar misión en {{ provinciaSeleccionada.nombre }}
+            </button>
+          </div>
+        </transition>
+      </div>
     </div>
 
     <!-- SECCIÓN DE PROGRESO DEL HÉROE (INVENTARIO, LOGROS, COLECCIÓN, CHECKPOINTS) -->
@@ -160,8 +238,13 @@
                 <p class="bloque-item"><strong>Nombre:</strong> {{ identidadHeroe.nombre }}</p>
                 <p class="bloque-item"><strong>Edad:</strong> {{ identidadHeroe.edad || '—' }} años</p>
                 <p class="bloque-item"><strong>Universidad:</strong> {{ identidadHeroe.universidad }}</p>
-                <p class="bloque-item"><strong>Carrera:</strong> {{ identidadHeroe.carrera }}</p>
-                <p class="bloque-item"><strong>Deporte:</strong> {{ identidadHeroe.deporte || 'Ninguno' }}</p>
+                <p class="bloque-item"><strong>Sede:</strong> {{ nombreSedeLegible(identidadHeroe.universidad, identidadHeroe.sedeUniversitaria) }}</p>
+                <p class="bloque-item"><strong>Carrera:</strong> {{ nombreCarreraLegible(identidadHeroe.carrera) }}</p>
+                <p class="bloque-item"><strong>Semestre:</strong> {{ identidadHeroe.semestre }}°</p>
+                <p class="bloque-item"><strong>Promedio:</strong> {{ identidadHeroe.promedio }}</p>
+                <p class="bloque-item"><strong>Créditos:</strong> {{ identidadHeroe.creditosAprobados }}</p>
+                <p class="bloque-item"><strong>Club:</strong> {{ identidadHeroe.clubUniversitario || 'Ninguno' }}</p>
+                <p class="bloque-item"><strong>Deporte:</strong> {{ deporteLegible(identidadHeroe.deporte) }}</p>
               </div>
             </div>
 
@@ -174,15 +257,23 @@
                 <p class="bloque-item"><strong>Experiencia:</strong> {{ experienciaHeroe }} XP</p>
                 <p class="bloque-item"><strong>Reputación:</strong> {{ estadisticasHeroe.reputacionNocturna }}</p>
                 
+                <div class="titulo-heroico-contenedor-mapa" v-if="tituloFinal">
+                  <p class="bloque-item"><strong>Título:</strong> <span class="titulo-nombre-val">{{ tituloFinal.emoji }} {{ tituloFinal.nombre }}</span></p>
+                  <p class="titulo-desc-mapa">{{ tituloFinal.descripcion }}</p>
+                </div>
+
                 <div class="progreso-sospecha-container">
-                  <span class="progreso-sospecha-label">
-                    <strong>Sospecha:</strong> {{ estadisticasHeroe.sospechaIdentidad }}%
-                  </span>
+                  <div class="sospecha-meta-mapa">
+                    <span class="progreso-sospecha-label">
+                      <strong>Sospecha:</strong> {{ estadisticasHeroe.sospechaIdentidad }}%
+                    </span>
+                    <span class="sospecha-rango-badge" :class="sospechaRangoInfo.clase">{{ sospechaRangoInfo.label }}</span>
+                  </div>
                   <div class="pista-sospecha-mapa" title="Nivel de Sospecha Secreta">
                     <div 
                       class="relleno-sospecha-mapa" 
                       :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }"
-                      :class="{ 'alerta-sospecha': estadisticasHeroe.sospechaIdentidad > 50 }"
+                      :class="sospechaRangoInfo.clase"
                     ></div>
                   </div>
                 </div>
@@ -302,6 +393,19 @@
                 />
               </div>
 
+              <!-- Campo: Sede Universitaria -->
+              <div class="form-group-edicion" v-if="formularioEdicion.universidad" :class="{ 'selector-activo': selectorAbiertoEdicion === 'sede' }">
+                <label>Sede Universitaria</label>
+                <SelectorPersonalizado
+                  v-model="formularioEdicion.sedeUniversitaria"
+                  :opciones="sedesDisponiblesEdicion"
+                  placeholder="Selecciona tu sede..."
+                  :esta-abierto="selectorAbiertoEdicion === 'sede'"
+                  @abrir="selectorAbiertoEdicion = 'sede'"
+                  @cerrar="selectorAbiertoEdicion = null"
+                />
+              </div>
+
               <!-- Campo: Carrera -->
               <div class="form-group-edicion" :class="{ 'selector-activo': selectorAbiertoEdicion === 'carrera' }">
                 <label>Carrera</label>
@@ -404,10 +508,11 @@
 <script setup>
 // --- Importaciones de Vue 3 Composition API ---
 import { ref, computed, onMounted, reactive, watch } from 'vue'
-import { RELACION_U_CARRERAS } from '../../data/carrerasUniversitarias.js'
+import { RELACION_U_CARRERAS, RELACION_U_SEDES } from '../../data/carrerasUniversitarias.js'
 
 // --- Componentes hijos ---
 import TarjetaProvincia from './TarjetaProvincia.vue'
+import MapaCostaRica from './MapaCostaRica.vue'
 import IndicadorEstadistica from './IndicadorEstadistica.vue'
 import SelectorPersonalizado from './SelectorPersonalizado.vue'
 
@@ -431,8 +536,64 @@ const {
   nivelHeroe,
   experienciaHeroe,
   iniciarMision,
-  actualizarIdentidad
+  actualizarIdentidad,
+  tituloFinal,
+  esModoNocturno,
+  mensajeAlertaMapa,
+  navegarA,
+  PANTALLAS
 } = useEstadoJuego()
+
+const sospechaRangoInfo = computed(() => {
+  const s = estadisticasHeroe.sospechaIdentidad
+  if (s <= 25) return { label: 'Identidad segura 🟢', clase: 'segura' }
+  if (s <= 50) return { label: 'Rumores 🟡', clase: 'rumores' }
+  if (s <= 75) return { label: 'Sospecha alta 🟠', clase: 'alta' }
+  return { label: 'Investigación activa 🔴', clase: 'investigacion' }
+})
+
+function nombreCarreraLegible(carrera) {
+  const mapeo = {
+    Informatica: 'Informática Empresarial',
+    Software: 'Ingeniería de Software',
+    Ciberseguridad: 'Ciberseguridad',
+    Datos: 'Ciencia de Datos',
+    InformaticaEducativa: 'Informática Educativa',
+    Turismo: 'Turismo',
+    Administracion: 'Administración de Empresas',
+    Derecho: 'Derecho',
+    EducacionFisica: 'Educación Física',
+    Biologia: 'Biología',
+    Artes: 'Artes Plásticas',
+    Educacion: 'Ciencias de la Educación',
+    Otra: 'Otra Carrera'
+  }
+  return mapeo[carrera] || carrera
+}
+
+function deporteLegible(deporte) {
+  const mapeo = {
+    Futbol: '⚽ Fútbol',
+    Natacion: '🏊 Natación',
+    Ciclismo: '🚴 Ciclismo',
+    Gimnasio: '💪 Gimnasio',
+    Voleibol: '🏐 Voleibol',
+    Boxeo: '🥊 Boxeo / Kickboxing',
+    Basketball: '🏀 Baloncesto / Basketball',
+    Correr: '🏃 Running',
+    Surf: '🏄 Surf',
+    Escalada: '🧗 Escalada',
+    Ninguna: '😌 Solo estudio'
+  }
+  return mapeo[deporte] || deporte || 'Ninguno'
+}
+
+function nombreSedeLegible(uni, value) {
+  if (!uni || !value) return '—'
+  const list = RELACION_U_SEDES[uni] || []
+  const found = list.find(s => s.value === value)
+  return found ? found.label : value
+}
 
 // --- Secuencia de progresión geográfica ---
 const secuenciaProvincias = ['san-jose', 'heredia', 'cartago', 'alajuela', 'guanacaste', 'puntarenas', 'limon']
@@ -486,6 +647,7 @@ const estaCargando          = ref(false)
 const errorCarga            = ref(null)
 const provinciaSeleccionada = ref(null)
 const idProvinciaActiva     = ref(null)
+const vistaActiva           = ref('mapa')
 
 // Pestaña activa del progreso
 const pestanaActiva = ref('perfil')
@@ -496,6 +658,7 @@ const formularioEdicion = reactive({
   nombre:             '',
   edad:               '',
   universidad:        '',
+  sedeUniversitaria:  '',
   carrera:            '',
   deporte:            '',
   personalidad:       '',
@@ -532,6 +695,11 @@ const universidades = [
   { value: 'Otra',     label: '🎓 Otra universidad' }
 ]
 
+const sedesDisponiblesEdicion = computed(() => {
+  if (!formularioEdicion.universidad) return []
+  return RELACION_U_SEDES[formularioEdicion.universidad] || []
+})
+
 const carrerasDisponiblesEdicion = computed(() => {
   if (!formularioEdicion.universidad) return []
   return RELACION_U_CARRERAS[formularioEdicion.universidad] || []
@@ -540,12 +708,19 @@ const carrerasDisponiblesEdicion = computed(() => {
 watch(() => formularioEdicion.universidad, (nuevaU) => {
   if (!nuevaU) {
     formularioEdicion.carrera = ''
+    formularioEdicion.sedeUniversitaria = ''
     return
   }
-  const listaValida = RELACION_U_CARRERAS[nuevaU] || []
-  const existe = listaValida.some(c => c.value === formularioEdicion.carrera)
-  if (!existe) {
+  const listaValidaCarreras = RELACION_U_CARRERAS[nuevaU] || []
+  const existeCarrera = listaValidaCarreras.some(c => c.value === formularioEdicion.carrera)
+  if (!existeCarrera) {
     formularioEdicion.carrera = ''
+  }
+
+  const listaValidaSedes = RELACION_U_SEDES[nuevaU] || []
+  const existeSede = listaValidaSedes.some(s => s.value === formularioEdicion.sedeUniversitaria)
+  if (!existeSede) {
+    formularioEdicion.sedeUniversitaria = ''
   }
 })
 
@@ -556,7 +731,7 @@ const deportes = [
   { value: 'Gimnasio',  label: '💪 Gimnasio / Pesas' },
   { value: 'Voleibol',  label: '🏐 Voleibol' },
   { value: 'Boxeo',     label: '🥊 Boxeo / Artes Marciales' },
-  { value: 'Yoga',      label: '🧘 Yoga / Meditación' },
+  { value: 'Basketball',label: '🏀 Basketball' },
   { value: 'Correr',    label: '🏃 Correr / Running' },
   { value: 'Surf',      label: '🏄 Surf' },
   { value: 'Escalada',  label: '🧗 Escalada' },
@@ -589,6 +764,7 @@ const formularioEdicionValido = computed(() => {
   return formularioEdicion.nombre.trim().length >= 2 &&
     edadValida &&
     formularioEdicion.universidad !== '' &&
+    formularioEdicion.sedeUniversitaria !== '' &&
     formularioEdicion.carrera !== '' &&
     formularioEdicion.personalidad !== '' &&
     aliasValido
@@ -641,12 +817,14 @@ function obtenerProvinciasFallback() {
 
 // --- Seleccionar provincia ---
 function alSeleccionarProvincia(provincia) {
+  if (!esModoNocturno.value) return
   provinciaSeleccionada.value = provincia
   reproducirEfecto('click')
 }
 
 // --- Iniciar misión ---
 function alIniciarMision(provincia) {
+  if (!esModoNocturno.value) return
   if (!provincia.desbloqueada) return
   idProvinciaActiva.value = provincia.id
   reproducirEfecto('click')
@@ -674,6 +852,7 @@ function abrirEditarPerfil() {
   formularioEdicion.nombre = identidadHeroe.nombre
   formularioEdicion.edad = identidadHeroe.edad
   formularioEdicion.universidad = identidadHeroe.universidad
+  formularioEdicion.sedeUniversitaria = identidadHeroe.sedeUniversitaria
   formularioEdicion.carrera = identidadHeroe.carrera
   formularioEdicion.deporte = identidadHeroe.deporte
   formularioEdicion.personalidad = identidadHeroe.personalidad
@@ -740,6 +919,7 @@ function guardarEdicion() {
     nombre: formularioEdicion.nombre.trim(),
     edad: edadNum,
     universidad: formularioEdicion.universidad,
+    sedeUniversitaria: formularioEdicion.sedeUniversitaria,
     carrera: formularioEdicion.carrera,
     deporte: formularioEdicion.deporte,
     personalidad: formularioEdicion.personalidad,
@@ -1387,6 +1567,44 @@ onMounted(async () => {
   color: var(--color-text-primary);
 }
 
+/* Badge del título en la cabecera */
+.titulo-heroico-mapa-badge {
+  font-size: 0.75rem;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: var(--color-neon-gold);
+  padding: 3px var(--space-3);
+  border-radius: var(--radius-full);
+  margin-left: var(--space-2);
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: var(--font-bold);
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+}
+
+/* Título heroico en la tarjeta de perfil */
+.titulo-heroico-contenedor-mapa {
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  background: rgba(255, 215, 0, 0.02);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  border-radius: var(--radius-md);
+}
+
+.titulo-nombre-val {
+  color: var(--color-neon-gold);
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+}
+
+.titulo-desc-mapa {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+  margin: 4px 0 0;
+  font-style: italic;
+}
+
 /* --- Progreso Sospecha --- */
 .progreso-sospecha-container {
   display: flex;
@@ -1396,6 +1614,25 @@ onMounted(async () => {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: var(--space-3);
 }
+
+.sospecha-meta-mapa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.sospecha-rango-badge {
+  font-size: 0.65rem;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+.sospecha-rango-badge.segura { background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); color: var(--color-neon-green); }
+.sospecha-rango-badge.rumores { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); color: var(--color-neon-gold); }
+.sospecha-rango-badge.alta { background: rgba(255, 140, 0, 0.1); border: 1px solid rgba(255, 140, 0, 0.3); color: #ff8c00; }
+.sospecha-rango-badge.investigacion { background: rgba(255, 70, 70, 0.1); border: 1px solid rgba(255, 70, 70, 0.3); color: #ff4646; }
 
 .progreso-sospecha-label {
   font-size: var(--text-xs);
@@ -1412,16 +1649,14 @@ onMounted(async () => {
 
 .relleno-sospecha-mapa {
   height: 100%;
-  background: var(--color-neon-blue);
-  box-shadow: 0 0 8px var(--color-neon-blue-glow);
   border-radius: var(--radius-full);
   transition: width 0.6s ease;
 }
 
-.relleno-sospecha-mapa.alerta-sospecha {
-  background: #ff4646;
-  box-shadow: 0 0 8px rgba(255, 70, 70, 0.6);
-}
+.relleno-sospecha-mapa.segura { background: var(--color-neon-green); }
+.relleno-sospecha-mapa.rumores { background: var(--color-neon-gold); }
+.relleno-sospecha-mapa.alta { background: #ff8c00; }
+.relleno-sospecha-mapa.investigacion { background: #ff4646; }
 
 @media (max-width: 640px) {
   .perfil-dual-grid {
@@ -1437,8 +1672,121 @@ onMounted(async () => {
   border-radius: var(--radius-lg);
   font-size: var(--text-xs);
   color: var(--color-neon-gold);
-  line-height: 1.4;
-  margin-bottom: var(--space-4);
   text-align: left;
+  margin-bottom: var(--space-4);
+}
+
+/* --- Estilos de Modo Día y Advertencias --- */
+.modo-diurno-mapa {
+  opacity: 0.55;
+  filter: grayscale(0.3) brightness(0.85);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.panel-preparacion-diurna {
+  background: var(--gradient-card);
+  border: 1px solid var(--color-neon-blue);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card), var(--shadow-neon-blue);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.estado-dia-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.emoji-sol-grande {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.titulo-preparacion-diurna {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 10px var(--color-neon-blue-glow);
+  margin: 0;
+}
+
+.badge-fase-dia {
+  font-size: var(--text-xs);
+  background: rgba(0, 200, 255, 0.08);
+  border: 1px solid rgba(0, 200, 255, 0.25);
+  color: var(--color-neon-blue);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+}
+
+.desc-preparacion {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.info-preparacion-campus {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.info-preparacion-campus p {
+  margin: 0;
+}
+
+.btn-iniciar-jornada {
+  width: 100%;
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.2);
+}
+
+.btn-iniciar-jornada:hover {
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.4);
+}
+
+.alerta-error-vuelo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: rgba(255, 70, 70, 0.08);
+  border: 1px solid rgba(255, 70, 70, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-5);
+  color: #ff4646;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+
+.alerta-error-vuelo .mensaje-texto {
+  flex: 1;
+  font-weight: var(--font-semibold);
+}
+
+.btn-cerrar-alerta {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
 }
 </style>

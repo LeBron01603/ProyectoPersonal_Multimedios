@@ -279,7 +279,7 @@ const emit = defineEmits(['salir', 'completar'])
 const { provinciaActiva, completarMision, navegarA, ganarExperiencia, identidadHeroe, estadisticasHeroe, PANTALLAS } = useEstadoJuego()
 
 // --- Audio ---
-const { reproducirEfecto } = useAudio()
+const { reproducirEfecto, reproducirMusica } = useAudio()
 
 // --- Temporizador ---
 const { tiempoRestante, iniciar, pausar, reiniciar } = useTemporizador()
@@ -453,6 +453,10 @@ const catCarreraPenalidad = computed(() => {
 function iniciarPregunta() {
   respuestaSeleccionada.value = null
   
+  if (preguntaActual.value === totalPreguntas.value - 1) {
+    reproducirMusica('desafio')
+  }
+  
   // BONO: +5s para informáticos en preguntas difíciles (dificultad provincia >= 3 o Desafío Final)
   let maxTiempo = 20
   const esDificil = (provinciaActiva.value?.dificultad >= 3) || (preguntaActual.value === totalPreguntas.value - 1)
@@ -573,6 +577,7 @@ function alSiguientePregunta() {
     // Desafío Final: Advertencia antes de la pregunta 8 (index 7) en San José
     if (esSanJose && preguntaActual.value === 7) {
       subEstadoPantalla.value = 'desafio_final_intro'
+      reproducirMusica('desafio')
     } else {
       iniciarPregunta()
     }
@@ -665,6 +670,7 @@ function alPresionarTecla(e) {
 }
 
 onMounted(() => {
+  reproducirMusica('juego')
   window.addEventListener('keydown', alPresionarTecla)
 })
 
