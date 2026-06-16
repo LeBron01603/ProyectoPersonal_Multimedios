@@ -141,11 +141,8 @@
 
       <!-- Botones de acción -->
       <div class="acciones-resultado animate-fade-in delay-500">
-        <button class="btn btn-outline" @click="alVolverAlMapa">
-          🗺️ Volver al mapa
-        </button>
-        <button class="btn btn-hero btn-lg" @click="alContinuar">
-          ⚡ Siguiente provincia
+        <button class="btn btn-hero btn-lg" @click="alVolverAlCampus">
+          🏫 Volver al campus
         </button>
       </div>
 
@@ -162,7 +159,7 @@ import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 import { useAudio } from '../../composables/useAudio.js'
 
 // --- Emits ---
-const emit = defineEmits(['volver-al-mapa', 'continuar'])
+const emit = defineEmits(['volver-al-campus'])
 
 // --- Estado del juego ---
 const { 
@@ -248,14 +245,9 @@ const fraseMotivacional = computed(() =>
 )
 
 // --- Navegación ---
-function alVolverAlMapa() {
-  navegarA(PANTALLAS.MAPA)
-  emit('volver-al-mapa')
-}
-
-function alContinuar() {
-  navegarA(PANTALLAS.MAPA)
-  emit('continuar')
+function alVolverAlCampus() {
+  navegarA(PANTALLAS.NUEVO_DIA)
+  emit('volver-al-campus')
 }
 
 onMounted(() => {

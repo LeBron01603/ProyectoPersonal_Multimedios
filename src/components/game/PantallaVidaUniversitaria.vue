@@ -15,6 +15,17 @@
         </p>
       </header>
 
+      <!-- Bloque de Recomendaciones según Estadísticas -->
+      <div v-if="recomendaciones.length > 0" class="panel-recomendaciones animate-fade-in">
+        <h3 class="titulo-recomendaciones">💡 Recomendaciones para hoy</h3>
+        <ul class="lista-recomendaciones">
+          <li v-for="(rec, idx) in recomendaciones" :key="idx" class="recomendar-item" :class="rec.color">
+            <span class="rec-icono">{{ rec.icono }}</span>
+            <span class="rec-texto">{{ rec.texto }}</span>
+          </li>
+        </ul>
+      </div>
+
       <!-- Lista de Actividades -->
       <div class="cuadricula-actividades">
         <button
@@ -83,11 +94,45 @@ import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 import { useAudio } from '../../composables/useAudio.js'
 
 // --- Estado global del juego ---
-const { navegarA, estadisticasHeroe, PANTALLAS } = useEstadoJuego()
+const { navegarA, estadisticasHeroe, guardarProgreso, PANTALLAS } = useEstadoJuego()
 const { reproducirEfecto } = useAudio()
 
 // --- Emits ---
 const emit = defineEmits(['completar', 'salir'])
+
+// --- Recomendaciones para hoy basadas en estadísticas ---
+const recomendaciones = computed(() => {
+  const recs = []
+  if (estadisticasHeroe.energia < 40) {
+    recs.push({
+      icono: '⚡',
+      texto: 'Tu energía está baja. Te sugerimos Descansar o realizar Entrenamiento Deportivo para recuperar fuerzas.',
+      color: 'recomendar-energia'
+    })
+  }
+  if (estadisticasHeroe.responsabilidad < 50) {
+    recs.push({
+      icono: '🎓',
+      texto: 'Tu responsabilidad académica está descuidada. Te recomendamos Estudiar o Participar en actividades de la U.',
+      color: 'recomendar-responsabilidad'
+    })
+  }
+  if (estadisticasHeroe.sospechaIdentidad > 50) {
+    recs.push({
+      icono: '🔍',
+      texto: '¡Sospecha alta! Los rumores aumentan en la facultad. Te recomendamos Estudiar o Participar en actividades de la U para disipar la sospecha.',
+      color: 'recomendar-sospecha'
+    })
+  }
+  if (estadisticasHeroe.conocimiento < 50) {
+    recs.push({
+      icono: '📚',
+      texto: 'Tu nivel de conocimiento sobre Costa Rica es bajo. Te sugerimos Estudiar o Investigar destinos turísticos.',
+      color: 'recomendar-conocimiento'
+    })
+  }
+  return recs
+})
 
 // --- Actividades disponibles ---
 const actividades = [
@@ -174,6 +219,7 @@ function confirmarSeleccion() {
     }
   })
 
+  guardarProgreso()
   emit('completar')
 }
 
@@ -393,5 +439,79 @@ function alCancelar() {
   .acciones-vida-u .btn {
     width: 100%;
   }
+}
+
+/* --- Bloque de Recomendaciones --- */
+.panel-recomendaciones {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px dashed rgba(184, 79, 255, 0.35);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-1);
+  text-align: left;
+}
+
+.titulo-recomendaciones {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--color-neon-purple);
+  margin: 0 0 var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-bold);
+  text-shadow: 0 0 6px var(--color-neon-purple-glow);
+}
+
+.lista-recomendaciones {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.recomendar-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border-left: 3px solid transparent;
+}
+
+.recomendar-energia {
+  background: rgba(255, 215, 0, 0.04);
+  border-left-color: var(--color-neon-gold);
+  color: var(--color-text-secondary);
+}
+
+.recomendar-responsabilidad {
+  background: rgba(0, 255, 136, 0.04);
+  border-left-color: var(--color-neon-green);
+  color: var(--color-text-secondary);
+}
+
+.recomendar-sospecha {
+  background: rgba(255, 70, 70, 0.05);
+  border-left-color: #ff4646;
+  color: var(--color-text-secondary);
+}
+
+.recomendar-conocimiento {
+  background: rgba(0, 200, 255, 0.04);
+  border-left-color: var(--color-neon-blue);
+  color: var(--color-text-secondary);
+}
+
+.rec-icono {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.rec-texto {
+  flex: 1;
 }
 </style>

@@ -31,6 +31,17 @@
 
       <!-- Controles de header -->
       <div class="header-controls">
+        <!-- Botón de Centro del Héroe (visible si hay identidad) -->
+        <button
+          v-if="identidadHeroe.nombre !== ''"
+          class="control-btn"
+          title="Centro del Héroe"
+          aria-label="Ver perfil de héroe"
+          @click="mostrarCentroHeroe = true"
+        >
+          👤
+        </button>
+
         <!-- Botón de sonido -->
         <button
           class="control-btn"
@@ -73,6 +84,12 @@
       @confirmar="confirmarReinicio"
       @cancelar="cerrarConfirmarReinicio"
     />
+
+    <!-- Componente del Centro del Héroe (Modal) -->
+    <CentroHeroe
+      :mostrar="mostrarCentroHeroe"
+      @cerrar="mostrarCentroHeroe = false"
+    />
   </header>
 </template>
 
@@ -83,6 +100,7 @@ import { ref, computed } from 'vue'
 // --- Componentes hijos ---
 import IndicadorEstadistica from '../game/IndicadorEstadistica.vue'
 import ModalConfirmacion from '../game/ModalConfirmacion.vue'
+import CentroHeroe from '../game/CentroHeroe.vue'
 
 // --- Composables ---
 import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
@@ -103,7 +121,8 @@ const {
 // --- Audio ---
 const { estaSilenciado, alternarSilencio, reproducirEfecto } = useAudio()
 
-// --- Estado local para confirmación de reinicio ---
+// --- Estado local para modal ---
+const mostrarCentroHeroe = ref(false)
 const mostrarModalConfirmar = ref(false)
 
 // --- Computed: mostrar estadísticas solo en pantallas de juego ---

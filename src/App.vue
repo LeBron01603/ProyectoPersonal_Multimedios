@@ -63,8 +63,14 @@
         <PantallaResultado
           v-else-if="pantallaActual === PANTALLAS.RESULTADO"
           key="resultado"
-          @volver-al-mapa="navegarA(PANTALLAS.MAPA)"
-          @continuar="navegarA(PANTALLAS.MAPA)"
+          @volver-al-campus="navegarA(PANTALLAS.NUEVO_DIA)"
+        />
+
+        <!-- Pantalla: Nuevo Día -->
+        <PantallaNuevoDia
+          v-else-if="pantallaActual === PANTALLAS.NUEVO_DIA"
+          key="nuevo_dia"
+          @comenzar="navegarA(PANTALLAS.ACTIVIDADES)"
         />
 
       </transition>
@@ -96,6 +102,7 @@ import PantallaVidaUniversitaria from './components/game/PantallaVidaUniversitar
 import PantallaTransformacion    from './components/game/PantallaTransformacion.vue'
 import PantallaJuego             from './components/game/PantallaJuego.vue'
 import PantallaResultado         from './components/game/PantallaResultado.vue'
+import PantallaNuevoDia          from './components/game/PantallaNuevoDia.vue'
 
 // --- Composables ---
 import { useEstadoJuego, PANTALLAS } from './composables/useEstadoJuego.js'

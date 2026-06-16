@@ -15,7 +15,8 @@ export const PANTALLAS = {
   ACTIVIDADES: 'actividades',
   TRANSFORMACION: 'transformacion',
   JUEGO:     'juego',
-  RESULTADO: 'resultado'
+  RESULTADO: 'resultado',
+  NUEVO_DIA: 'nuevo_dia'
 }
 
 // --- Estado global reactivo (singleton por sesión) ---
@@ -170,11 +171,13 @@ function confirmarIdentidad(identidad) {
   aplicarBonificacionesIniciales(identidad.personalidad)
   aplicarBonificacionesCarrera(identidad.carrera)
   navegarA(PANTALLAS.MAPA)
+  guardarProgreso()
 }
 
 /** Edita la identidad del héroe sin reiniciar ningún progreso ni estadística */
 function actualizarIdentidad(nuevaIdentidad) {
   Object.assign(identidadHeroe, nuevaIdentidad)
+  guardarProgreso()
 }
 
 /** Inicia misión en una provincia específica */
@@ -313,12 +316,92 @@ function completarMision(idProvincia, puntaje) {
   }
 
   navegarA(PANTALLAS.RESULTADO)
+  guardarProgreso()
 }
 
 /** Añade un logro si no ha sido desbloqueado anteriormente */
 function agregarLogro(nombre, emoji) {
   if (!logrosHeroe.value.some(l => l.nombre === nombre)) {
     logrosHeroe.value.push({ nombre, emoji })
+    guardarProgreso()
+  }
+}
+
+const SAVE_KEY = 'rutaTicaHeroeAfterProgreso'
+
+/** Guarda el progreso del juego en localStorage */
+function guardarProgreso() {
+  try {
+    const data = {
+      identidadHeroe: { ...identidadHeroe },
+      estadisticasHeroe: { ...estadisticasHeroe },
+      experienciaHeroe: experienciaHeroe.value,
+      nivelHeroe: nivelHeroe.value,
+      misionesCompletadas: [...misionesCompletadas.value],
+      checkpointsDesbloqueados: [...checkpointsDesbloqueados.value],
+      coleccionAfter: [...coleccionAfter.value],
+      inventarioHeroe: [...inventarioHeroe.value],
+      logrosHeroe: [...logrosHeroe.value],
+      pantallaActual: pantallaActual.value
+    }
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data))
+    console.info('[RutaTica] Progreso guardado correctamente.')
+  } catch (error) {
+    console.error('[RutaTica] Error al guardar progreso:', error)
+  }
+}
+
+/** Carga el progreso del juego desde localStorage */
+function cargarProgreso() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY)
+    if (!raw) return false
+    const data = JSON.parse(raw)
+    if (data.identidadHeroe) Object.assign(identidadHeroe, data.identidadHeroe)
+    if (data.estadisticasHeroe) Object.assign(estadisticasHeroe, data.estadisticasHeroe)
+    if (data.experienciaHeroe !== undefined) experienciaHeroe.value = data.experienciaHeroe
+    if (data.nivelHeroe !== undefined) nivelHeroe.value = data.nivelHeroe
+    if (data.misionesCompletadas) misionesCompletadas.value = data.misionesCompletadas
+    if (data.checkpointsDesbloqueados) checkpointsDesbloqueados.value = data.checkpointsDesbloqueados
+    if (data.coleccionAfter) coleccionAfter.value = data.coleccionAfter
+    if (data.inventarioHeroe) inventarioHeroe.value = data.inventarioHeroe
+    if (data.logrosHeroe) logrosHeroe.value = data.logrosHeroe
+    
+    // Si la pantalla guardada era juego, mandamos a mapa para evitar inconsistencias
+    if (data.pantallaActual && data.pantallaActual !== PANTALLAS.JUEGO) {
+      pantallaActual.value = data.pantallaActual
+    } else {
+      pantallaActual.value = PANTALLAS.MAPA
+    }
+    console.info('[RutaTica] Progreso cargado correctamente.')
+    return true
+  } catch (error) {
+    console.error('[RutaTica] Error al cargar progreso:', error)
+    return false
+  }
+}
+
+/** Borra el progreso del juego de localStorage y reinicia el estado y vuelve a Inicio */
+function borrarProgreso() {
+  try {
+    localStorage.removeItem(SAVE_KEY)
+    reiniciarJuego()
+    pantallaActual.value = PANTALLAS.INICIO
+    console.info('[RutaTica] Progreso borrado correctamente.')
+  } catch (error) {
+    console.error('[RutaTica] Error al borrar progreso:', error)
+  }
+}
+
+/** Comprueba si hay una partida guardada válida */
+function hayProgresoGuardado() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY)
+    if (!raw) return false
+    const parsed = JSON.parse(raw)
+    return !!(parsed && parsed.identidadHeroe && parsed.identidadHeroe.nombre)
+  } catch {
+    return false
   }
 }
 
@@ -373,6 +456,10 @@ export function useEstadoJuego() {
     ganarExperiencia,
     completarMision,
     reiniciarJuego,
+    guardarProgreso,
+    cargarProgreso,
+    borrarProgreso,
+    hayProgresoGuardado,
 
     // Constantes
     PANTALLAS

@@ -78,18 +78,81 @@
         🌿 Este juego promueve el conocimiento, el equilibrio y la responsabilidad universitaria.
       </p>
     </div>
+
+    <!-- Dialogo: Partida encontrada -->
+    <teleport to="body">
+      <transition name="modal-fade">
+        <div v-if="mostrarPartidaEncontrada" class="modal-overlay" role="dialog" aria-modal="true">
+          <div class="modal-wrapper">
+            <div class="modal-card animate-fade-in-scale">
+              <div class="modal-icon">💾</div>
+              <div class="modal-header">
+                <h3 class="modal-title">Partida Guardada Encontrada</h3>
+              </div>
+              <div class="modal-body">
+                <p class="modal-message">
+                  Hemos detectado una partida guardada anterior para el héroe:
+                  <br /><strong class="texto-heroe-guardado">{{ nombreHeroeGuardado }}</strong>.
+                  <br /><br />
+                  ¿Deseas continuar tu patrullaje o empezar de nuevo desde cero?
+                </p>
+              </div>
+              <div class="modal-actions-column">
+                <button
+                  type="button"
+                  class="btn btn-hero btn-lg btn-block btn-continuar-partida"
+                  @click="alContinuarPartida"
+                >
+                  📂 Continuar partida
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline btn-block"
+                  @click="alConfirmarNuevaPartida"
+                >
+                  ✨ Nueva partida
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </teleport>
+
+    <!-- Modal Confirmación para Nueva Partida -->
+    <ModalConfirmacion
+      :mostrar="mostrarConfirmarNuevaPartida"
+      titulo="¿Iniciar nueva partida?"
+      mensaje="¿Seguro que deseas iniciar una nueva partida? Esto eliminará de forma irreversible tu progreso anterior."
+      textoConfirmar="Empezar de nuevo"
+      textoCancelar="Cancelar"
+      @confirmar="comenzarNuevaPartida"
+      @cancelar="cerrarConfirmarNuevaPartida"
+    />
   </section>
 </template>
 
 <script setup>
 // --- Importaciones de Vue 3 Composition API ---
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+
+// --- Componentes hijos ---
+import ModalConfirmacion from './ModalConfirmacion.vue'
 
 // --- Composables ---
 import { useAudio } from '../../composables/useAudio.js'
+import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 
 // --- Audio ---
-const { reproducirMusica } = useAudio()
+const { reproducirMusica, reproducirEfecto } = useAudio()
+
+// --- Estado global ---
+const { hayProgresoGuardado, cargarProgreso, borrarProgreso } = useEstadoJuego()
+
+// --- Estado local ---
+const mostrarPartidaEncontrada = ref(false)
+const mostrarConfirmarNuevaPartida = ref(false)
+const nombreHeroeGuardado = ref('')
 
 // --- Emits: notifica al padre qué acción realizar ---
 const emit = defineEmits(['iniciar'])
@@ -98,11 +161,47 @@ const emit = defineEmits(['iniciar'])
 onMounted(() => {
   // Iniciar música de menú
   reproducirMusica('menu')
+
+  if (hayProgresoGuardado()) {
+    try {
+      const raw = localStorage.getItem('rutaTicaHeroeAfterProgreso')
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        nombreHeroeGuardado.value = parsed.identidadHeroe?.nombre || 'Héroe del After'
+        mostrarPartidaEncontrada.value = true
+      }
+    } catch (e) {
+      console.error('Error al detectar save en PantallaInicio:', e)
+    }
+  }
 })
 
 /** Emitir evento de inicio hacia App.vue */
 function alIniciar() {
   emit('iniciar')
+}
+
+function alContinuarPartida() {
+  reproducirEfecto('subirNivel')
+  cargarProgreso()
+  mostrarPartidaEncontrada.value = false
+}
+
+function alConfirmarNuevaPartida() {
+  reproducirEfecto('click')
+  mostrarConfirmarNuevaPartida.value = true
+}
+
+function cerrarConfirmarNuevaPartida() {
+  reproducirEfecto('click')
+  mostrarConfirmarNuevaPartida.value = false
+}
+
+function comenzarNuevaPartida() {
+  reproducirEfecto('subirNivel')
+  borrarProgreso()
+  mostrarConfirmarNuevaPartida.value = false
+  mostrarPartidaEncontrada.value = false
 }
 
 /**
@@ -376,5 +475,88 @@ function estiloParticula(n) {
   .contenido-inicio {
     gap: var(--space-6);
   }
+}
+
+/* --- Estilos Modal de Partida Encontrada --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: rgba(5, 8, 20, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--gradient-card);
+  border: 1px solid rgba(184, 79, 255, 0.3);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6) var(--space-8);
+  box-shadow: var(--shadow-card), 0 0 25px rgba(184, 79, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+
+.modal-icon {
+  font-size: 2.8rem;
+  animation: pulse-neon 2.5s infinite;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-neon-purple);
+  text-shadow: 0 0 10px var(--color-neon-purple-glow);
+  margin: 0;
+}
+
+.modal-message {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.texto-heroe-guardado {
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 5px var(--color-neon-blue-glow);
+}
+
+.modal-actions-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-continuar-partida {
+  background: linear-gradient(135deg, var(--color-neon-blue), #005a9c);
+  border-color: rgba(0, 200, 255, 0.4);
+}
+
+.btn-continuar-partida:hover {
+  background: linear-gradient(135deg, #33ccff, #0088cc);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.4);
 }
 </style>
