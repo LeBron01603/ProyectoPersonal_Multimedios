@@ -25,7 +25,7 @@
 
       <!-- Info legal/académica -->
       <p class="footer-legal">
-        Proyecto académico · Vue 3 + Vite · CENFOTEC · 2026
+        Proyecto académico · Vue 3 + Vite · UCR · 2026
       </p>
     </div>
   </footer>

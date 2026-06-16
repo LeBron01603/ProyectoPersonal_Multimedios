@@ -288,6 +288,7 @@ const { tiempoRestante, iniciar, pausar, reiniciar } = useTemporizador()
 const subEstadoPantalla = ref('narrativa_inicial')
 const preguntaActual       = ref(0)
 const respuestaSeleccionada = ref(null)
+const respuestasCorrectasCount = ref(0)
 const puntaje              = ref(0)
 const rachaRespuestas      = ref(0)
 const tiempoMaximoPregunta = ref(20)
@@ -468,6 +469,7 @@ function iniciarPregunta() {
 // --- Comenzar Misión Principal ---
 function comenzarMisionPrincipal() {
   subEstadoPantalla.value = 'pregunta'
+  respuestasCorrectasCount.value = 0
   iniciarPregunta()
 }
 
@@ -494,6 +496,7 @@ function seleccionarRespuesta(idx) {
   if (preguntaActualDatos.value && idx === preguntaActualDatos.value.correcta) {
     reproducirEfecto('correcto')
     rachaRespuestas.value++
+    respuestasCorrectasCount.value++
     
     // Puntos proporcionales
     puntaje.value += Math.round(100 / totalPreguntas.value)
@@ -594,8 +597,18 @@ function iniciarDesafioFinal() {
 }
 
 function finalizarMisionAventura() {
-  completarMision(provinciaActiva.value?.id, Math.min(100, puntaje.value))
-  emit('completar', { idProvincia: provinciaActiva.value?.id, puntaje: Math.min(100, puntaje.value) })
+  completarMision(
+    provinciaActiva.value?.id,
+    Math.min(100, puntaje.value),
+    respuestasCorrectasCount.value,
+    totalPreguntas.value
+  )
+  emit('completar', {
+    idProvincia: provinciaActiva.value?.id,
+    puntaje: Math.min(100, puntaje.value),
+    correctas: respuestasCorrectasCount.value,
+    total: totalPreguntas.value
+  })
 }
 
 // --- Salir al mapa ---

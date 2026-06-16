@@ -1,29 +1,45 @@
 <template>
   <!-- PantallaResultado: pantalla de resultados al finalizar una misión -->
   <section class="pantalla-resultado" aria-label="Pantalla de resultados">
-    <div class="contenedor-resultado animate-fade-in-scale">
+    <div class="contenedor-resultado animate-fade-in-scale" :class="{ 'failed-border': !misionAprobada }">
 
       <!-- Ícono de resultado -->
       <div class="emblema-resultado animate-float" aria-hidden="true">
         <span class="emoji-resultado">{{ emojiResultado }}</span>
-        <div class="anillo-resultado"></div>
+        <div class="anillo-resultado" :class="{ 'failed-anillo': !misionAprobada }"></div>
       </div>
 
       <!-- Título de resultado -->
       <header class="encabezado-resultado">
-        <p class="etiqueta-mision-resultado">{{ provinciaActiva?.nombre }} — Misión completada</p>
+        <p class="etiqueta-mision-resultado">
+          {{ provinciaActiva?.nombre }} — {{ misionAprobada ? 'Misión Aprobada' : 'Patrullaje Fallido' }}
+        </p>
         <h2 class="titulo-resultado" :class="claseTituloResultado">{{ tituloResultado }}</h2>
         <p class="subtitulo-resultado">{{ subtituloResultado }}</p>
       </header>
 
       <!-- Panel de XP y Nivel -->
-      <div class="perfil-nivel-resultado animate-fade-in delay-100">
+      <div v-if="misionAprobada" class="perfil-nivel-resultado animate-fade-in delay-100">
         <div class="badge-nivel-resultado">⭐ Nivel {{ nivelHeroe }}</div>
         <div class="xp-ganada-resultado">+{{ xpGanada }} XP Obtenidos</div>
       </div>
+      <div v-else class="perfil-nivel-resultado failed animate-fade-in delay-100">
+        <div class="badge-nivel-resultado">⚠️ Desempeño Insuficiente</div>
+        <div class="xp-ganada-resultado failed">0 XP Obtenidos</div>
+      </div>
+
+      <!-- Caja de advertencia de modo práctica -->
+      <div v-if="misionAprobada && misionEsPractica" class="caja-aviso-practica animate-fade-in delay-150">
+        <span>💡 Misión completada en modo Práctica. No se otorgan nuevas recompensas únicas.</span>
+      </div>
+
+      <!-- Desglose de respuestas -->
+      <div class="desglose-respuestas-res animate-fade-in delay-150">
+        <span>Desempeño: <strong>{{ respuestasCorrectasMision }} / {{ totalPreguntasMision }}</strong> correctas (mínimo: {{ totalPreguntasMision === 8 ? '6' : '70%' }})</span>
+      </div>
 
       <!-- Recompensas obtenidas -->
-      <div class="recompensas-mision-resultado animate-fade-in delay-200" v-if="provinciaActiva">
+      <div class="recompensas-mision-resultado animate-fade-in delay-200" v-if="provinciaActiva && misionAprobada && !misionEsPractica">
         <h3 class="titulo-seccion-resultado">Recompensas Desbloqueadas:</h3>
         <div class="recompensas-resultado-grid">
           <div class="recompensa-resultado-card principal" v-if="provinciaActiva.recompensaPrincipal">
@@ -41,6 +57,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="recompensas-mision-resultado failed animate-fade-in delay-200" v-else-if="!misionAprobada">
+        <p class="recompensas-bloqueadas-msg">⚠️ Debes responder correctamente más del 70% (o 6 de 8) para desbloquear las recompensas únicas de esta provincia.</p>
       </div>
 
       <!-- Impacto Académico y Heroico -->
@@ -141,7 +160,11 @@
 
       <!-- Botones de acción -->
       <div class="acciones-resultado animate-fade-in delay-500">
-        <button class="btn btn-hero btn-lg" @click="alVolverAlCampus">
+        <!-- Botón de reintentar solo visible si no se aprobó -->
+        <button v-if="!misionAprob" class="btn btn-hero btn-lg btn-danger" @click="alReintentarMision">
+          🔄 Reintentar misión
+        </button>
+        <button class="btn btn-hero btn-lg" :class="{ 'btn-outline': !misionAprob }" @click="alVolverAlCampus">
           🏫 Volver al campus
         </button>
       </div>
@@ -172,39 +195,52 @@ const {
   misionesCompletadas, 
   PANTALLAS,
   estadisticasHeroe,
-  estadisticasPreMision
+  estadisticasPreMision,
+  misionAprobada,
+  misionEsPractica,
+  respuestasCorrectasMision,
+  totalPreguntasMision
 } = useEstadoJuego()
+
+// Computed alias local para compatibilidad de plantilla
+const misionAprob = computed(() => misionAprobada.value)
 
 // --- Audio ---
 const { reproducirMusica } = useAudio()
 
 // --- Computed: emoji y título según puntaje de misión ---
 const emojiResultado = computed(() => {
+  if (!misionAprobada.value) return '❌'
   if (ultimoPuntajeMision.value >= 80) return '🏆'
   if (ultimoPuntajeMision.value >= 50) return '⭐'
   return '💪'
 })
 
 const tituloResultado = computed(() => {
+  if (!misionAprobada.value) return 'Patrullaje Incompleto'
   if (ultimoPuntajeMision.value >= 80) return '¡La Noche ha sido Salvada!'
   if (ultimoPuntajeMision.value >= 50) return '¡After Seguro Garantizado!'
   return 'Continúa patrullando, héroe'
 })
 
 const claseTituloResultado = computed(() => {
+  if (!misionAprobada.value) return 'texto-neon-red'
   if (ultimoPuntajeMision.value >= 80) return 'texto-neon'
   if (ultimoPuntajeMision.value >= 50) return 'texto-neon-blue'
   return 'texto-neon-purple'
 })
 
-const subtituloResultado = computed(() =>
-  `Provincia ${provinciaActiva.value?.nombre || ''} resguardada con éxito. Los estudiantes están a salvo.`
-)
+const subtituloResultado = computed(() => {
+  if (!misionAprobada.value) {
+    return `No lograste responder suficientes preguntas correctas en ${provinciaActiva.value?.nombre || ''}.`
+  }
+  return `Provincia ${provinciaActiva.value?.nombre || ''} resguardada con éxito. Los estudiantes están a salvo.`
+})
 
 // --- Experiencia ganada ---
 const xpGanada = computed(() => {
-  // +50 por completar misión +10 por respuesta correcta (aproximado por puntaje)
-  return 50 + Math.round(ultimoPuntajeMision.value * 0.5)
+  if (!misionAprobada.value || misionEsPractica.value) return 0
+  return 50
 })
 
 // --- Cambios reales en estadísticas (Deltas exactos del transcurso de la misión) ---
@@ -215,7 +251,7 @@ const impactoAcademico = computed(() => [
 
 const impactoHeroico = computed(() => [
   { key: 'reputacionNocturna', etiqueta: 'Reputación',    icon: '🤝', delta: estadisticasHeroe.reputacionNocturna - estadisticasPreMision.reputacionNocturna },
-  { key: 'xp',                 etiqueta: 'Experiencia',   icon: '⭐', delta: xpGanada.value }
+  { key: 'xp',                 etiqueta: 'Experiencia',   icon: '⭐', delta: misionAprobada.value && !misionEsPractica.value ? 50 : 0 }
 ])
 
 const deltaEnergia = computed(() => estadisticasHeroe.energia - estadisticasPreMision.energia)
@@ -248,6 +284,10 @@ const fraseMotivacional = computed(() =>
 function alVolverAlCampus() {
   navegarA(PANTALLAS.NUEVO_DIA)
   emit('volver-al-campus')
+}
+
+function alReintentarMision() {
+  navegarA(PANTALLAS.MAPA)
 }
 
 onMounted(() => {
@@ -641,5 +681,66 @@ onMounted(() => {
   .acciones-resultado .btn {
     width: 100%;
   }
+}
+
+/* --- Fase 4.5 Fallas y Prácticas --- */
+.contenedor-resultado.failed-border {
+  border-color: rgba(255, 70, 70, 0.4);
+  box-shadow: var(--shadow-card), 0 0 25px rgba(255, 70, 70, 0.25);
+}
+
+.anillo-resultado.failed-anillo {
+  border-color: #ff4646;
+  box-shadow: 0 0 20px rgba(255, 70, 70, 0.6), inset 0 0 20px rgba(255, 70, 70, 0.6);
+}
+
+.perfil-nivel-resultado.failed {
+  background: rgba(255, 70, 70, 0.05);
+  border-color: rgba(255, 70, 70, 0.2);
+}
+
+.perfil-nivel-resultado.failed .badge-nivel-resultado {
+  color: #ff6b6b;
+}
+
+.xp-ganada-resultado.failed {
+  color: var(--color-text-muted);
+}
+
+.caja-aviso-practica {
+  background: rgba(255, 215, 0, 0.04);
+  border: 1px dashed rgba(255, 215, 0, 0.3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-xs);
+  color: var(--color-neon-gold);
+  margin-bottom: var(--space-1);
+  width: 100%;
+  text-align: center;
+}
+
+.desglose-respuestas-res {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-1);
+  width: 100%;
+}
+
+.desglose-respuestas-res strong {
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 6px var(--color-neon-blue-glow);
+}
+
+.recompensas-bloqueadas-msg {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0;
+  width: 100%;
+  text-align: center;
 }
 </style>

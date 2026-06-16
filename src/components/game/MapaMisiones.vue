@@ -110,6 +110,11 @@
             </div>
           </div>
 
+          <!-- Advertencia de Práctica / Repetida -->
+          <div v-if="misionesCompletadas.includes(provinciaSeleccionada.id)" class="caja-alerta-practica">
+            <span>💡 Esta provincia ya fue completada. Puedes repetirla como práctica, pero no obtendrás recompensas únicas otra vez.</span>
+          </div>
+
           <button
             class="btn btn-primary btn-lg"
             @click="alIniciarMision(provinciaSeleccionada)"
@@ -1423,5 +1428,17 @@ onMounted(async () => {
     grid-template-columns: 1fr;
     gap: var(--space-4);
   }
+}
+
+.caja-alerta-practica {
+  background: rgba(255, 215, 0, 0.04);
+  border: 1px dashed rgba(255, 215, 0, 0.35);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-xs);
+  color: var(--color-neon-gold);
+  line-height: 1.4;
+  margin-bottom: var(--space-4);
+  text-align: left;
 }
 </style>

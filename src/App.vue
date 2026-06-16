@@ -33,7 +33,7 @@
         <MapaMisiones
           v-else-if="pantallaActual === PANTALLAS.MAPA"
           key="mapa"
-          @iniciar-mision="navegarA(PANTALLAS.ACTIVIDADES)"
+          @iniciar-mision="navegarA(PANTALLAS.JUEGO)"
         />
 
         <!-- Pantalla: Vida Universitaria -->
@@ -48,7 +48,7 @@
         <PantallaTransformacion
           v-else-if="pantallaActual === PANTALLAS.TRANSFORMACION"
           key="transformacion"
-          @continuar="navegarA(PANTALLAS.JUEGO)"
+          @continuar="navegarA(PANTALLAS.MAPA)"
         />
 
         <!-- Pantalla: Juego activo -->

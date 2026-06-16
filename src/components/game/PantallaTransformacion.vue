@@ -66,7 +66,7 @@
         </p>
 
         <button class="btn btn-hero btn-lg btn-danger btn-iniciar-noche animate-pulse" @click="iniciarMisionNocturna">
-          🚨 La noche te necesita
+          🗺️ Elegir próxima misión
         </button>
       </div>
 
@@ -106,7 +106,7 @@ function siguienteFase() {
 
 function iniciarMisionNocturna() {
   reproducirEfecto('subirNivel')
-  navegarA(PANTALLAS.JUEGO)
+  navegarA(PANTALLAS.MAPA)
   emit('continuar')
 }
 </script>

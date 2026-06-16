@@ -77,6 +77,10 @@ const logrosHeroe = ref([])
 const experienciaHeroe = ref(0)
 const nivelHeroe = ref(1)
 const ultimoPuntajeMision = ref(0)
+const misionAprobada = ref(true)
+const misionEsPractica = ref(false)
+const respuestasCorrectasMision = ref(0)
+const totalPreguntasMision = ref(0)
 
 // --- TÍTULOS FINALES PREVISTOS ---
 const titulosFinales = [
@@ -184,6 +188,7 @@ function actualizarIdentidad(nuevaIdentidad) {
 function iniciarMision(provincia) {
   Object.assign(estadisticasPreMision, estadisticasHeroe)
   provinciaActiva.value = provincia
+  misionEsPractica.value = misionesCompletadas.value.includes(provincia.id)
   navegarA(PANTALLAS.JUEGO)
 }
 
@@ -216,12 +221,93 @@ function ganarExperiencia(cantidad) {
 }
 
 /** Registra misión completada, otorga recompensas (principales, secundarias) y actualiza logros */
-function completarMision(idProvincia, puntaje) {
-  if (!misionesCompletadas.value.includes(idProvincia)) {
-    misionesCompletadas.value.push(idProvincia)
+function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCount) {
+  // 1. Determinar si aprueba
+  let aprobado = false
+  if (totalPreguntasCount === 8) {
+    aprobado = correctasCount >= 6
+  } else if (totalPreguntasCount > 0) {
+    aprobado = (correctasCount / totalPreguntasCount) >= 0.70
+  } else {
+    aprobado = puntaje >= 70 // fallback
   }
-  ultimoPuntajeMision.value = puntaje
 
+  misionAprobada.value = aprobado
+  ultimoPuntajeMision.value = puntaje
+  respuestasCorrectasMision.value = correctasCount
+  totalPreguntasMision.value = totalPreguntasCount
+
+  const yaCompletada = misionesCompletadas.value.includes(idProvincia)
+
+  // 2. Si aprueba:
+  if (aprobado) {
+    // Si no estaba completada, la agregamos al progreso y otorgamos las recompensas únicas
+    if (!yaCompletada) {
+      misionesCompletadas.value.push(idProvincia)
+
+      // Otorgar recompensas basadas en la provincia activa
+      if (provinciaActiva.value) {
+        const recompensaPri = provinciaActiva.value.recompensaPrincipal
+        const recompensaSec = provinciaActiva.value.recompensaSecundaria
+
+        // 1. Desbloquear Colección del After (Principal)
+        if (recompensaPri && !coleccionAfter.value.some(c => c.nombre === recompensaPri.nombre)) {
+          coleccionAfter.value.push(recompensaPri)
+          inventarioHeroe.value.push(recompensaPri)
+        }
+
+        // 2. Desbloquear Checkpoint (Secundaria)
+        if (recompensaSec && !checkpointsDesbloqueados.value.some(ch => ch.nombre === recompensaSec.nombre)) {
+          checkpointsDesbloqueados.value.push(recompensaSec)
+          if (recompensaSec.nombre === "Jägermeister") {
+            inventarioHeroe.value.push(recompensaSec)
+          }
+        }
+
+        // 3. Desbloquear Pases VIP específicos (Inventario adicional)
+        if (idProvincia === 'san-jose') {
+          const paseLaCali = { nombre: "Pase VIP La Cali", emoji: "🎟" }
+          if (!inventarioHeroe.value.some(i => i.nombre === paseLaCali.nombre)) {
+            inventarioHeroe.value.push(paseLaCali)
+          }
+        } else if (idProvincia === 'guanacaste') {
+          const paseSharkys = { nombre: "Pase VIP Sharky's", emoji: "🎟" }
+          if (!inventarioHeroe.value.some(i => i.nombre === paseSharkys.nombre)) {
+            inventarioHeroe.value.push(paseSharkys)
+          }
+        } else if (idProvincia === 'limon') {
+          const pasePuerto = { nombre: "Pase VIP Puerto Viejo", emoji: "🎟" }
+          if (!inventarioHeroe.value.some(i => i.nombre === pasePuerto.nombre)) {
+            inventarioHeroe.value.push(pasePuerto)
+          }
+        }
+      }
+
+      // 4. Sistema de Logros (Solo se otorgan si la provincia no estaba completada)
+      if (misionesCompletadas.value.length === 1) {
+        agregarLogro("Primer After", "🏆")
+      }
+      if (idProvincia === 'guanacaste') {
+        agregarLogro("Conquistador de Guanacaste", "🏆")
+      }
+      if (idProvincia === 'san-jose') {
+        agregarLogro("Rey de la Cali", "🏆")
+      }
+      if (idProvincia === 'limon') {
+        agregarLogro("Leyenda Caribeña", "🏆")
+      }
+      if (misionesCompletadas.value.length === 7) {
+        agregarLogro("Héroe Nacional", "🏆")
+      }
+    }
+
+    // Ganar experiencia base solo si no era práctica
+    if (!yaCompletada) {
+      ganarExperiencia(50)
+    }
+  }
+
+  // 3. Actualizar estadísticas globales (se aplican siempre, gane o pierda, excepto las recompensas únicas)
   // Actualizar estadísticas según puntaje (0-100)
   estadisticasHeroe.conocimiento    = Math.min(100, estadisticasHeroe.conocimiento + Math.floor(puntaje * 0.3))
   estadisticasHeroe.diversion       = Math.min(100, estadisticasHeroe.diversion + Math.floor(puntaje * 0.2))
@@ -239,73 +325,6 @@ function completarMision(idProvincia, puntaje) {
   }
 
   estadisticasHeroe.energia         = Math.max(0, estadisticasHeroe.energia - 10)
-
-  // Otorgar experiencia extra (+50 XP por completar misión)
-  ganarExperiencia(50)
-
-  // Otorgar recompensas basadas en la provincia activa
-  if (provinciaActiva.value) {
-    const recompensaPri = provinciaActiva.value.recompensaPrincipal
-    const recompensaSec = provinciaActiva.value.recompensaSecundaria
-
-    // 1. Desbloquear Colección del After (Principal)
-    if (recompensaPri && !coleccionAfter.value.some(c => c.nombre === recompensaPri.nombre)) {
-      coleccionAfter.value.push(recompensaPri)
-      
-      // Agregar al Inventario
-      inventarioHeroe.value.push(recompensaPri)
-    }
-
-    // 2. Desbloquear Checkpoint (Secundaria)
-    if (recompensaSec && !checkpointsDesbloqueados.value.some(ch => ch.nombre === recompensaSec.nombre)) {
-      checkpointsDesbloqueados.value.push(recompensaSec)
-      
-      // Si la recompensa secundaria es un objeto físico (como Jägermeister), agregar también al inventario
-      if (recompensaSec.nombre === "Jägermeister") {
-        inventarioHeroe.value.push(recompensaSec)
-      }
-    }
-
-    // 3. Desbloquear Pases VIP específicos (Inventario adicional)
-    if (idProvincia === 'san-jose') {
-      const paseLaCali = { nombre: "Pase VIP La Cali", emoji: "🎟" }
-      if (!inventarioHeroe.value.some(i => i.nombre === paseLaCali.nombre)) {
-        inventarioHeroe.value.push(paseLaCali)
-      }
-    } else if (idProvincia === 'guanacaste') {
-      const paseSharkys = { nombre: "Pase VIP Sharky's", emoji: "🎟" }
-      if (!inventarioHeroe.value.some(i => i.nombre === paseSharkys.nombre)) {
-        inventarioHeroe.value.push(paseSharkys)
-      }
-    } else if (idProvincia === 'limon') {
-      const pasePuerto = { nombre: "Pase VIP Puerto Viejo", emoji: "🎟" }
-      if (!inventarioHeroe.value.some(i => i.nombre === pasePuerto.nombre)) {
-        inventarioHeroe.value.push(pasePuerto)
-      }
-    }
-  }
-
-  // 4. Sistema de Logros
-  // Logro: Primer After
-  if (misionesCompletadas.value.length === 1) {
-    agregarLogro("Primer After", "🏆")
-  }
-  // Logro: Conquistador de Guanacaste
-  if (idProvincia === 'guanacaste') {
-    agregarLogro("Conquistador de Guanacaste", "🏆")
-  }
-  // Logro: Rey de la Cali
-  if (idProvincia === 'san-jose') {
-    agregarLogro("Rey de la Cali", "🏆")
-  }
-  // Logro: Leyenda Caribeña
-  if (idProvincia === 'limon') {
-    agregarLogro("Leyenda Caribeña", "🏆")
-  }
-  // Logro: Héroe Nacional
-  if (misionesCompletadas.value.length === 7) {
-    agregarLogro("Héroe Nacional", "🏆")
-  }
 
   // Lógica de sospecha acumulada al terminar el día
   if (estadisticasHeroe.responsabilidad < 50) {
@@ -417,6 +436,10 @@ function reiniciarJuego() {
   experienciaHeroe.value = 0
   nivelHeroe.value = 1
   ultimoPuntajeMision.value = 0
+  misionAprobada.value = true
+  misionEsPractica.value = false
+  respuestasCorrectasMision.value = 0
+  totalPreguntasMision.value = 0
   Object.assign(identidadHeroe, { nombre: '', edad: '', universidad: '', carrera: '', deporte: '', personalidad: '', aliasHeroe: '' })
   Object.assign(estadisticasHeroe, { energia: 80, conocimiento: 10, diversion: 10, responsabilidad: 80, reputacionNocturna: 50, sospechaIdentidad: 0 })
 }
@@ -441,6 +464,10 @@ export function useEstadoJuego() {
     experienciaHeroe,
     nivelHeroe,
     ultimoPuntajeMision,
+    misionAprobada,
+    misionEsPractica,
+    respuestasCorrectasMision,
+    totalPreguntasMision,
 
     // Computed
     identidadCompleta,
