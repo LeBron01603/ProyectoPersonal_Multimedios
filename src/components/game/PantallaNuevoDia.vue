@@ -39,11 +39,11 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
-import { useEstadoJuego, PANTALLAS } from '../../composables/useEstadoJuego.js'
+import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 import { useAudio } from '../../composables/useAudio.js'
 
 const emit = defineEmits(['comenzar'])
-const { navegarA, identidadHeroe, estadisticasHeroe, misionesCompletadas } = useEstadoJuego()
+const { identidadHeroe, estadisticasHeroe, misionesCompletadas } = useEstadoJuego()
 const { reproducirMusica, reproducirEfecto } = useAudio()
 
 // Computar el día de la semana según misiones completadas

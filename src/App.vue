@@ -12,7 +12,7 @@
     <!-- Área principal de contenido -->
     <!-- transition: animación entre cambios de pantalla -->
     <main class="game-main">
-      <transition name="screen-transition" mode="out-in" :duration="350">
+      <transition name="screen-transition" :duration="350">
         <PantallaInicio
           v-if="pantallaActual === PANTALLAS.INICIO"
           key="inicio"
@@ -143,6 +143,7 @@ onMounted(() => {
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 /* --- Transición entre pantallas --- */
@@ -153,6 +154,10 @@ onMounted(() => {
 .screen-transition-enter-from {
   opacity: 0;
   transform: scale(0.97);
+}
+.screen-transition-leave-active {
+  position: absolute;
+  inset: 0;
 }
 .screen-transition-leave-to {
   opacity: 0;
