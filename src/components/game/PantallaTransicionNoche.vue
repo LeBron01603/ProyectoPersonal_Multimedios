@@ -1,6 +1,21 @@
 <template>
   <!-- PantallaTransicionNoche: transición cinemática de atardecer a noche -->
   <section class="pantalla-transicion-noche" :style="estiloCieloDinamico" aria-label="Transición al anochecer">
+    <!-- Efectos visuales de fondo -->
+    <div class="efectos-fondo" aria-hidden="true">
+      <div class="estrellas" :style="{ opacity: porcentajeProgreso / 100 }">
+        <div class="estrellas-centelleo"></div>
+      </div>
+      <div class="nebula cian"></div>
+      <div class="nebula purpura"></div>
+      <div class="luna-silueta" :style="{ opacity: Math.max(0, (porcentajeProgreso - 40) / 60), transform: `translateY(${30 - (porcentajeProgreso / 100) * 30}px)` }">🌙</div>
+      <!-- Silueta de la ciudad en la noche -->
+      <svg class="silueta-ciudad-svg" viewBox="0 0 800 300" preserveAspectRatio="none" :style="{ opacity: porcentajeProgreso / 100 }">
+        <path d="M0,300 L0,230 L50,230 L50,210 L90,210 L90,240 L150,240 L150,200 L200,200 L200,240 L280,240 L280,250 L340,250 L340,180 L420,180 L420,250 L490,250 L490,220 L550,220 L550,240 L630,240 L630,195 L680,195 L680,240 L800,240 L800,300 Z" fill="rgba(0, 200, 255, 0.03)" />
+        <path d="M0,300 L0,260 L30,260 L30,250 L80,250 L80,260 L140,260 L140,230 L180,230 L180,260 L240,260 L240,270 L300,270 L300,210 L370,210 L370,270 L450,270 L450,240 L510,240 L510,260 L580,260 L580,225 L630,225 L630,260 L800,260 L800,300 Z" fill="rgba(184, 79, 255, 0.02)" />
+      </svg>
+    </div>
+
     <div class="contenedor-cinematico card text-center animate-fade-in-scale">
       
       <!-- Reloj Cinemático Animado -->
@@ -182,17 +197,19 @@ onUnmounted(() => {
   justify-content: center;
   padding: var(--space-8) var(--space-4);
   background: radial-gradient(circle at center, #1b0a2a 0%, #06050b 100%);
+  position: relative;
+  overflow: hidden;
 }
 
 .contenedor-cinematico {
   width: 100%;
-  max-width: 550px;
-  background: rgba(12, 6, 20, 0.8);
-  border: 1px solid rgba(0, 200, 255, 0.15);
+  max-width: 590px;
+  background: rgba(8, 4, 15, 0.65);
+  border: 1px solid rgba(0, 200, 255, 0.22);
   border-radius: var(--radius-xl);
   padding: var(--space-10) var(--space-8);
-  box-shadow: var(--shadow-card), 0 0 25px rgba(184, 79, 255, 0.15);
-  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-card), 0 0 35px rgba(184, 79, 255, 0.2);
+  backdrop-filter: blur(18px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -336,5 +353,135 @@ onUnmounted(() => {
 /* Transición del Botón */
 .fade-in-scale-enter-active {
   animation: fadeInScale 0.4s ease both;
+}
+
+/* --- Efectos de fondo --- */
+.efectos-fondo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  user-select: none;
+}
+
+.estrellas {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 50px 160px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 80px 120px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 110px 220px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 150px 50px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 200px 180px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 250px 280px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 300px 90px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 330px 150px, #ffffff, rgba(0,0,0,0));
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  transition: opacity 0.5s ease;
+}
+
+.estrellas-centelleo {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(1px 1px at 15px 85px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 95px 45px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 180px 115px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 220px 210px, #ffffff, rgba(0,0,0,0));
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: centelleo-lento 5s ease-in-out infinite alternate;
+}
+
+@keyframes centelleo-lento {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
+.nebula {
+  position: absolute;
+  width: 60vw;
+  height: 60vh;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+.nebula.cian {
+  background: radial-gradient(circle, var(--color-neon-blue) 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: flotar-nebula-1 30s ease-in-out infinite alternate;
+}
+
+.nebula.purpura {
+  background: radial-gradient(circle, var(--color-neon-purple) 0%, transparent 70%);
+  bottom: -15%;
+  right: -15%;
+  animation: flotar-nebula-2 35s ease-in-out infinite alternate;
+}
+
+@keyframes flotar-nebula-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(6vw, 4vh) scale(1.15); }
+}
+
+@keyframes flotar-nebula-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-6vw, -4vh) scale(1.2); }
+}
+
+.luna-silueta {
+  position: absolute;
+  top: 10%;
+  right: 12%;
+  font-size: 3.2rem;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.4));
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.contenedor-cinematico {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Responsividad adicional --- */
+@media (max-width: 480px) {
+  .luna-silueta {
+    font-size: 2.2rem;
+    top: 8%;
+    right: 8%;
+  }
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .estrellas-centelleo {
+    animation: none !important;
+  }
+  .nebula.cian,
+  .nebula.purpura {
+    animation: none !important;
+  }
+  .luna-silueta {
+    transition: opacity 0.5s ease !important;
+    transform: none !important;
+  }
+}
+
+.silueta-ciudad-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  z-index: 1;
+  transition: opacity 0.5s ease;
 }
 </style>

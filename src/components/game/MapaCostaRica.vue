@@ -37,9 +37,15 @@
             '--neon-color': COLORES[prov.id]?.hex || '#00ff88', 
             '--neon-color-rgb': COLORES[prov.id]?.rgb || '0, 255, 136' 
           }"
+          tabindex="0"
+          role="button"
+          :aria-label="`Provincia de ${estadoMap[prov.id]?.nombre || prov.id}. Estado: ${estadoMap[prov.id]?.completada ? 'completada' : (estadoMap[prov.id]?.desbloqueada ? 'disponible' : 'bloqueada')}.`"
           @click="seleccionarNodo(estadoMap[prov.id], $event)"
           @mouseenter="onMouseEnterProvincia(prov.id)"
           @mouseleave="onMouseLeaveProvincia"
+          @focus="onFocusProvincia(prov.id, $event)"
+          @blur="onBlurProvincia"
+          @keydown.enter.space.prevent="seleccionarNodo(estadoMap[prov.id], $event)"
         />
       </g>
 
@@ -85,9 +91,15 @@
         :style="{
           'transform-origin': animacionUnlock.activa && animacionUnlock.fase === 2 && animacionUnlock.targetId === node.id ? `${node.x}px ${node.y}px` : 'none'
         }"
+        tabindex="0"
+        role="button"
+        :aria-label="`Nodo de ${node.nombre || node.id}. Estado: ${node.completada ? 'completada' : (node.desbloqueada ? 'disponible' : 'bloqueada')}.`"
         @click="seleccionarNodo(node, $event)"
         @mouseenter="onMouseEnterProvincia(node.id)"
         @mouseleave="onMouseLeaveProvincia"
+        @focus="onFocusProvincia(node.id, $event)"
+        @blur="onBlurProvincia"
+        @keydown.enter.space.prevent="seleccionarNodo(node, $event)"
       >
         <!-- Círculo de Brillo Exterior -->
         <circle 
@@ -166,7 +178,13 @@
           {{ tooltipData.nombre }}
         </div>
         <div class="tooltip-status">
-          {{ tooltipData.estado }}
+          <strong>Estado:</strong> {{ tooltipData.estado }}
+        </div>
+        <div class="tooltip-mission" v-if="tooltipData.tituloMision">
+          <strong>Misión:</strong> {{ tooltipData.tituloMision }}
+        </div>
+        <div class="tooltip-difficulty" v-if="tooltipData.dificultad">
+          <strong>Dificultad:</strong> {{ tooltipData.dificultad }}
         </div>
         <div class="tooltip-message" v-if="tooltipData.mensaje">
           {{ tooltipData.mensaje }}
@@ -315,7 +333,16 @@ const enlacesRuta = computed(() => {
 })
 
 const tooltipActive = ref(false)
-const tooltipData = ref({ nombre: '', estado: '', mensaje: '', color: '#fff', x: 0, y: 0 })
+const tooltipData = ref({
+  nombre: '',
+  estado: '',
+  mensaje: '',
+  dificultad: '',
+  tituloMision: '',
+  color: '#fff',
+  x: 0,
+  y: 0
+})
 let tooltipTimeout = null
 
 const { provinciaRecienDesbloqueada, guardarProgreso } = useEstadoJuego()
@@ -386,7 +413,7 @@ function getProvinciaInfo(id) {
   
   let estado = 'Bloqueada 🔒'
   if (completada) estado = 'Completada ✅'
-  else if (recomendada) estado = 'Recomendada ⚡'
+  else if (recomendada) estado = 'Disponible (Recomendada) ⚡'
   else if (p.desbloqueada) estado = 'Disponible 🔓'
   
   let mensaje = ''
@@ -408,6 +435,8 @@ function getProvinciaInfo(id) {
     nombre: p.nombre,
     estado,
     mensaje,
+    dificultad: '⭐'.repeat(p.dificultad || 1),
+    tituloMision: p.tituloMision || 'Misión Nocturna',
     color: COLORES[id]?.hex || '#00ff88'
   }
 }
@@ -424,12 +453,55 @@ function onMouseEnterProvincia(id) {
     tooltipData.value.nombre = info.nombre
     tooltipData.value.estado = info.estado
     tooltipData.value.mensaje = info.mensaje
+    tooltipData.value.dificultad = info.dificultad
+    tooltipData.value.tituloMision = info.tituloMision
     tooltipData.value.color = info.color
     tooltipActive.value = true
   }
 }
 
 function onMouseLeaveProvincia() {
+  tooltipActive.value = false
+}
+
+function onFocusProvincia(id, event) {
+  const info = getProvinciaInfo(id)
+  if (info) {
+    tooltipData.value.nombre = info.nombre
+    tooltipData.value.estado = info.estado
+    tooltipData.value.mensaje = info.mensaje
+    tooltipData.value.dificultad = info.dificultad
+    tooltipData.value.tituloMision = info.tituloMision
+    tooltipData.value.color = info.color
+    
+    const target = event.currentTarget
+    const container = target.ownerSVGElement?.parentElement || target.parentElement
+    if (target && container) {
+      const targetRect = target.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
+      
+      let posX = (targetRect.left + targetRect.right) / 2 - containerRect.left
+      let posY = targetRect.top - containerRect.top - 10
+      
+      if (posX + 180 > containerRect.width) {
+        posX = containerRect.width - 200
+      }
+      if (posX < 10) posX = 10
+      if (posY < 10) posY = targetRect.bottom - containerRect.top + 10
+      
+      tooltipData.value.x = posX
+      tooltipData.value.y = posY
+    } else {
+      const coords = COORDENADAS[id] || { x: 300, y: 200 }
+      tooltipData.value.x = coords.x
+      tooltipData.value.y = coords.y
+    }
+    
+    tooltipActive.value = true
+  }
+}
+
+function onBlurProvincia() {
   tooltipActive.value = false
 }
 
@@ -449,6 +521,8 @@ function seleccionarNodo(node, event) {
     tooltipData.value.nombre = info.nombre
     tooltipData.value.estado = info.estado
     tooltipData.value.mensaje = info.mensaje
+    tooltipData.value.dificultad = info.dificultad
+    tooltipData.value.tituloMision = info.tituloMision
     tooltipData.value.color = info.color
     
     let clientX = null
@@ -505,17 +579,55 @@ function seleccionarNodo(node, event) {
 <style scoped>
 .mapa-costa-rica-container {
   width: 100%;
-  background: rgba(8, 10, 20, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: radial-gradient(circle at center, rgba(14, 18, 42, 0.75) 0%, rgba(8, 10, 24, 0.9) 100%);
+  border: 1px solid rgba(0, 220, 255, 0.2);
   border-radius: var(--radius-xl);
-  padding: var(--space-2);
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+  padding: var(--space-4);
+  box-shadow: 
+    inset 0 0 40px rgba(0, 220, 255, 0.1),
+    inset 0 0 15px rgba(184, 79, 255, 0.05),
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(0, 220, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: relative;
   overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.mapa-costa-rica-container:hover {
+  border-color: rgba(0, 220, 255, 0.35);
+  box-shadow: 
+    inset 0 0 50px rgba(0, 220, 255, 0.15),
+    inset 0 0 25px rgba(184, 79, 255, 0.08),
+    0 15px 40px rgba(0, 0, 0, 0.9),
+    0 0 45px rgba(0, 220, 255, 0.08);
+}
+
+/* Tech corner decorations */
+.mapa-costa-rica-container::before,
+.mapa-costa-rica-container::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-neon-blue);
+  pointer-events: none;
+}
+.mapa-costa-rica-container::before {
+  top: 10px;
+  left: 10px;
+  border-right: none;
+  border-bottom: none;
+}
+.mapa-costa-rica-container::after {
+  bottom: 10px;
+  right: 10px;
+  border-left: none;
+  border-top: none;
 }
 
 .svg-mapa-cr {
@@ -550,13 +662,16 @@ function seleccionarNodo(node, event) {
   cursor: pointer;
 }
 
-/* Hover y Selección */
+/* Hover, Focus y Selección */
 .provincia-path.disponible:hover,
-.provincia-path.completada:hover {
+.provincia-path.completada:hover,
+.provincia-path.disponible:focus-visible,
+.provincia-path.completada:focus-visible {
   fill: rgba(var(--neon-color-rgb), 0.12);
   stroke: var(--neon-color);
   stroke-width: 3.5;
   filter: drop-shadow(0 0 10px var(--neon-color));
+  outline: none;
 }
 
 .provincia-path.seleccionada {
@@ -565,6 +680,10 @@ function seleccionarNodo(node, event) {
   stroke-width: 4.5 !important;
   filter: drop-shadow(0 0 14px var(--neon-color)) !important;
   z-index: 10;
+}
+
+.provincia-path:focus {
+  outline: none;
 }
 
 /* --- Conexiones vectoriales --- */
@@ -624,16 +743,22 @@ function seleccionarNodo(node, event) {
 }
 
 /* Interacciones con los pines */
-.nodo-provincia:not(.bloqueada):hover .circulo-nodo-core {
+.nodo-provincia:not(.bloqueada):hover .circulo-nodo-core,
+.nodo-provincia:not(.bloqueada):focus-visible .circulo-nodo-core {
   r: 26;
   stroke-width: 3.5;
   filter: drop-shadow(0 0 8px currentColor);
 }
 
-.nodo-provincia:not(.bloqueada):hover .brillo-nodo {
+.nodo-provincia:not(.bloqueada):hover .brillo-nodo,
+.nodo-provincia:not(.bloqueada):focus-visible .brillo-nodo {
   r: 32;
   stroke-width: 1.5;
   animation: rotate-clockwise 4s linear infinite;
+}
+
+.nodo-provincia:focus {
+  outline: none;
 }
 
 .nodo-provincia.seleccionada .circulo-nodo-core {
@@ -665,7 +790,8 @@ function seleccionarNodo(node, event) {
 }
 
 .nodo-provincia:not(.bloqueada):hover .label-nodo-grupo,
-.nodo-provincia.seleccionada .label-nodo-grupo {
+.nodo-provincia.seleccionada .label-nodo-grupo,
+.nodo-provincia:not(.bloqueada):focus-visible .label-nodo-grupo {
   opacity: 1;
 }
 
@@ -758,10 +884,18 @@ function seleccionarNodo(node, event) {
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.15);
 }
 
-.tooltip-status {
+.tooltip-status,
+.tooltip-mission,
+.tooltip-difficulty {
   font-size: 0.75rem;
-  font-weight: var(--font-semibold);
   color: var(--color-text-secondary);
+}
+
+.tooltip-status strong,
+.tooltip-mission strong,
+.tooltip-difficulty strong {
+  color: var(--color-text-primary);
+  font-weight: var(--font-semibold);
 }
 
 .tooltip-message {

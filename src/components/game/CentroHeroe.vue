@@ -4,28 +4,62 @@
       <div v-if="mostrar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="centro-heroe-titulo">
         <div class="modal-wrapper" @click.self="cerrar">
           <div class="modal-card-centro animate-fade-in-scale">
-            
+            <!-- Fondo Vivo Operaciones (Fase 3 Tarea 12) -->
+            <div class="fondo-vivo-operaciones" aria-hidden="true">
+              <div class="nebulosa nebulosa-cian"></div>
+              <div class="nebulosa nebulosa-purpura"></div>
+              <div class="futuristic-grid"></div>
+              <div class="particulas-lentas">
+                <span class="p-lenta pl1"></span>
+                <span class="p-lenta pl2"></span>
+                <span class="p-lenta pl3"></span>
+                <span class="p-lenta pl4"></span>
+                <span class="p-lenta pl5"></span>
+                <span class="p-lenta pl6"></span>
+              </div>
+            </div>
+
             <!-- Botón de cerrar modal -->
             <button class="btn-cerrar-modal" @click="cerrar" aria-label="Cerrar panel">×</button>
 
-            <!-- Cabecera del Centro del Héroe -->
-            <header class="centro-header">
-              <h2 id="centro-heroe-titulo" class="texto-neon-purple">
-                👤 Centro del Héroe
-              </h2>
-              <p class="subtitulo-centro">Bitácora oficial de tu identidad dual</p>
-            </header>
+            <!-- Hero Section Superior Premium -->
+            <div class="centro-hero-section">
+              <div class="avatar-wrapper">
+                <div class="avatar-halo"></div>
+                <div class="avatar-box">
+                  <span class="avatar-icon">{{ tituloFinal?.emoji || '🦸‍♂️' }}</span>
+                </div>
+              </div>
+              <div class="hero-title-group">
+                <h2 id="centro-heroe-titulo" class="titulo-heroico texto-neon-purple">
+                  {{ identidadHeroe.aliasHeroe || 'Héroe Sin Nombre' }}
+                </h2>
+                <p class="subtitulo-heroico">Protegiendo la vida universitaria de Costa Rica</p>
+              </div>
+            </div>
+
+            <!-- Sección Narrativa: Estado del Héroe -->
+            <div class="estado-heroe-narrativa">
+              <div class="narrativa-header">
+                <span class="radar-ping"></span>
+                <span class="narrativa-tag">ESTADO DEL HÉROE</span>
+              </div>
+              <p class="narrativa-texto">{{ mensajeNarrativoEstado }}</p>
+            </div>
 
             <!-- Navegación de Pestañas -->
-            <nav class="tabs-centro" aria-label="Navegación del Centro del Héroe">
+            <nav class="tabs-centro" role="tablist" aria-label="Navegación del Centro del Héroe">
               <button
                 v-for="tab in tabs"
                 :key="tab.id"
                 class="tab-btn"
+                role="tab"
+                :aria-selected="tabActiva === tab.id ? 'true' : 'false'"
+                :aria-controls="'panel-' + tab.id"
                 :class="{ activo: tabActiva === tab.id }"
                 @click="tabActiva = tab.id; reproducirEfecto('boton')"
               >
-                <span class="tab-icono">{{ tab.icono }}</span>
+                <span class="tab-icono" aria-hidden="true">{{ tab.icono }}</span>
                 <span class="tab-etiqueta">{{ tab.label }}</span>
               </button>
             </nav>
@@ -34,9 +68,100 @@
             <div class="contenido-tab">
 
               <!-- ================= PESTAÑA: PERFIL ================= -->
-              <div v-if="tabActiva === 'perfil'" class="seccion-perfil animate-fade-in">
+              <div v-if="tabActiva === 'perfil'" id="panel-perfil" role="tabpanel" aria-label="Perfil del Héroe" class="seccion-perfil animate-fade-in">
                 <!-- Modo Lectura -->
                 <div v-if="!modoEdicion" class="perfil-info-grid">
+                  
+                  <!-- Panel de Progreso Heroico -->
+                  <div class="progreso-heroico-dashboard">
+                    <div class="tarjeta-progreso-neon">
+                      <span class="card-title">PROVINCIAS COMPLETADAS</span>
+                      <span class="card-value value-green">{{ misionesCompletadas.length }}</span>
+                    </div>
+                    <div class="tarjeta-progreso-neon">
+                      <span class="card-title">PROVINCIAS RESTANTES</span>
+                      <span class="card-value value-blue">{{ 7 - misionesCompletadas.length }}</span>
+                    </div>
+                    <div class="tarjeta-progreso-neon">
+                      <span class="card-title">AVENTURA COMPLETADA</span>
+                      <span class="card-value value-purple">{{ porcentajeProgreso }}%</span>
+                    </div>
+                    <div class="tarjeta-progreso-neon">
+                      <span class="card-title">XP TOTAL</span>
+                      <span class="card-value value-gold">{{ experienciaHeroe }} XP</span>
+                    </div>
+                    <div class="tarjeta-progreso-neon">
+                      <span class="card-title">NIVEL ACTUAL</span>
+                      <span class="card-value value-cyan">NIVEL {{ nivelHeroe }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Dashboard de Estadísticas -->
+                  <div class="estadisticas-dashboard-seccion">
+                    <h3>📊 Módulo de Estadísticas</h3>
+                    <div class="estadisticas-dashboard-grid">
+                      <!-- Energía -->
+                      <div class="stat-dashboard-card energy-card" tabindex="0">
+                        <div class="stat-header">
+                          <span class="stat-icon">⚡</span>
+                          <span class="stat-name">Energía</span>
+                          <span class="stat-value">{{ estadisticasHeroe.energia }}%</span>
+                        </div>
+                        <div class="stat-bar-container">
+                          <div class="stat-bar-fill" :style="{ width: estadisticasHeroe.energia + '%' }"></div>
+                        </div>
+                      </div>
+
+                      <!-- Conocimiento -->
+                      <div class="stat-dashboard-card knowledge-card" tabindex="0">
+                        <div class="stat-header">
+                          <span class="stat-icon">🧠</span>
+                          <span class="stat-name">Conocimiento</span>
+                          <span class="stat-value">{{ estadisticasHeroe.conocimiento }}%</span>
+                        </div>
+                        <div class="stat-bar-container">
+                          <div class="stat-bar-fill" :style="{ width: estadisticasHeroe.conocimiento + '%' }"></div>
+                        </div>
+                      </div>
+
+                      <!-- Diversión -->
+                      <div class="stat-dashboard-card fun-card" tabindex="0">
+                        <div class="stat-header">
+                          <span class="stat-icon">🎉</span>
+                          <span class="stat-name">Diversión</span>
+                          <span class="stat-value">{{ estadisticasHeroe.diversion }}%</span>
+                        </div>
+                        <div class="stat-bar-container">
+                          <div class="stat-bar-fill" :style="{ width: estadisticasHeroe.diversion + '%' }"></div>
+                        </div>
+                      </div>
+
+                      <!-- Responsabilidad -->
+                      <div class="stat-dashboard-card responsibility-card" tabindex="0">
+                        <div class="stat-header">
+                          <span class="stat-icon">📚</span>
+                          <span class="stat-name">Responsabilidad</span>
+                          <span class="stat-value">{{ estadisticasHeroe.responsabilidad }}%</span>
+                        </div>
+                        <div class="stat-bar-container">
+                          <div class="stat-bar-fill" :style="{ width: estadisticasHeroe.responsabilidad + '%' }"></div>
+                        </div>
+                      </div>
+
+                      <!-- Reputación -->
+                      <div class="stat-dashboard-card reputation-card" tabindex="0">
+                        <div class="stat-header">
+                          <span class="stat-icon">🏆</span>
+                          <span class="stat-name">Reputación</span>
+                          <span class="stat-value">{{ estadisticasHeroe.reputacionNocturna }}%</span>
+                        </div>
+                        <div class="stat-bar-container">
+                          <div class="stat-bar-fill" :style="{ width: estadisticasHeroe.reputacionNocturna + '%' }"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Bloque Identidad Civil -->
                   <div class="tarjeta-info civil">
                     <h3>🎓 Identidad Civil</h3>
@@ -82,6 +207,11 @@
                         </div>
                       </div>
 
+                      <div class="crisis-estatus-centro" style="margin-top: 10px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 4px;">
+                        <p style="margin: 0;"><strong>Marcas Exposición:</strong> <span class="badge-marcas" style="color: #ff6b6b; font-weight: bold;">{{ marcasExposicion }}/2</span></p>
+                        <p style="margin: 0;"><strong>Estado:</strong> <span class="badge-estado-actual" style="font-weight: bold; text-transform: uppercase;">{{ estadoSuspicionNombre }}</span></p>
+                      </div>
+
                       <!-- Alerta de sospecha interactiva narrada -->
                       <div class="advertencia-sospecha-centro" :class="sospechaRangoInfo.clase">
                         <p>{{ mensajeSospechaHeroe }}</p>
@@ -99,7 +229,7 @@
                     </div>
                   </div>
 
-                  <button class="btn btn-outline btn-editar-perfil-centro" @click="activarModoEdicion">
+                  <button class="btn btn-outline btn-editar-perfil-centro" @click="activarModoEdicion" aria-label="Editar identidad de héroe">
                     ✏️ Modificar Identidad
                   </button>
                 </div>
@@ -167,10 +297,10 @@
                   </div>
 
                   <div class="acciones-edicion">
-                    <button type="button" class="btn btn-outline" @click="cancelarEdicion">
+                    <button type="button" class="btn btn-outline" @click="cancelarEdicion" aria-label="Cancelar edición de perfil">
                       Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary" :disabled="!formularioValido">
+                    <button type="submit" class="btn btn-primary" :disabled="!formularioValido" aria-label="Guardar cambios del perfil">
                       Guardar Cambios
                     </button>
                   </div>
@@ -178,7 +308,7 @@
               </div>
 
               <!-- ================= PESTAÑA: PROGRESO ================= -->
-              <div v-if="tabActiva === 'progreso'" class="seccion-progreso animate-fade-in">
+              <div v-if="tabActiva === 'progreso'" id="panel-progreso" role="tabpanel" aria-label="Progreso de Aventura" class="seccion-progreso animate-fade-in">
                 <div class="seccion-progreso-scroll">
                   
                   <!-- Calendario Académico Básico -->
@@ -250,7 +380,7 @@
               </div>
 
               <!-- ================= PESTAÑA: MOCHILA ================= -->
-              <div v-if="tabActiva === 'mochila'" class="seccion-mochila animate-fade-in">
+              <div v-if="tabActiva === 'mochila'" id="panel-mochila" role="tabpanel" aria-label="Mochila e Inventario" class="seccion-mochila animate-fade-in">
                 <div class="seccion-mochila-scroll">
                   
                   <!-- Mochila / Inventario -->
@@ -281,13 +411,13 @@
               </div>
 
               <!-- ================= PESTAÑA: OPCIONES ================= -->
-              <div v-if="tabActiva === 'opciones'" class="seccion-opciones animate-fade-in">
+              <div v-if="tabActiva === 'opciones'" id="panel-opciones" role="tabpanel" aria-label="Ajustes de Guardado" class="seccion-opciones animate-fade-in">
                 <div class="opciones-contenido">
                   <p class="opciones-intro">Manejo persistente del progreso de tu aventura:</p>
 
                   <div class="opciones-botones-vertical">
                     <!-- Guardar -->
-                    <button class="btn btn-hero btn-lg btn-guardar-manual" @click="guardarManualmente">
+                    <button class="btn btn-hero btn-lg btn-guardar-manual" @click="guardarManualmente" aria-label="Guardar progreso actual manualmente">
                       💾 Guardar Progreso Actual
                     </button>
 
@@ -297,6 +427,7 @@
                         class="btn btn-primary btn-lg"
                         :disabled="!existeSave"
                         @click="cargarManualmente"
+                        aria-label="Cargar partida guardada manualmente"
                       >
                         📂 Cargar Partida
                       </button>
@@ -304,12 +435,12 @@
                     </div>
 
                     <!-- Borrar -->
-                    <button class="btn btn-danger btn-lg" @click="abrirConfirmacionBorrar">
+                    <button class="btn btn-danger btn-lg" @click="abrirConfirmacionBorrar" aria-label="Borrar progreso de forma definitiva">
                       🗑️ Borrar Progreso (Reiniciar)
                     </button>
 
                     <!-- Reiniciar Aventura -->
-                    <button class="btn btn-danger btn-lg" @click="alReiniciarAventura">
+                    <button class="btn btn-danger btn-lg" @click="alReiniciarAventura" aria-label="Reiniciar toda la aventura">
                       🔄 Reiniciar aventura
                     </button>
                   </div>
@@ -324,7 +455,7 @@
               </div>
 
               <!-- ================= PESTAÑA: RANKING ================= -->
-              <div v-if="tabActiva === 'ranking'" class="seccion-ranking animate-fade-in">
+              <div v-if="tabActiva === 'ranking'" id="panel-ranking" role="tabpanel" aria-label="Salón de la Fama" class="seccion-ranking animate-fade-in">
                 <div class="seccion-ranking-scroll">
                   <h4>🏆 Salón de la Fama (Ranking Local)</h4>
                   <p class="ranking-intro">Los mejores patrullajes registrados en este dispositivo:</p>
@@ -368,7 +499,7 @@
               </div>
 
               <!-- ================= PESTAÑA: AUDIO ================= -->
-              <div v-if="tabActiva === 'audio'" class="seccion-audio animate-fade-in">
+              <div v-if="tabActiva === 'audio'" id="panel-audio" role="tabpanel" aria-label="Ajustes de Sonido" class="seccion-audio animate-fade-in">
                 <div class="audio-config-card">
                   <p class="audio-intro">Personaliza el ambiente sonoro de tu patrullaje y vida universitaria:</p>
 
@@ -499,8 +630,36 @@ const {
   tituloFinal,
   ultimaMisionNombre,
   ultimaMisionResultado,
-  ultimaRecompensa
+  ultimaRecompensa,
+  porcentajeProgreso,
+  marcasExposicion,
+  enCrisis,
+  exposicionRevelada
 } = useEstadoJuego()
+
+const estadoSuspicionNombre = computed(() => {
+  if (exposicionRevelada.value || marcasExposicion.value >= 2) return 'Identidad Revelada'
+  if (enCrisis.value || estadisticasHeroe.sospechaIdentidad >= 100) return 'Crisis'
+  const s = estadisticasHeroe.sospechaIdentidad
+  if (s <= 25) return 'Normal'
+  if (s <= 50) return 'Rumores'
+  return 'Alerta'
+})
+
+const mensajeNarrativoEstado = computed(() => {
+  const sospecha = estadisticasHeroe.sospechaIdentidad
+  const energia = estadisticasHeroe.energia
+  if (sospecha >= 65) {
+    return "Tu identidad comienza a llamar la atención."
+  }
+  if (energia <= 35) {
+    return "Necesitas administrar mejor tu energía."
+  }
+  if (energia >= 75) {
+    return "Listo para otra noche de patrullaje."
+  }
+  return "Monitoreando la actividad universitaria. Todo estable."
+})
 
 const sospechaRangoInfo = computed(() => {
   const s = estadisticasHeroe.sospechaIdentidad
@@ -1725,5 +1884,447 @@ function cerrar() {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   margin-top: var(--space-2);
+}
+
+/* --- Fondo Vivo Operaciones (Fase 3 Tarea 12) --- */
+.fondo-vivo-operaciones {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nebulosa {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  mix-blend-mode: screen;
+  animation: pulse-glow 15s infinite alternate ease-in-out;
+}
+
+.nebulosa-cian {
+  top: -10%;
+  left: 20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--color-neon-blue-glow) 0%, transparent 70%);
+}
+
+.nebulosa-purpura {
+  bottom: -10%;
+  right: 15%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, var(--color-neon-purple-glow) 0%, transparent 70%);
+  animation-delay: -5s;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.1; }
+  100% { transform: scale(1.3) translate(20px, -20px); opacity: 0.22; }
+}
+
+.futuristic-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 200, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  mask-image: radial-gradient(circle, black 40%, transparent 90%);
+  -webkit-mask-image: radial-gradient(circle, black 40%, transparent 90%);
+}
+
+.particulas-lentas {
+  position: absolute;
+  inset: 0;
+}
+
+.p-lenta {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.3;
+  box-shadow: 0 0 6px #fff;
+}
+
+.pl1 { top: 20%; left: 15%; animation: float-slow 20s infinite linear; }
+.pl2 { top: 50%; left: 85%; animation: float-slow 25s infinite linear -4s; }
+.pl3 { top: 80%; left: 25%; animation: float-slow 18s infinite linear -8s; }
+.pl4 { top: 15%; left: 75%; animation: float-slow 22s infinite linear -12s; }
+.pl5 { top: 65%; left: 45%; animation: float-slow 30s infinite linear -16s; }
+.pl6 { top: 85%; left: 70%; animation: float-slow 24s infinite linear -20s; }
+
+@keyframes float-slow {
+  0% { transform: translateY(0) scale(1); opacity: 0.2; }
+  50% { transform: translateY(-30px) scale(1.2); opacity: 0.5; }
+  100% { transform: translateY(-60px) scale(1); opacity: 0.2; }
+}
+
+/* Ensure modal content is relative so it prints over the background */
+.btn-cerrar-modal,
+.centro-hero-section,
+.estado-heroe-narrativa,
+.tabs-centro,
+.contenido-tab {
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Hero Section Superior --- */
+.centro-hero-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-top: var(--space-2);
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-halo {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--color-neon-blue), var(--color-neon-purple), var(--color-neon-blue));
+  animation: rotate-halo 6s infinite linear;
+  box-shadow: 0 0 15px var(--color-neon-purple-glow);
+}
+
+@keyframes rotate-halo {
+  100% { transform: rotate(360deg); }
+}
+
+.avatar-box {
+  position: absolute;
+  inset: 2px;
+  background: #090613;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.avatar-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.hero-title-group {
+  text-align: left;
+}
+
+.titulo-heroico {
+  font-family: var(--font-display);
+  font-size: 1.65rem !important;
+  margin: 0 0 4px 0 !important;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px var(--color-neon-purple-glow);
+}
+
+.subtitulo-heroico {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+}
+
+/* --- Sección Narrativa --- */
+.estado-heroe-narrativa {
+  background: rgba(4, 6, 15, 0.6);
+  border-left: 3px solid var(--color-neon-blue);
+  border-top: 1px solid rgba(0, 200, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 200, 255, 0.1);
+  border-right: 1px solid rgba(0, 200, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+
+.narrativa-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 4px;
+}
+
+.radar-ping {
+  width: 6px;
+  height: 6px;
+  background: var(--color-neon-blue);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 8px var(--color-neon-blue);
+}
+
+.radar-ping::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--color-neon-blue);
+  animation: ping 1.5s infinite ease-out;
+}
+
+@keyframes ping {
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.narrativa-tag {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--color-neon-blue);
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+.narrativa-texto {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* --- Panel de Progreso Heroico --- */
+.progreso-heroico-dashboard {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.tarjeta-progreso-neon {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+  transition: all var(--transition-base);
+}
+
+.tarjeta-progreso-neon:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.card-title {
+  font-size: 0.55rem;
+  color: var(--color-text-muted);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.card-value {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.value-green {
+  color: var(--color-neon-green);
+  text-shadow: 0 0 6px var(--color-neon-green-glow);
+}
+
+.value-blue {
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 6px var(--color-neon-blue-glow);
+}
+
+.value-purple {
+  color: var(--color-neon-purple);
+  text-shadow: 0 0 6px var(--color-neon-purple-glow);
+}
+
+.value-gold {
+  color: var(--color-neon-gold);
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+}
+
+.value-cyan {
+  color: #00f0ff;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
+}
+
+/* --- Dashboard de Estadísticas --- */
+.estadisticas-dashboard-seccion {
+  grid-column: span 2;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-2);
+}
+
+.estadisticas-dashboard-seccion h3 {
+  margin: 0 0 var(--space-3) 0;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: var(--space-2);
+}
+
+.estadisticas-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.stat-dashboard-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.stat-dashboard-card:hover,
+.stat-dashboard-card:focus-visible {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
+  font-weight: bold;
+}
+
+.stat-icon {
+  font-size: 1rem;
+}
+
+.stat-name {
+  color: var(--color-text-secondary);
+  flex-grow: 1;
+  text-align: left;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.stat-bar-container {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+/* Custom glows and bar colors for stats (Fase 3 Tarea 12) */
+.energy-card:hover,
+.energy-card:focus-visible {
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.15);
+  border-color: rgba(255, 170, 0, 0.3);
+}
+.energy-card .stat-bar-fill {
+  background: linear-gradient(90deg, #ff7700, #ffaa00);
+  box-shadow: 0 0 8px rgba(255, 170, 0, 0.6);
+}
+.energy-card .stat-value {
+  color: #ffaa00;
+}
+
+.knowledge-card:hover,
+.knowledge-card:focus-visible {
+  box-shadow: 0 0 10px rgba(0, 200, 255, 0.15);
+  border-color: rgba(0, 200, 255, 0.3);
+}
+.knowledge-card .stat-bar-fill {
+  background: linear-gradient(90deg, #0088ff, #00c8ff);
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.6);
+}
+.knowledge-card .stat-value {
+  color: #00c8ff;
+}
+
+.fun-card:hover,
+.fun-card:focus-visible {
+  box-shadow: 0 0 10px rgba(240, 0, 255, 0.15);
+  border-color: rgba(240, 0, 255, 0.3);
+}
+.fun-card .stat-bar-fill {
+  background: linear-gradient(90deg, #b833ff, #f000ff);
+  box-shadow: 0 0 8px rgba(240, 0, 255, 0.6);
+}
+.fun-card .stat-value {
+  color: #f000ff;
+}
+
+.responsibility-card:hover,
+.responsibility-card:focus-visible {
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.15);
+  border-color: rgba(0, 255, 136, 0.3);
+}
+.responsibility-card .stat-bar-fill {
+  background: linear-gradient(90deg, #00cc66, #00ff88);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+}
+.responsibility-card .stat-value {
+  color: #00ff88;
+}
+
+.reputation-card:hover,
+.reputation-card:focus-visible {
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+.reputation-card .stat-bar-fill {
+  background: linear-gradient(90deg, #cc9900, #ffd700);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+.reputation-card .stat-value {
+  color: #ffd700;
+}
+
+/* Adjust layout on mobile devices */
+@media (max-width: 640px) {
+  .progreso-heroico-dashboard {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>

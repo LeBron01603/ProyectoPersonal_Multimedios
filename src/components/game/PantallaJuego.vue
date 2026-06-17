@@ -1,8 +1,57 @@
 <template>
   <!-- PantallaJuego: pantalla de juego activo (preguntas de la misión) -->
-  <section class="pantalla-juego" aria-label="Pantalla de juego activo">
-    <div class="contenedor-juego animate-fade-in-scale" :class="{ 'con-ancho-extendido': respuestaSeleccionada !== null && subEstadoPantalla === 'pregunta' }">
+  <section class="pantalla-juego" aria-label="Pantalla de juego activo">    <!-- Fondo inmersivo nocturno de patrullaje con paralaje y luces urbanas -->
+    <div class="efectos-fondo" aria-hidden="true">
+      <div class="estrellas">
+        <div class="estrellas-centelleo"></div>
+      </div>
+      <div class="nebula-juego cian"></div>
+      <div class="nebula-juego purpura"></div>
+      
+      <!-- Niebla neón tenue y partículas suaves flotantes (Fase 3 Tarea 12) -->
+      <div class="niebla-neon"></div>
+      <div class="brillos-flotantes">
+        <div class="brillo b1"></div>
+        <div class="brillo b2"></div>
+        <div class="brillo b3"></div>
+        <div class="brillo b4"></div>
+      </div>
 
+      <!-- Luces urbanas flotando (bokeh / neones lejanos) -->
+      <div class="luces-ciudad">
+        <div class="luz-urbana lu1"></div>
+        <div class="luz-urbana lu2"></div>
+        <div class="luz-urbana lu3"></div>
+        <div class="luz-urbana lu4"></div>
+        <div class="luz-urbana lu5"></div>
+      </div>
+
+      <!-- Siluetas de edificios y postes de luz (Capas de Profundidad) -->
+      <div class="capas-ciudad">
+        <!-- Capa lejana (Edificios 1) -->
+        <svg class="capa-ciudad-svg lejana" viewBox="0 0 800 300" preserveAspectRatio="none">
+          <path d="M0,300 L0,180 L40,180 L40,160 L100,160 L100,190 L160,190 L160,150 L220,150 L220,200 L290,200 L290,170 L350,170 L350,130 L430,130 L430,200 L510,200 L510,180 L570,180 L570,160 L650,160 L650,210 L700,210 L700,175 L800,175 L800,300 Z" fill="rgba(184, 79, 255, 0.015)" />
+        </svg>
+        
+        <!-- Capa media (Edificios 2) -->
+        <svg class="capa-ciudad-svg media" viewBox="0 0 800 300" preserveAspectRatio="none">
+          <path d="M0,300 L0,220 L60,220 L60,200 L120,200 L120,230 L180,230 L180,190 L240,190 L240,240 L310,240 L310,205 L370,205 L370,160 L450,160 L450,230 L520,230 L520,210 L590,210 L590,230 L670,230 L670,185 L720,185 L720,230 L800,230 L800,300 Z" fill="rgba(0, 200, 255, 0.02)" />
+        </svg>
+
+        <!-- Capa cercana (Silueta del campus / postes) -->
+        <svg class="capa-ciudad-svg cercana" viewBox="0 0 800 300" preserveAspectRatio="none">
+          <path d="M0,300 L0,250 L80,250 L80,242 L90,242 L90,250 L180,250 L180,230 L220,230 L220,250 L340,250 L340,220 L400,220 L400,250 L560,250 L560,235 L620,235 L620,250 L700,250 L700,245 L740,245 L740,250 L800,250 L800,300 Z" fill="rgba(0, 255, 136, 0.025)" />
+          <!-- Postes de luz simplificados en SVG -->
+          <line x1="120" y1="250" x2="120" y2="190" stroke="rgba(255, 215, 0, 0.2)" stroke-width="2" />
+          <circle cx="120" cy="190" r="4" fill="rgba(255, 215, 0, 0.6)" filter="drop-shadow(0 0 6px #ffd700)" />
+          <line x1="480" y1="250" x2="480" y2="195" stroke="rgba(255, 215, 0, 0.2)" stroke-width="2" />
+          <circle cx="480" cy="195" r="4" fill="rgba(255, 215, 0, 0.6)" filter="drop-shadow(0 0 6px #ffd700)" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="contenedor-juego animate-fade-in-scale" :class="{ 'con-ancho-extendido': respuestaSeleccionada !== null && subEstadoPantalla === 'pregunta' }">
+      
       <!-- ================= NARRATIVA INICIAL ================= -->
       <div v-if="subEstadoPantalla === 'narrativa_inicial'" class="tarjeta-narrativa card text-center animate-fade-in">
         <span class="icono-narrativa animate-float">🧭</span>
@@ -14,7 +63,7 @@
         <p class="texto-narrativa-secundario">
           Tu misión comienza en <strong>{{ provinciaActiva?.lugarPrincipal }}</strong>. Debes guiar a los grupos universitarios para que disfruten de la historia y cultura, y culminar con éxito en <strong>{{ provinciaActiva?.lugarAfter }}</strong>.
         </p>
-        <button class="btn btn-hero btn-lg btn-iniciar-mision" @click="comenzarMisionPrincipal()">
+        <button class="btn btn-hero btn-lg btn-iniciar-mision" @click="comenzarMisionPrincipal()" aria-label="Iniciar Misión Principal de la provincia">
           ⚡ Iniciar Misión
         </button>
       </div>
@@ -53,7 +102,7 @@
           </div>
         </div>
 
-        <button class="btn btn-primary btn-lg" @click="continuarDesdeCheckpoint1()">
+        <button class="btn btn-primary btn-lg" @click="continuarDesdeCheckpoint1()" aria-label="Continuar misión desde checkpoint 1">
           Continuar misión →
         </button>
       </div>
@@ -90,7 +139,7 @@
           </div>
         </div>
 
-        <button class="btn btn-primary btn-lg" @click="continuarDesdeCheckpoint2()">
+        <button class="btn btn-primary btn-lg" @click="continuarDesdeCheckpoint2()" aria-label="Aceptar Siguiente Reto y continuar">
           Aceptar Siguiente Reto →
         </button>
       </div>
@@ -115,7 +164,7 @@
           </span>
         </div>
 
-        <button class="btn btn-hero btn-lg btn-danger" @click="iniciarDesafioFinal()">
+        <button class="btn btn-hero btn-lg btn-danger" @click="iniciarDesafioFinal()" aria-label="Aceptar Desafío Final en la provincia">
           🚨 Aceptar Desafío
         </button>
       </div>
@@ -157,7 +206,7 @@
           </div>
         </div>
 
-        <button class="btn btn-hero btn-lg" @click="finalizarMisionAventura()">
+        <button class="btn btn-hero btn-lg" @click="finalizarMisionAventura()" aria-label="Finalizar misión, ver estadísticas y guardar progreso">
           📊 Ver Estadísticas y Guardar
         </button>
       </div>
@@ -270,13 +319,14 @@
 
             <!-- Controles de juego -->
             <div class="controles-juego">
-              <button class="btn btn-outline" @click="alSalir">
+              <button class="btn btn-outline" @click="alSalir" aria-label="Volver al mapa de Costa Rica">
                 ← Volver al mapa
               </button>
               <button
                 v-if="respuestaSeleccionada !== null"
                 class="btn btn-primary"
                 @click="alSiguientePregunta"
+                :aria-label="preguntaActual + 1 >= totalPreguntas ? 'Terminar Misión y ver resultados' : 'Ir a la siguiente pregunta'"
               >
                 {{ preguntaActual + 1 >= totalPreguntas ? '🏆 Terminar Misión' : '→ Siguiente pregunta' }}
               </button>
@@ -287,8 +337,13 @@
           <div class="columna-lateral-trivia" v-if="respuestaSeleccionada !== null">
             <!-- Panel de resultado de respuesta con Consecuencias Narrativas -->
             <transition name="fade">
-              <div class="retroalimentacion-respuesta" :class="esCorrecta ? 'retroalimentacion-correcta' : 'retroalimentacion-incorrecta'">
-                <span class="icono-retroalimentacion">
+              <div 
+                class="retroalimentacion-respuesta" 
+                :class="esCorrecta ? 'retroalimentacion-correcta' : 'retroalimentacion-incorrecta'"
+                role="alert"
+                aria-live="assertive"
+              >
+                <span class="icono-retroalimentacion" aria-hidden="true">
                   {{ respuestaSeleccionada === -1 ? '⏱️' : (esCorrecta ? '✅' : '❌') }}
                 </span>
                 <div class="contenido-retroalimentacion">
@@ -317,8 +372,8 @@
             <transition name="slide-up">
               <div class="tarjeta-explicacion-educativa card">
                 <div class="cabecera-explicacion">
-                  <span class="icono-explicacion">💡</span>
-                  <h4 class="titulo-explicacion">Sabías que...</h4>
+                  <span class="icono-explicacion">🎓</span>
+                  <h4 class="titulo-explicacion">Centro de Conocimiento</h4>
                 </div>
                 <p class="explicacion-texto">
                   {{ preguntaActualDatos?.explicacion }}
@@ -329,10 +384,10 @@
 
         </div>
       </div>
+      </div>
 
-    </div>
-  </section>
-</template>
+    </section>
+  </template>
 
 <script setup>
 // --- Importaciones de Vue 3 Composition API ---
@@ -861,26 +916,31 @@ onUnmounted(() => {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-6) var(--space-4) var(--space-12);
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #090e1c 0%, #030408 100%);
 }
 
 .contenedor-juego {
   width: 100%;
-  max-width: 720px;
+  max-width: 820px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  transition: max-width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  gap: var(--space-4);
+  transition: max-width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  z-index: 2;
 }
 
 .contenedor-juego.con-ancho-extendido {
-  max-width: 1080px;
+  max-width: 1180px;
 }
 
 .flujo-pregunta-activo {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
   width: 100%;
 }
 
@@ -891,10 +951,13 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  max-width: 640px;
+  max-width: 760px;
   margin-inline: auto;
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
+  background: rgba(10, 6, 22, 0.65);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-card), 0 0 30px rgba(0, 200, 255, 0.15);
 }
 
 .icono-narrativa {
@@ -962,14 +1025,14 @@ onUnmounted(() => {
 .texto-narrativa-principal {
   font-size: var(--text-base);
   color: var(--color-text-primary);
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0;
 }
 
 .texto-narrativa-secundario {
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
   margin: 0;
 }
 
@@ -990,7 +1053,7 @@ onUnmounted(() => {
 .rec-title {
   font-size: var(--text-xs);
   font-weight: var(--font-bold);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   margin: 0;
 }
@@ -1038,6 +1101,17 @@ onUnmounted(() => {
   justify-content: space-between;
   gap: var(--space-3);
   flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(14, 20, 44, 0.8) 0%, rgba(8, 10, 24, 0.95) 100%);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1.5px solid rgba(0, 220, 255, 0.25);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(0, 220, 255, 0.1),
+    inset 0 0 15px rgba(0, 220, 255, 0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all var(--transition-base);
 }
 
 .insignia-mision {
@@ -1052,7 +1126,7 @@ onUnmounted(() => {
 
 .etiqueta-mision {
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin: 0;
@@ -1123,11 +1197,11 @@ onUnmounted(() => {
 }
 
 .p-actual { color: var(--color-neon-green); }
-.p-separador, .p-total { color: var(--color-text-muted); font-size: var(--text-lg); }
+.p-separador, .p-total { color: var(--color-text-secondary); font-size: var(--text-lg); }
 
 /* --- Barra de progreso --- */
 .barra-progreso-juego {
-  height: 4px;
+  height: 6px;
   background: rgba(255,255,255,0.06);
   border-radius: var(--radius-full);
   overflow: hidden;
@@ -1144,14 +1218,37 @@ onUnmounted(() => {
 .area-pregunta {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .tarjeta-pregunta {
   position: relative;
   overflow: hidden;
-  padding: var(--space-3) var(--space-4) !important;
-  padding-top: var(--space-4) !important;
+  padding: var(--space-6) var(--space-6) !important;
+  padding-top: var(--space-6) !important;
+  background: rgba(10, 14, 28, 0.65) !important;
+  border-color: rgba(0, 200, 255, 0.28) !important;
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-card), 0 0 25px rgba(0, 200, 255, 0.15) !important;
+  border-radius: var(--radius-xl) !important;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.tarjeta-pregunta.pregunta-glow-verde {
+  border-color: var(--color-neon-green) !important;
+  box-shadow: var(--shadow-card), 0 0 35px rgba(0, 255, 136, 0.3) !important;
+}
+
+.tarjeta-pregunta.pregunta-shake-rojo {
+  border-color: #ff4646 !important;
+  box-shadow: var(--shadow-card), 0 0 35px rgba(255, 70, 70, 0.3) !important;
+  animation: shake-rapido 0.35s ease both;
+}
+
+@keyframes shake-rapido {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
 }
 
 .pista-tiempo-pregunta {
@@ -1177,49 +1274,54 @@ onUnmounted(() => {
   font-size: var(--text-xs);
   color: var(--color-neon-blue);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   margin: 0 0 var(--space-1);
 }
 
 .texto-pregunta {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   color: var(--color-text-primary);
-  line-height: 1.35;
+  line-height: 1.45;
   margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 /* --- Opciones --- */
 .cuadricula-opciones {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .boton-opcion {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  background: rgba(255,255,255,0.04);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(10, 15, 30, 0.55);
+  border: 1.5px solid rgba(0, 200, 255, 0.25);
+  border-radius: var(--radius-xl);
   color: var(--color-text-primary);
   cursor: pointer;
   text-align: left;
   transition: all var(--transition-base);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
 }
 
-.boton-opcion:not(:disabled):hover {
+.boton-opcion:not(:disabled):hover,
+.boton-opcion:not(:disabled):focus-visible {
   border-color: var(--color-neon-blue);
-  background: rgba(0,200,255,0.08);
-  transform: translateX(3px);
+  background: rgba(0, 200, 255, 0.12);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+  outline: none !important;
 }
 
 .boton-opcion:disabled {
   cursor: not-allowed;
-  opacity: 0.4;
+  opacity: 0.45;
   transform: none !important;
 }
 
@@ -1231,100 +1333,103 @@ onUnmounted(() => {
 
 .letra-opcion {
   font-family: var(--font-display);
-  font-weight: var(--font-bold);
+  font-weight: var(--font-extrabold);
   color: var(--color-neon-blue);
   font-size: var(--text-base);
-  min-width: 20px;
+  min-width: 24px;
 }
 
 .opcion-correcta {
   border-color: var(--color-neon-green) !important;
-  background: rgba(0,255,136,0.12) !important;
+  background: rgba(0, 255, 136, 0.15) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.35) !important;
 }
 
 .opcion-incorrecta {
   border-color: #ff4646 !important;
-  background: rgba(255,70,70,0.10) !important;
+  background: rgba(255, 70, 70, 0.15) !important;
+  box-shadow: 0 0 20px rgba(255, 70, 70, 0.35) !important;
 }
 
 .opcion-revelada {
   border-color: var(--color-neon-green) !important;
-  background: rgba(0,255,136,0.08) !important;
+  background: rgba(0, 255, 136, 0.08) !important;
 }
 
 .simbolo-feedback {
-  font-size: 1.1rem;
-  font-weight: var(--font-bold);
+  font-size: 1.25rem;
+  font-weight: var(--font-extrabold);
   display: inline-block;
   line-height: 1;
 }
 
 .simbolo-feedback.correcto {
   color: var(--color-neon-green);
-  text-shadow: 0 0 5px var(--color-neon-green);
+  text-shadow: 0 0 8px var(--color-neon-green);
 }
 
 .simbolo-feedback.incorrecto {
   color: #ff4646;
-  text-shadow: 0 0 5px #ff4646;
+  text-shadow: 0 0 8px #ff4646;
 }
 
 /* --- Feedback --- */
 .retroalimentacion-respuesta {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-lg);
-  border: 1px solid;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1.5px solid;
+  backdrop-filter: blur(14px);
 }
 
 .retroalimentacion-correcta {
-  background: rgba(0,255,136,0.10);
+  background: rgba(0, 255, 136, 0.08);
   border-color: var(--color-neon-green);
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.28), inset 0 0 15px rgba(0, 255, 136, 0.05);
 }
 
 .retroalimentacion-incorrecta {
-  background: rgba(255,70,70,0.10);
+  background: rgba(255, 70, 70, 0.08);
   border-color: #ff4646;
+  box-shadow: 0 0 25px rgba(255, 70, 70, 0.28), inset 0 0 15px rgba(255, 70, 70, 0.05);
 }
 
-.icono-retroalimentacion { font-size: 1.4rem; flex-shrink: 0; }
+.icono-retroalimentacion { font-size: 1.8rem; flex-shrink: 0; }
 
 .contenido-retroalimentacion {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
   text-align: left;
 }
 
 .texto-retroalimentacion {
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--color-text-primary);
   margin: 0;
 }
 
 .narrativa-consecuencia {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  line-height: 1.4;
+  color: #cbd5e1;
+  line-height: 1.5;
   margin: 0 0 var(--space-1);
 }
 
 /* --- Tarjeta de Explicación Educativa --- */
 .tarjeta-explicacion-educativa {
-  background: rgba(0, 200, 255, 0.03) !important;
-  border: 1px dashed var(--color-neon-blue) !important;
-  box-shadow: 0 0 15px rgba(0, 200, 255, 0.08) !important;
-  border-radius: var(--radius-lg);
-  padding: var(--space-2) var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  background: rgba(0, 200, 255, 0.04) !important;
+  border: 1px solid rgba(0, 200, 255, 0.35) !important;
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.15), inset 0 0 10px rgba(0, 200, 255, 0.05) !important;
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-5);
   margin-top: 0;
   text-align: left;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(14px);
 }
 
 .tarjeta-explicacion-educativa::before {
@@ -1344,7 +1449,7 @@ onUnmounted(() => {
 }
 
 .icono-explicacion {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
 .titulo-explicacion {
@@ -1371,9 +1476,9 @@ onUnmounted(() => {
 }
 
 .badge-cambio-atributo {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: var(--font-bold);
-  padding: 1px 8px;
+  padding: 2px 10px;
   border-radius: var(--radius-full);
 }
 
@@ -1401,27 +1506,27 @@ onUnmounted(() => {
 .cuerpo-trivia {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-3);
+  gap: var(--space-4);
   width: 100%;
 }
 
 .columna-principal-trivia {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .columna-lateral-trivia {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 @media (min-width: 800px) {
   .cuerpo-trivia.con-retroalimentacion {
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1.15fr 0.85fr;
     align-items: start;
-    gap: var(--space-4);
+    gap: var(--space-5);
   }
 }
 
@@ -1441,6 +1546,154 @@ onUnmounted(() => {
   transform: translateY(-15px);
 }
 
+/* --- Efectos de fondo y Parallax --- */
+.efectos-fondo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  user-select: none;
+}
+
+.estrellas {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 150px 70px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 280px 180px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 420px 110px, #ffffff, rgba(0,0,0,0));
+  background-size: 350px 350px;
+  background-repeat: repeat;
+  opacity: 0.25;
+}
+
+.estrellas-centelleo {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(1px 1px at 80px 140px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 220px 290px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 340px 50px, #ffffff, rgba(0,0,0,0));
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  animation: centelleo-lento 6s ease-in-out infinite alternate;
+}
+
+@keyframes centelleo-lento {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.8; }
+}
+
+.nebula-juego {
+  position: absolute;
+  width: 50vw;
+  height: 50vh;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+.nebula-juego.cian {
+  background: radial-gradient(circle, var(--color-neon-blue) 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: float-nebula-j1 25s ease-in-out infinite alternate;
+}
+
+.nebula-juego.purpura {
+  background: radial-gradient(circle, var(--color-neon-purple) 0%, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation: float-nebula-j2 30s ease-in-out infinite alternate;
+}
+
+@keyframes float-nebula-j1 {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.2) translate(4vw, 4vh); }
+}
+
+@keyframes float-nebula-j2 {
+  0% { transform: scale(1.1) translate(0, 0); }
+  100% { transform: scale(0.95) translate(-4vw, -4vh); }
+}
+
+/* Luces urbanas */
+.luces-ciudad {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.luz-urbana {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  filter: blur(35px);
+  opacity: 0.15;
+}
+
+.lu1 { left: 10%; bottom: 25%; width: 50px; height: 50px; background: #00c8ff; animation: pulse-luz-bokeh 6s ease-in-out infinite alternate; }
+.lu2 { left: 30%; bottom: 35%; width: 40px; height: 40px; background: #b84fff; animation: pulse-luz-bokeh 8s ease-in-out infinite alternate 1s; }
+.lu3 { left: 50%; bottom: 20%; width: 60px; height: 60px; background: #00ff88; animation: pulse-luz-bokeh 7s ease-in-out infinite alternate 0.5s; }
+.lu4 { left: 70%; bottom: 30%; width: 45px; height: 45px; background: #ffd700; animation: pulse-luz-bokeh 9s ease-in-out infinite alternate 1.5s; }
+.lu5 { left: 85%; bottom: 22%; width: 55px; height: 55px; background: #ff0055; animation: pulse-luz-bokeh 5s ease-in-out infinite alternate 2s; }
+
+@keyframes pulse-luz-bokeh {
+  0% { transform: translateY(0) scale(0.9); opacity: 0.1; }
+  100% { transform: translateY(-15px) scale(1.1); opacity: 0.2; }
+}
+
+/* Capas de profundidad */
+.capas-ciudad {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.capa-ciudad-svg {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 220px;
+}
+
+.capa-ciudad-svg.lejana {
+  height: 260px;
+  opacity: 0.6;
+  animation: float-parallax-lejana 40s ease-in-out infinite alternate;
+}
+
+.capa-ciudad-svg.media {
+  height: 210px;
+  opacity: 0.8;
+  animation: float-parallax-media 32s ease-in-out infinite alternate;
+}
+
+.capa-ciudad-svg.cercana {
+  height: 160px;
+  opacity: 0.95;
+  animation: float-parallax-cercana 25s ease-in-out infinite alternate;
+}
+
+@keyframes float-parallax-lejana {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-3%); }
+}
+
+@keyframes float-parallax-media {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-1.5%); }
+}
+
+@keyframes float-parallax-cercana {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-0.5%); }
+}
+
 /* --- Responsive --- */
 @media (max-width: 640px) {
   .cuadricula-opciones {
@@ -1453,5 +1706,149 @@ onUnmounted(() => {
     width: 100%;
     justify-content: center;
   }
+  .capa-ciudad-svg {
+    height: 140px !important;
+  }
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .estrellas-centelleo,
+  .nebula-juego.cian,
+  .nebula-juego.purpura,
+  .luz-urbana,
+  .capa-ciudad-svg.lejana,
+  .capa-ciudad-svg.media,
+  .capa-ciudad-svg.cercana,
+  .tarjeta-pregunta.pregunta-shake-rojo {
+    animation: none !important;
+  }
+  .boton-opcion {
+    transition: none !important;
+  }
+}
+
+/* --- Niebla neón y brillos flotantes (Fase 3 Tarea 12) --- */
+.niebla-neon {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at bottom, rgba(184, 79, 255, 0.05) 0%, rgba(0, 200, 255, 0.03) 50%, transparent 100%);
+  filter: blur(40px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.brillos-flotantes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.brillo {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--color-neon-blue);
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0.25;
+  box-shadow: 0 0 10px var(--color-neon-blue-glow);
+}
+
+.brillo.b1 { top: 25%; left: 20%; background: var(--color-neon-blue); animation: float-glow-particle 12s infinite ease-in-out; }
+.brillo.b2 { top: 60%; left: 80%; background: var(--color-neon-purple); animation: float-glow-particle 15s infinite ease-in-out -3s; }
+.brillo.b3 { top: 80%; left: 15%; background: var(--color-neon-green); animation: float-glow-particle 10s infinite ease-in-out -6s; }
+.brillo.b4 { top: 30%; left: 75%; background: var(--color-neon-gold); animation: float-glow-particle 14s infinite ease-in-out -9s; }
+
+@keyframes float-glow-particle {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.15; }
+  50% { transform: translateY(-40px) scale(1.4); opacity: 0.45; }
+}
+
+/* --- Checkpoint Evento Especial Premium --- */
+.checkpoint-card {
+  background: radial-gradient(circle at top, rgba(255, 215, 0, 0.15) 0%, rgba(10, 6, 22, 0.95) 100%) !important;
+  border: 1.5px solid rgba(255, 215, 0, 0.45) !important;
+  box-shadow: 
+    0 0 35px rgba(255, 215, 0, 0.25), 
+    inset 0 0 20px rgba(255, 215, 0, 0.08) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.checkpoint-card .icono-narrativa {
+  font-size: 4.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  border: 2px solid rgba(255, 215, 0, 0.35);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  margin-bottom: var(--space-2);
+}
+
+.checkpoint-card .titulo-narrativa {
+  color: var(--color-neon-gold) !important;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+/* --- Mejoras de Pregunta Protagonista --- */
+.tarjeta-pregunta {
+  border: 2px solid rgba(184, 79, 255, 0.35) !important;
+  box-shadow: 
+    0 0 30px rgba(184, 79, 255, 0.15), 
+    inset 0 0 15px rgba(184, 79, 255, 0.06) !important;
+}
+
+.texto-pregunta {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em;
+}
+
+/* --- Mejoras de Opciones con animaciones --- */
+.boton-opcion:not(:disabled):hover,
+.boton-opcion:not(:disabled):focus-visible {
+  border-color: var(--color-neon-blue) !important;
+  background: linear-gradient(90deg, rgba(0, 200, 255, 0.15) 0%, rgba(0, 200, 255, 0.03) 100%) !important;
+  transform: translateX(6px) translateY(-2px) !important;
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.45) !important;
+  outline: none !important;
+}
+
+/* Opciones: Correcta (Destello y Pop) */
+.boton-opcion.opcion-correcta {
+  animation: correct-success-anim 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both !important;
+}
+
+@keyframes correct-success-anim {
+  0% { transform: scale(1); filter: brightness(1); }
+  30% { transform: scale(1.04); filter: brightness(1.6); box-shadow: 0 0 30px rgba(0, 255, 136, 0.7); }
+  100% { transform: scale(1); filter: brightness(1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.35); }
+}
+
+/* Opciones: Incorrecta (Vibración y Glow Rojo) */
+.boton-opcion.opcion-incorrecta {
+  animation: incorrect-shake-anim 0.4s ease-in-out both !important;
+}
+
+@keyframes incorrect-shake-anim {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+/* --- Centro de Conocimiento --- */
+.tarjeta-explicacion-educativa {
+  background: linear-gradient(135deg, rgba(14, 20, 36, 0.85) 0%, rgba(8, 10, 24, 0.95) 100%) !important;
+  border: 1.5px solid rgba(255, 215, 0, 0.45) !important;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.2), inset 0 0 12px rgba(255, 215, 0, 0.05) !important;
+}
+
+.tarjeta-explicacion-educativa::before {
+  background: linear-gradient(180deg, var(--color-neon-blue), var(--color-neon-gold)) !important;
 }
 </style>

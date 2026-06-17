@@ -1,6 +1,25 @@
 <template>
   
   <section class="mapa-misiones" aria-label="Mapa de misiones de Costa Rica">
+    <!-- Fondo vivo de Base de Operaciones Cyberpunk (Fase 3 Tarea 12) -->
+    <div class="mapa-misiones-fondo-vivo" aria-hidden="true">
+      <div class="op-grid-overlay"></div>
+      <div class="op-nebula cian"></div>
+      <div class="op-nebula purpura"></div>
+      <div class="op-radar-lines">
+        <div class="radar-circle rc1"></div>
+        <div class="radar-circle rc2"></div>
+        <div class="radar-circle rc3"></div>
+        <div class="radar-sweep"></div>
+      </div>
+      <div class="op-particles">
+        <span class="op-p opp1"></span>
+        <span class="op-p opp2"></span>
+        <span class="op-p opp3"></span>
+        <span class="op-p opp4"></span>
+        <span class="op-p opp5"></span>
+      </div>
+    </div>
 
     <!-- Header del mapa -->
     <div class="encabezado-mapa animate-fade-in">
@@ -1877,5 +1896,137 @@ onMounted(async () => {
   cursor: pointer;
   line-height: 1;
   padding: 0;
+}
+
+/* --- Fondo Vivo Cyberpunk del Centro de Operaciones (Fase 3 Tarea 12) --- */
+.mapa-misiones-fondo-vivo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(circle at 35% 40%, #06091e 0%, #02030a 100%);
+}
+
+.op-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 220, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 220, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at 35% 45%, black 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 35% 45%, black 20%, transparent 80%);
+  opacity: 0.85;
+}
+
+.op-nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  mix-blend-mode: screen;
+  animation: pulse-nebula-op 18s infinite alternate ease-in-out;
+}
+
+.op-nebula.cian {
+  top: 15%;
+  left: 10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--color-neon-blue-glow) 0%, transparent 70%);
+}
+
+.op-nebula.purpura {
+  bottom: 15%;
+  right: 10%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, var(--color-neon-purple-glow) 0%, transparent 70%);
+  animation-delay: -6s;
+}
+
+@keyframes pulse-nebula-op {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.12; }
+  100% { transform: scale(1.25) translate(30px, -30px); opacity: 0.22; }
+}
+
+.op-radar-lines {
+  position: absolute;
+  top: 45%;
+  left: 33%;
+  width: 650px;
+  height: 650px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.radar-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px dashed rgba(0, 220, 255, 0.05);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.rc1 { width: 200px; height: 200px; }
+.rc2 { width: 400px; height: 400px; border-style: solid; border-color: rgba(0, 220, 255, 0.03); }
+.rc3 { width: 600px; height: 600px; }
+
+.radar-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, rgba(0, 220, 255, 0.07) 0deg, rgba(0, 220, 255, 0) 90deg);
+  border-radius: 50%;
+  animation: rotate-sweep-radar 12s infinite linear;
+}
+
+@keyframes rotate-sweep-radar {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.op-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.op-p {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.25;
+  box-shadow: 0 0 6px #fff;
+}
+
+.opp1 { top: 15%; left: 25%; background: var(--color-neon-blue); animation: op-float 22s infinite linear; }
+.opp2 { top: 40%; left: 75%; background: var(--color-neon-purple); animation: op-float 28s infinite linear -4s; }
+.opp3 { top: 70%; left: 15%; background: var(--color-neon-green); animation: op-float 20s infinite linear -8s; }
+.opp4 { top: 25%; left: 60%; background: var(--color-neon-gold); animation: op-float 24s infinite linear -12s; }
+.opp5 { top: 80%; left: 80%; background: var(--color-neon-blue); animation: op-float 32s infinite linear -16s; }
+
+@keyframes op-float {
+  0% { transform: translateY(0) scale(1); opacity: 0.15; }
+  50% { transform: translateY(-30px) scale(1.3); opacity: 0.45; }
+  100% { transform: translateY(-60px) scale(1); opacity: 0.15; }
+}
+
+/* Ensure mapa-misiones components display over the background */
+.encabezado-mapa,
+.progreso-mapa,
+.alerta-error-vuelo,
+.carga-mapa,
+.error-mapa,
+.contenido-mapa-grid,
+.seccion-progreso-heroe {
+  position: relative;
+  z-index: 2;
 }
 </style>

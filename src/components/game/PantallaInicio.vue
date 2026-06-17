@@ -122,7 +122,7 @@
 
 <script setup>
 // --- Importaciones de Vue 3 Composition API ---
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 // --- Componentes hijos ---
 import ModalConfirmacion from './ModalConfirmacion.vue'
@@ -135,7 +135,7 @@ import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 const { reproducirMusica, reproducirEfecto } = useAudio()
 
 // --- Estado global ---
-const { hayProgresoGuardado, cargarProgreso, borrarProgreso } = useEstadoJuego()
+const { hayProgresoGuardado, cargarProgreso, borrarProgreso, pantallaActual, PANTALLAS } = useEstadoJuego()
 
 // --- Estado local ---
 const tieneProgresoValido = ref(false)
@@ -143,6 +143,13 @@ const mostrarConfirmarNuevaPartida = ref(false)
 
 // --- Emits: notifica al padre qué acción realizar ---
 const emit = defineEmits(['iniciar'])
+
+// --- Watcher para actualizar el estado al volver a Inicio ---
+watch(pantallaActual, (nuevaPantalla) => {
+  if (nuevaPantalla === PANTALLAS.INICIO) {
+    tieneProgresoValido.value = hayProgresoGuardado()
+  }
+})
 
 // --- Ciclo de vida: onMounted ---
 onMounted(() => {
@@ -212,9 +219,7 @@ function estiloParticula(n) {
   justify-content: center;
   padding: var(--space-8) var(--space-4);
   overflow: hidden;
-  background: linear-gradient(135deg, #05040f 0%, #060c20 35%, #120726 70%, #03040a 100%);
-  background-size: 400% 400%;
-  animation: inicioGradientBG 18s ease infinite;
+  background: radial-gradient(circle at center, #060a17 0%, #010205 100%);
 }
 
 /* Fondo decorativo con ondas de energía futuristas */
@@ -222,16 +227,10 @@ function estiloParticula(n) {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(0, 200, 255, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 80% 70%, rgba(184, 79, 255, 0.04) 0%, transparent 60%);
+  background: radial-gradient(circle at 30% 20%, rgba(0, 200, 255, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(184, 79, 255, 0.06) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
-}
-
-@keyframes inicioGradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* --- Cyber Grid Overlay --- */
@@ -239,25 +238,21 @@ function estiloParticula(n) {
   position: absolute;
   inset: -100px;
   background-image: 
-    linear-gradient(rgba(0, 200, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 200, 255, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(rgba(0, 200, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 255, 0.03) 1px, transparent 1px);
+  background-size: 55px 55px;
   background-position: center center;
-  transform: perspective(500px) rotateX(20deg);
+  transform: perspective(500px) rotateX(25deg);
   pointer-events: none;
   z-index: 0;
-  opacity: 0.8;
-  animation: grid-scroll 25s linear infinite;
+  opacity: 0.85;
+  animation: grid-scroll 20s linear infinite;
   will-change: transform;
 }
 
 @keyframes grid-scroll {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 0 500px;
-  }
+  from { background-position: 0 0; }
+  to { background-position: 0 550px; }
 }
 
 /* --- Luces Ambientales (Auroras/Nebulosas) --- */
@@ -267,8 +262,8 @@ function estiloParticula(n) {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  filter: blur(140px);
-  opacity: 0.65;
+  filter: blur(120px);
+  opacity: 0.8;
 }
 
 .luz-ambiente {
@@ -279,48 +274,48 @@ function estiloParticula(n) {
 }
 
 .luz-azul {
-  top: 10%;
-  left: 15%;
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(0, 200, 255, 0.25) 0%, transparent 80%);
-  animation: float-luz-1 20s ease-in-out infinite alternate;
+  top: 5%;
+  left: 10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.3) 0%, transparent 80%);
+  animation: float-luz-1 22s ease-in-out infinite alternate;
 }
 
 .luz-verde {
-  bottom: 10%;
-  right: 10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(0, 255, 136, 0.18) 0%, transparent 80%);
-  animation: float-luz-2 24s ease-in-out infinite alternate;
+  bottom: 5%;
+  right: 5%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.22) 0%, transparent 80%);
+  animation: float-luz-2 26s ease-in-out infinite alternate;
 }
 
 .luz-purpura {
-  top: 40%;
-  left: 50%;
-  width: 380px;
-  height: 380px;
-  background: radial-gradient(circle, rgba(184, 79, 255, 0.2) 0%, transparent 80%);
-  animation: float-luz-3 22s ease-in-out infinite alternate;
+  top: 35%;
+  left: 45%;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(184, 79, 255, 0.25) 0%, transparent 80%);
+  animation: float-luz-3 24s ease-in-out infinite alternate;
 }
 
 @keyframes float-luz-1 {
   0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(80px, 50px, 0) scale(1.15); }
-  100% { transform: translate3d(-40px, 90px, 0) scale(0.9); }
+  50% { transform: translate3d(60px, 40px, 0) scale(1.1); }
+  100% { transform: translate3d(-30px, 70px, 0) scale(0.95); }
 }
 
 @keyframes float-luz-2 {
   0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-90px, -60px, 0) scale(0.85); }
-  100% { transform: translate3d(50px, 40px, 0) scale(1.1); }
+  50% { transform: translate3d(-70px, -50px, 0) scale(0.9); }
+  100% { transform: translate3d(40px, 30px, 0) scale(1.05); }
 }
 
 @keyframes float-luz-3 {
   0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(60px, -80px, 0) scale(1.1); }
-  100% { transform: translate3d(-70px, 50px, 0) scale(0.85); }
+  50% { transform: translate3d(40px, -60px, 0) scale(1.05); }
+  100% { transform: translate3d(-50px, 40px, 0) scale(0.9); }
 }
 
 /* --- Partículas flotantes de energía --- */
@@ -355,14 +350,10 @@ function estiloParticula(n) {
     transform: translateY(120vh) translateX(0) scale(0.6);
     opacity: 0;
   }
-  15% {
-    opacity: 0.7;
-  }
-  85% {
-    opacity: 0.7;
-  }
+  15% { opacity: 0.6; }
+  85% { opacity: 0.6; }
   100% {
-    transform: translateY(-20vh) translateX(40px) scale(1.1);
+    transform: translateY(-20vh) translateX(30px) scale(1.1);
     opacity: 0;
   }
 }
@@ -374,22 +365,104 @@ function estiloParticula(n) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
-  max-width: 700px;
+  gap: var(--space-8);
   width: 100%;
+  max-width: 650px;
   text-align: center;
+}
+
+/* GRID LAYOUT EN ESCRITORIO */
+@media (min-width: 850px) {
+  .contenido-inicio {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    grid-template-rows: auto auto auto auto;
+    text-align: left;
+    max-width: 1120px;
+    gap: var(--space-6) var(--space-12);
+    align-items: center;
+  }
+  
+  .encabezado-inicio {
+    grid-column: 1;
+    grid-row: 1;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+  
+  .divisor-titulo {
+    margin-left: 0 !important;
+  }
+  
+  .descripcion-inicio {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+  }
+  
+  .llamada-accion {
+    grid-column: 1;
+    grid-row: 3;
+    align-items: flex-start !important;
+  }
+  
+  .descargo-responsabilidad {
+    grid-column: 1;
+    grid-row: 4;
+    text-align: left;
+  }
+  
+  .emblema-heroe {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin: 0 auto !important;
+    transform: scale(1.2) !important;
+  }
+  
+  .estadisticas-inicio {
+    grid-column: 2;
+    grid-row: 3 / span 2;
+    margin: var(--space-4) auto 0 !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 290px !important;
+    gap: var(--space-4) !important;
+    padding: var(--space-6) var(--space-8) !important;
+  }
+  
+  .divisor-estadistica {
+    width: 100% !important;
+    height: 1px !important;
+  }
 }
 
 /* --- Emblema del héroe con Zoom y Glow Progresivo --- */
 .emblema-heroe {
   position: relative;
-  width: 110px;
-  height: 110px;
+  width: 120px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--space-2);
   animation: introLogoZoom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.emblema-heroe::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184, 79, 255, 0.18) 0%, rgba(0, 200, 255, 0.08) 45%, transparent 75%);
+  filter: blur(20px);
+  z-index: -1;
+  animation: pulse-glow-hero 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow-hero {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.15); opacity: 1; }
 }
 
 .anillo-emblema {
@@ -416,22 +489,20 @@ function estiloParticula(n) {
 }
 
 .icono-emblema {
-  font-size: 3.2rem;
+  font-size: 3.5rem;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.4));
 }
 
 @keyframes introLogoZoom {
   0% {
     transform: scale(0.5);
     opacity: 0;
-    filter: brightness(2);
   }
   100% {
     transform: scale(1);
     opacity: 1;
-    filter: brightness(1);
   }
 }
 
@@ -447,7 +518,7 @@ function estiloParticula(n) {
   font-size: var(--text-xs);
   color: var(--color-neon-blue);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   margin: 0;
   font-weight: var(--font-bold);
   text-shadow: 0 0 8px var(--color-neon-blue-glow);
@@ -457,44 +528,36 @@ function estiloParticula(n) {
   font-family: var(--font-display);
   margin: 0;
   line-height: 1.1;
-  animation: introTitleGlow 1.8s ease-out forwards;
 }
 
 .titulo-ruta {
-  font-size: clamp(2.8rem, 8vw, 4.8rem);
+  font-size: clamp(3.2rem, 9vw, 5.4rem);
   font-weight: var(--font-extrabold);
   background: linear-gradient(135deg, #00ff88, #00c8ff, #b84fff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: block;
-  text-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+  filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.45)) drop-shadow(0 0 35px rgba(0, 200, 255, 0.25));
+  letter-spacing: -0.01em;
 }
 
 .titulo-heroe {
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
-  color: var(--color-text-secondary);
+  font-size: clamp(1.3rem, 4.2vw, 2.1rem);
+  color: #f1f5f9;
   font-weight: var(--font-bold);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0, 200, 255, 0.3);
 }
 
 .divisor-titulo {
-  width: 120px;
+  width: 140px;
   height: 3px;
   background: linear-gradient(90deg, transparent, var(--color-neon-green), var(--color-neon-blue), transparent);
   border-radius: var(--radius-full);
   box-shadow: 0 0 12px var(--color-neon-green-glow);
   margin-top: var(--space-2);
-}
-
-@keyframes introTitleGlow {
-  0% {
-    filter: drop-shadow(0 0 0px transparent);
-  }
-  100% {
-    filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.25));
-  }
 }
 
 /* --- Descripción --- */
@@ -507,37 +570,44 @@ function estiloParticula(n) {
 
 .descripcion-principal {
   font-size: var(--text-lg);
-  color: var(--color-text-primary);
+  color: #f8fafc;
   line-height: 1.65;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
 .descripcion-mision {
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
   line-height: 1.7;
-  background: rgba(13, 20, 41, 0.6);
-  border: 1px solid rgba(0, 200, 255, 0.18);
+  background: rgba(8, 12, 28, 0.7);
+  border: 1px solid rgba(0, 200, 255, 0.25);
   border-radius: var(--radius-lg);
   padding: var(--space-4) var(--space-5);
   margin: 0;
-  backdrop-filter: blur(4px);
-  box-shadow: inset 0 0 15px rgba(0, 200, 255, 0.05);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 20px rgba(0, 200, 255, 0.08);
 }
 
 /* --- Stats decorativas --- */
 .estadisticas-inicio {
   display: flex;
   align-items: center;
+  justify-content: space-around;
   gap: var(--space-6);
-  background: rgba(15, 10, 30, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(7, 10, 25, 0.75);
+  border: 1px solid rgba(0, 200, 255, 0.3);
   border-radius: var(--radius-xl);
   padding: var(--space-4) var(--space-8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 255, 0.15), inset 0 0 10px rgba(0, 200, 255, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.estadisticas-inicio:hover {
+  border-color: rgba(0, 255, 136, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 255, 136, 0.2), inset 0 0 10px rgba(0, 255, 136, 0.05);
 }
 
 .estadistica-inicio {
@@ -558,7 +628,7 @@ function estiloParticula(n) {
 
 .etiqueta-estadistica {
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -566,7 +636,7 @@ function estiloParticula(n) {
 .divisor-estadistica {
   width: 1px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 200, 255, 0.15);
 }
 
 /* --- CTA con Pulso Neón --- */
@@ -578,40 +648,53 @@ function estiloParticula(n) {
   width: 100%;
 }
 
+.llamada-accion .btn {
+  transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease, background 0.25s ease;
+}
+
 .llamada-accion .btn-primary {
-  padding: var(--space-4) var(--space-8);
-  font-size: var(--text-lg);
-  letter-spacing: 0.05em;
-  background: linear-gradient(135deg, var(--color-neon-green) 0%, #009955 100%);
-  border: 1px solid rgba(0, 255, 136, 0.5);
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
-  animation: pulseNeonCTA 2s infinite ease-in-out;
+  padding: var(--space-4) var(--space-10);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--color-neon-green) 0%, #00a85d 100%);
+  border: 1px solid rgba(0, 255, 136, 0.6);
+  box-shadow: 0 0 22px rgba(0, 255, 136, 0.35);
+  animation: pulseNeonCTA 2.5s infinite ease-in-out;
 }
 
 .llamada-accion .btn-primary:hover {
-  background: linear-gradient(135deg, #00ffaa 0%, #00b362 100%);
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
-  transform: scale(1.05) translateY(-2px);
+  background: linear-gradient(135deg, #00ffaa 0%, #00c069 100%);
+  box-shadow: 0 0 35px rgba(0, 255, 136, 0.65), 0 0 15px rgba(0, 200, 255, 0.35);
+  transform: scale(1.06) translateY(-3px);
 }
 
 @keyframes pulseNeonCTA {
-  0% {
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.55), 0 0 10px rgba(0, 200, 255, 0.3);
-  }
-  100% {
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.25);
-  }
+  0% { box-shadow: 0 0 18px rgba(0, 255, 136, 0.3); }
+  50% { box-shadow: 0 0 32px rgba(0, 255, 136, 0.6), 0 0 15px rgba(0, 200, 255, 0.35); }
+  100% { box-shadow: 0 0 18px rgba(0, 255, 136, 0.3); }
+}
+
+.llamada-accion .btn-outline {
+  border-color: rgba(0, 200, 255, 0.4);
+  color: var(--color-neon-blue);
+  background: rgba(0, 200, 255, 0.03);
+}
+
+.llamada-accion .btn-outline:hover {
+  background: rgba(0, 200, 255, 0.1);
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.35);
+  transform: scale(1.05) translateY(-2px);
 }
 
 .sugerencia-cta {
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   margin: 0;
+  opacity: 0.95;
 }
 
 /* --- Disclaimer --- */
@@ -621,28 +704,7 @@ function estiloParticula(n) {
   max-width: 480px;
   line-height: 1.5;
   margin: 0;
-  opacity: 0.8;
-}
-
-/* --- Responsive --- */
-@media (max-width: 640px) {
-  .estadisticas-inicio {
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-5);
-  }
-  .numero-estadistica {
-    font-size: var(--text-2xl);
-  }
-  .emblema-heroe {
-    width: 90px;
-    height: 90px;
-  }
-  .icono-emblema {
-    font-size: 2.5rem;
-  }
-  .contenido-inicio {
-    gap: var(--space-6);
-  }
+  opacity: 0.85;
 }
 
 /* --- Estilos Modal de Partida Encontrada --- */
@@ -650,7 +712,7 @@ function estiloParticula(n) {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
-  background: rgba(4, 5, 12, 0.9);
+  background: rgba(3, 4, 10, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -668,10 +730,10 @@ function estiloParticula(n) {
   width: 100%;
   max-width: 440px;
   background: var(--gradient-card);
-  border: 1px solid rgba(184, 79, 255, 0.3);
+  border: 1px solid rgba(184, 79, 255, 0.4);
   border-radius: var(--radius-xl);
   padding: var(--space-6) var(--space-8);
-  box-shadow: var(--shadow-card), 0 0 25px rgba(184, 79, 255, 0.15);
+  box-shadow: var(--shadow-card), 0 0 25px rgba(184, 79, 255, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -749,20 +811,69 @@ function estiloParticula(n) {
 .btn-continuar-partida-inicio {
   background: linear-gradient(135deg, var(--color-neon-blue) 0%, #005a9c 100%);
   border-color: rgba(0, 200, 255, 0.4);
-  animation: pulseNeonCTA 2s infinite ease-in-out;
+  animation: pulseNeonCTA-blue 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseNeonCTA-blue {
+  0% { box-shadow: 0 0 15px rgba(0, 200, 255, 0.25); }
+  50% { box-shadow: 0 0 25px rgba(0, 200, 255, 0.5), 0 0 10px rgba(184, 79, 255, 0.25); }
+  100% { box-shadow: 0 0 15px rgba(0, 200, 255, 0.25); }
 }
 
 .btn-continuar-partida-inicio:hover {
   background: linear-gradient(135deg, #33ccff 0%, #0088cc 100%);
-  box-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
-  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 200, 255, 0.55);
+  transform: scale(1.06) translateY(-3px);
 }
 
+/* --- Responsive adicional --- */
 @media (max-width: 640px) {
+  .estadisticas-inicio {
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-5);
+  }
+  .numero-estadistica {
+    font-size: var(--text-2xl);
+  }
+  .emblema-heroe {
+    width: 100px;
+    height: 100px;
+  }
+  .icono-emblema {
+    font-size: 3rem;
+  }
+  .contenido-inicio {
+    gap: var(--space-6);
+  }
   .opciones-inicio-botones {
     flex-direction: column;
     align-items: center;
     gap: var(--space-3);
+  }
+  .opciones-inicio-botones .btn {
+    width: 100%;
+  }
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .grid-overlay,
+  .luz-azul,
+  .luz-verde,
+  .luz-purpura,
+  .particula,
+  .emblema-heroe::before,
+  .anillo-emblema,
+  .llamada-accion .btn-primary,
+  .btn-continuar-partida-inicio,
+  .modal-icon {
+    animation: none !important;
+  }
+  .particula {
+    display: none;
+  }
+  .btn {
+    transition: none !important;
   }
 }
 </style>

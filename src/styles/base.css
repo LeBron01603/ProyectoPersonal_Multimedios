@@ -97,6 +97,17 @@ button, input, select, textarea {
   font-size: inherit;
 }
 
+/* --- Accesibilidad: Foco Visible Global --- */
+button:focus-visible,
+.btn:focus-visible,
+[tabindex="0"]:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2.5px solid var(--color-neon-blue, #00c8ff) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 12px var(--color-neon-blue-glow, rgba(0, 200, 255, 0.45)) !important;
+}
+
 /* --- Utilidades globales --- */
 
 .container {

@@ -1,9 +1,14 @@
 <template>
   <section class="pantalla-vuelo" aria-label="Pantalla de vuelo hacia la misión">
+    <!-- Fondo warp y nebulosas -->
+    <div class="efectos-fondo" aria-hidden="true">
+      <div class="warp-glow cian"></div>
+      <div class="warp-glow purpura"></div>
+    </div>
 
     <!-- Rayas de velocidad de fondo -->
     <div class="speed-lines" aria-hidden="true">
-      <div v-for="n in 12" :key="n" class="speed-line" :style="lineaVelocidadEstilo(n)"></div>
+      <div v-for="n in 18" :key="n" class="speed-line" :style="lineaVelocidadEstilo(n)"></div>
     </div>
 
     <div
@@ -241,11 +246,11 @@ onUnmounted(() => {
 .speed-line {
   position: absolute;
   left: -80px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00c8ff, transparent);
+  height: 2.5px;
+  background: linear-gradient(90deg, transparent, var(--color-neon-blue), transparent);
   border-radius: 9999px;
   animation: speed-streak linear infinite;
-  filter: blur(0.5px);
+  filter: drop-shadow(0 0 4px var(--color-neon-blue-glow));
 }
 
 @keyframes speed-streak {
@@ -258,13 +263,13 @@ onUnmounted(() => {
 /* ===== Card principal ===== */
 .contenedor-vuelo {
   width: 100%;
-  max-width: 620px;
-  background: rgba(8, 6, 18, 0.85);
-  border: 1px solid rgba(0, 200, 255, 0.22);
+  max-width: 650px;
+  background: rgba(4, 3, 10, 0.55);
+  border: 1px solid rgba(0, 200, 255, 0.3);
   border-radius: var(--radius-xl);
   padding: var(--space-10) var(--space-8);
-  box-shadow: var(--shadow-card), var(--shadow-neon-blue);
-  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-card), 0 0 35px rgba(0, 200, 255, 0.25);
+  backdrop-filter: blur(20px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -295,6 +300,12 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: micro-vibracion 0.15s linear infinite alternate;
+}
+
+@keyframes micro-vibracion {
+  0% { transform: translate(-1px, 1px) rotate(-0.5deg); }
+  100% { transform: translate(1px, -1px) rotate(0.5deg); }
 }
 
 .avatar-heroe-vuelo {
@@ -509,5 +520,65 @@ onUnmounted(() => {
   .contenedor-vuelo { padding: var(--space-6) var(--space-4); }
   .titulo-vuelo     { font-size: var(--text-xl); }
   .destino-nombre   { font-size: var(--text-base); }
+}
+
+/* --- Efectos de fondo --- */
+.efectos-fondo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  user-select: none;
+}
+
+.warp-glow {
+  position: absolute;
+  width: 70vw;
+  height: 70vh;
+  border-radius: 50%;
+  filter: blur(130px);
+  opacity: 0.15;
+  mix-blend-mode: screen;
+}
+
+.warp-glow.cian {
+  background: radial-gradient(circle, var(--color-neon-blue) 0%, transparent 70%);
+  top: 15%;
+  left: -10%;
+  animation: flotar-warp-1 12s ease-in-out infinite alternate;
+}
+
+.warp-glow.purpura {
+  background: radial-gradient(circle, var(--color-neon-purple) 0%, transparent 70%);
+  bottom: 15%;
+  right: -10%;
+  animation: flotar-warp-2 15s ease-in-out infinite alternate;
+}
+
+@keyframes flotar-warp-1 {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.2) translate(8vw, 4vh); }
+}
+
+@keyframes flotar-warp-2 {
+  0% { transform: scale(1.1) translate(0, 0); }
+  100% { transform: scale(0.9) translate(-8vw, -4vh); }
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .vuelo-avatar-container {
+    animation: none !important;
+    transform: none !important;
+  }
+  .warp-glow.cian,
+  .warp-glow.purpura {
+    animation: none !important;
+  }
+  .speed-line {
+    animation: none !important;
+    opacity: 0.1 !important;
+  }
 }
 </style>

@@ -18,7 +18,9 @@ export const PANTALLAS = {
   VUELO:     'vuelo',
   JUEGO:     'juego',
   RESULTADO: 'resultado',
-  NUEVO_DIA: 'nuevo_dia'
+  NUEVO_DIA: 'nuevo_dia',
+  CRISIS:    'crisis',
+  GAMEOVER:  'gameover'
 }
 
 // --- Estado global reactivo (singleton por sesión) ---
@@ -117,6 +119,24 @@ const totalPreguntasMision = ref(0)
 const esSegundoIntento = ref(false)
 const avanceMision = ref(null)
 
+const marcasExposicion = ref(0)
+const enCrisis = ref(false)
+const exposicionRevelada = ref(false)
+let estaCargandoProgreso = false
+
+watch(() => estadisticasHeroe.sospechaIdentidad, (nuevaSospecha, antiguaSospecha) => {
+  if (estaCargandoProgreso) return
+  if (nuevaSospecha >= 100 && !enCrisis.value && !exposicionRevelada.value) {
+    enCrisis.value = true
+    navegarA(PANTALLAS.CRISIS)
+  } else if (nuevaSospecha >= 75 && (antiguaSospecha === undefined || antiguaSospecha < 75)) {
+    mensajeAlertaMapa.value = "🚨 Alerta de Sospecha Alta: Profesores y compañeros hacen preguntas. (Penalización: Energía -5)"
+    estadisticasHeroe.energia = Math.max(0, estadisticasHeroe.energia - 5)
+  } else if (nuevaSospecha >= 50 && (antiguaSospecha === undefined || antiguaSospecha < 50)) {
+    mensajeAlertaMapa.value = "⚠️ Advertencia: Algunos compañeros empiezan a notar tus desapariciones."
+  }
+})
+
 // --- TÍTULOS HEROICOS DINÁMICOS ---
 const titulosFinales = [
   { id: 'sombra', nombre: 'Sombra Fugitiva', emoji: '👤', descripcion: 'La sospecha sobre tu identidad civil está por los cielos. Eres un misterio andante en el campus.' },
@@ -198,6 +218,14 @@ function aplicarBonificacionesIniciales(estilo) {
 
 /** Cambia la pantalla activa */
 function navegarA(pantalla) {
+  if (exposicionRevelada.value && pantalla !== PANTALLAS.GAMEOVER && pantalla !== PANTALLAS.INICIO) {
+    pantallaActual.value = PANTALLAS.GAMEOVER
+    return
+  }
+  if (enCrisis.value && pantalla !== PANTALLAS.CRISIS && pantalla !== PANTALLAS.GAMEOVER && pantalla !== PANTALLAS.INICIO) {
+    pantallaActual.value = PANTALLAS.CRISIS
+    return
+  }
   const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
   if (!pantalla || !PANTALLAS_VALIDAS.includes(pantalla)) {
     console.warn(`[useEstadoJuego] Intento de navegar a pantalla inválida o nula: "${pantalla}". Redirigiendo a INICIO.`)
@@ -462,7 +490,10 @@ function guardarProgreso() {
       provinciaRecienDesbloqueada: provinciaRecienDesbloqueada.value,
       ultimaMisionNombre: ultimaMisionNombre.value,
       ultimaMisionResultado: ultimaMisionResultado.value,
-      ultimaRecompensa: ultimaRecompensa.value
+      ultimaRecompensa: ultimaRecompensa.value,
+      marcasExposicion: marcasExposicion.value,
+      enCrisis: enCrisis.value,
+      exposicionRevelada: exposicionRevelada.value
     }
     localStorage.setItem(SAVE_KEY, JSON.stringify(data))
     console.info('[RutaTica] Progreso guardado correctamente.')
@@ -538,6 +569,7 @@ function cargarProgreso() {
     }
 
     // Si todo es válido, aplicamos las asignaciones de forma segura
+    estaCargandoProgreso = true
     Object.assign(identidadHeroe, data.identidadHeroe)
     Object.assign(estadisticasHeroe, data.estadisticasHeroe)
     if (data.experienciaHeroe !== undefined) experienciaHeroe.value = data.experienciaHeroe
@@ -553,6 +585,10 @@ function cargarProgreso() {
     if (data.ultimaMisionResultado !== undefined) ultimaMisionResultado.value = data.ultimaMisionResultado
     if (data.ultimaRecompensa !== undefined) ultimaRecompensa.value = data.ultimaRecompensa
     if (data.avanceMision !== undefined) avanceMision.value = data.avanceMision
+    if (data.marcasExposicion !== undefined) marcasExposicion.value = data.marcasExposicion
+    if (data.enCrisis !== undefined) enCrisis.value = data.enCrisis
+    if (data.exposicionRevelada !== undefined) exposicionRevelada.value = data.exposicionRevelada
+    estaCargandoProgreso = false
 
     // Pantallas transitorias que no deben restaurarse (no tienen estado persistente propio)
     const pantallasTransitorias = [
@@ -626,6 +662,15 @@ function hayProgresoGuardado() {
 
 /** Reinicia el juego desde cero */
 function reiniciarJuego() {
+  try {
+    localStorage.removeItem(SAVE_KEY)
+    localStorage.removeItem('rutaTicaHeroeAfterAvance')
+    localStorage.removeItem('rutaTicaHeroeAfterCheckpoint')
+    localStorage.removeItem('rutaTicaHeroeAfterMision')
+  } catch (error) {
+    console.error('[useEstadoJuego] Error al limpiar localStorage en reiniciarJuego:', error)
+  }
+
   pantallaActual.value = PANTALLAS.INICIO
   provinciaActiva.value = null
   misionesCompletadas.value = []
@@ -649,6 +694,9 @@ function reiniciarJuego() {
   ultimaMisionNombre.value = ''
   ultimaMisionResultado.value = ''
   ultimaRecompensa.value = ''
+  marcasExposicion.value = 0
+  enCrisis.value = false
+  exposicionRevelada.value = false
   Object.assign(identidadHeroe, { 
     nombre: '', 
     edad: '', 
@@ -767,6 +815,9 @@ export function useEstadoJuego() {
     ultimaMisionResultado,
     ultimaRecompensa,
     rankingLocal,
+    marcasExposicion,
+    enCrisis,
+    exposicionRevelada,
 
     // Computed
     identidadCompleta,

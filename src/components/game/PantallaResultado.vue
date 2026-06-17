@@ -1,6 +1,21 @@
 <template>
   <!-- PantallaResultado: pantalla de resultados al finalizar una misión -->
   <section class="pantalla-resultado" aria-label="Pantalla de resultados">
+    <!-- Efectos visuales de fondo condicionales -->
+    <div class="efectos-fondo" :class="misionAprobada ? 'exito' : 'fallo'" aria-hidden="true">
+      <div class="resultado-nebula cian"></div>
+      <div class="resultado-nebula color-acento"></div>
+      <div class="particulas-resultado">
+        <div class="chispa-res r1"></div>
+        <div class="chispa-res r2"></div>
+        <div class="chispa-res r3"></div>
+        <div class="chispa-res r4"></div>
+        <div class="chispa-res r5"></div>
+      </div>
+      <!-- Patrón cyberpunk de fondo condicional -->
+      <div class="patron-fallo" v-if="!misionAprobada"></div>
+    </div>
+
     <div class="contenedor-resultado animate-fade-in-scale" :class="{ 'failed-border': !misionAprobada }">
 
       <!-- Ícono de resultado -->
@@ -317,17 +332,19 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   padding: var(--space-8) var(--space-4);
+  position: relative;
+  overflow: hidden;
 }
 
 .contenedor-resultado {
   width: 100%;
-  max-width: 600px;
-  background: var(--gradient-card);
+  max-width: 630px;
+  background: rgba(10, 14, 26, 0.65);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-10) var(--space-8);
-  box-shadow: var(--shadow-card), var(--shadow-neon-green);
-  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-card), 0 0 35px rgba(0, 255, 136, 0.25);
+  backdrop-filter: blur(18px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -700,8 +717,8 @@ onMounted(() => {
 
 /* --- Fase 4.5 Fallas y Prácticas --- */
 .contenedor-resultado.failed-border {
-  border-color: rgba(255, 70, 70, 0.4);
-  box-shadow: var(--shadow-card), 0 0 25px rgba(255, 70, 70, 0.25);
+  border-color: rgba(255, 70, 70, 0.55);
+  box-shadow: var(--shadow-card), 0 0 35px rgba(255, 70, 70, 0.35);
 }
 
 .anillo-resultado.failed-anillo {
@@ -757,5 +774,128 @@ onMounted(() => {
   margin: 0;
   width: 100%;
   text-align: center;
+}
+
+/* --- Efectos de fondo --- */
+.efectos-fondo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  user-select: none;
+  transition: background 0.5s ease;
+}
+.efectos-fondo.exito {
+  background: radial-gradient(circle at center, #040d1a 0%, #010408 100%);
+}
+.efectos-fondo.fallo {
+  background: radial-gradient(circle at center, #1a0404 0%, #080101 100%);
+}
+
+.resultado-nebula {
+  position: absolute;
+  width: 55vw;
+  height: 55vh;
+  border-radius: 50%;
+  filter: blur(120px);
+  mix-blend-mode: screen;
+  opacity: 0.12;
+}
+
+/* Éxito */
+.exito .resultado-nebula.cian {
+  background: radial-gradient(circle, var(--color-neon-green) 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: flotar-res-1 20s ease-in-out infinite alternate;
+}
+.exito .resultado-nebula.color-acento {
+  background: radial-gradient(circle, var(--color-neon-blue) 0%, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation: flotar-res-2 24s ease-in-out infinite alternate;
+}
+
+/* Fallo */
+.fallo .resultado-nebula.cian {
+  background: radial-gradient(circle, #ff4646 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: flotar-res-1 20s ease-in-out infinite alternate;
+}
+.fallo .resultado-nebula.color-acento {
+  background: radial-gradient(circle, #b84fff 0%, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation: flotar-res-2 24s ease-in-out infinite alternate;
+}
+
+@keyframes flotar-res-1 {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(4vw, 4vh); }
+}
+@keyframes flotar-res-2 {
+  0% { transform: scale(1.1) translate(0, 0); }
+  100% { transform: scale(0.9) translate(-4vw, -4vh); }
+}
+
+/* Partículas */
+.particulas-resultado {
+  position: absolute;
+  inset: 0;
+}
+
+.chispa-res {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  filter: blur(0.5px);
+  animation: flotar-chispa-res-sube linear infinite;
+}
+
+.exito .chispa-res {
+  background: radial-gradient(circle, var(--color-neon-green) 0%, var(--color-neon-gold) 100%);
+}
+.fallo .chispa-res {
+  background: radial-gradient(circle, #ff4646 0%, rgba(255, 70, 70, 0.2) 100%);
+}
+
+.r1 { left: 10%; width: 5px; height: 5px; animation-duration: 8s; animation-delay: 0s; }
+.r2 { left: 30%; width: 7px; height: 7px; animation-duration: 11s; animation-delay: 1.5s; }
+.r3 { left: 50%; width: 4px; height: 4px; animation-duration: 9s; animation-delay: 0.5s; }
+.r4 { left: 70%; width: 6px; height: 6px; animation-duration: 12s; animation-delay: 2s; }
+.r5 { left: 90%; width: 5px; height: 5px; animation-duration: 7s; animation-delay: 3.5s; }
+
+@keyframes flotar-chispa-res-sube {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  15% { opacity: 0.6; }
+  85% { opacity: 0.6; }
+  100% { transform: translateY(-105vh) scale(0.7); opacity: 0; }
+}
+
+/* Patrón cyberpunk de advertencia */
+.patron-fallo {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 15px,
+    rgba(255, 70, 70, 0.015) 15px,
+    rgba(255, 70, 70, 0.015) 30px
+  );
+  z-index: 1;
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .resultado-nebula {
+    animation: none !important;
+  }
+  .chispa-res {
+    animation: none !important;
+    display: none;
+  }
 }
 </style>

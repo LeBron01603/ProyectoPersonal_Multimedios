@@ -66,6 +66,14 @@
           key="nuevo_dia"
           @comenzar="navegarA(PANTALLAS.ACTIVIDADES)"
         />
+        <PantallaCrisis
+          v-else-if="pantallaActual === PANTALLAS.CRISIS"
+          key="crisis"
+        />
+        <PantallaGameOver
+          v-else-if="pantallaActual === PANTALLAS.GAMEOVER"
+          key="gameover"
+        />
         <PantallaInicio
           v-else
           key="inicio-fallback"
@@ -103,6 +111,8 @@ import PantallaVuelo             from './components/game/PantallaVuelo.vue'
 import PantallaJuego             from './components/game/PantallaJuego.vue'
 import PantallaResultado         from './components/game/PantallaResultado.vue'
 import PantallaNuevoDia          from './components/game/PantallaNuevoDia.vue'
+import PantallaCrisis            from './components/game/PantallaCrisis.vue'
+import PantallaGameOver          from './components/game/PantallaGameOver.vue'
 
 // --- Composables ---
 import { useEstadoJuego, PANTALLAS } from './composables/useEstadoJuego.js'

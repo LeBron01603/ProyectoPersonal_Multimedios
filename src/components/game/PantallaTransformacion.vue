@@ -1,6 +1,19 @@
 <template>
   <!-- PantallaTransformacion: transición animada de estudiante civil a héroe nocturno -->
   <section class="pantalla-transformacion" aria-label="Pantalla de transformación">
+    <!-- Efectos de fondo neón/cyber -->
+    <div class="efectos-fondo" aria-hidden="true">
+      <div class="nebula cian"></div>
+      <div class="nebula purpura"></div>
+      <div class="particulas-transformacion" v-if="fase === 2">
+        <div class="chispa c1"></div>
+        <div class="chispa c2"></div>
+        <div class="chispa c3"></div>
+        <div class="chispa c4"></div>
+        <div class="chispa c5"></div>
+      </div>
+    </div>
+
     <div class="contenedor-transformacion card text-center animate-fade-in-scale">
 
       <!-- FASE 1: ANOCHECER CIVIL -->
@@ -40,7 +53,10 @@
         </h2>
 
         <div class="perfil-heroe-revelado">
-          <div class="emblema-heroe-revelado animate-float">🦸‍♂️</div>
+          <div class="emblema-heroe-revelado-container">
+            <div class="halo-anillo-giro"></div>
+            <div class="emblema-heroe-revelado animate-float">🦸‍♂️</div>
+          </div>
           <h3 class="alias-revelado">{{ identidadHeroe.aliasHeroe || 'Héroe del After' }}</h3>
           
           <div class="stats-revelacion-grid">
@@ -144,17 +160,19 @@ function iniciarMisionNocturna() {
   justify-content: center;
   padding: var(--space-8) var(--space-4);
   background: radial-gradient(circle at center, #100826 0%, #05050d 100%);
+  position: relative;
+  overflow: hidden;
 }
 
 .contenedor-transformacion {
   width: 100%;
-  max-width: 600px;
-  background: rgba(10, 6, 22, 0.75);
-  border: 1px solid rgba(184, 79, 255, 0.2);
+  max-width: 620px;
+  background: rgba(8, 4, 18, 0.6);
+  border: 1px solid rgba(184, 79, 255, 0.28);
   border-radius: var(--radius-xl);
   padding: var(--space-10) var(--space-8);
-  box-shadow: var(--shadow-card), var(--shadow-neon-purple);
-  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-card), 0 0 35px rgba(184, 79, 255, 0.25);
+  backdrop-filter: blur(18px);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -396,12 +414,114 @@ function iniciarMisionNocturna() {
 }
 
 @media (max-width: 480px) {
-  .contenedor-transformacion {
-    padding: var(--space-6) var(--space-4);
-  }
   .stats-revelacion-grid {
     grid-template-columns: 1fr;
     gap: var(--space-2);
+  }
+}
+
+/* --- Efectos de fondo --- */
+.efectos-fondo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  user-select: none;
+}
+
+.nebula {
+  position: absolute;
+  width: 60vw;
+  height: 60vh;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  mix-blend-mode: screen;
+}
+
+.nebula.cian {
+  background: radial-gradient(circle, var(--color-neon-blue) 0%, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: flotar-nebula-1 25s ease-in-out infinite alternate;
+}
+
+.nebula.purpura {
+  background: radial-gradient(circle, var(--color-neon-purple) 0%, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation: flotar-nebula-2 30s ease-in-out infinite alternate;
+}
+
+.particulas-transformacion {
+  position: absolute;
+  inset: 0;
+}
+
+.chispa {
+  position: absolute;
+  bottom: -20px;
+  background: radial-gradient(circle, var(--color-neon-blue) 0%, var(--color-neon-purple) 100%);
+  border-radius: 50%;
+  filter: blur(0.5px);
+  animation: flotar-chispa-sube linear infinite;
+}
+
+.c1 { left: 20%; width: 5px; height: 5px; animation-duration: 7s; animation-delay: 0s; }
+.c2 { left: 40%; width: 7px; height: 7px; animation-duration: 9s; animation-delay: 2s; }
+.c3 { left: 60%; width: 4px; height: 4px; animation-duration: 8s; animation-delay: 1s; }
+.c4 { left: 80%; width: 6px; height: 6px; animation-duration: 10s; animation-delay: 3s; }
+.c5 { left: 95%; width: 5px; height: 5px; animation-duration: 6s; animation-delay: 4.5s; }
+
+@keyframes flotar-chispa-sube {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.7; }
+  100% { transform: translateY(-105vh) scale(0.7); opacity: 0; }
+}
+
+.emblema-heroe-revelado-container {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.halo-anillo-giro {
+  position: absolute;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  border: 2px dashed var(--color-neon-purple);
+  box-shadow: 0 0 15px var(--color-neon-purple-glow);
+  animation: spin-lento 12s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin-lento {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.contenedor-transformacion {
+  position: relative;
+  z-index: 2;
+  box-shadow: var(--shadow-card), 0 0 35px rgba(184, 79, 255, 0.25);
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .nebula.cian,
+  .nebula.purpura,
+  .halo-anillo-giro {
+    animation: none !important;
+  }
+  .chispa {
+    animation: none !important;
+    display: none;
   }
 }
 </style>
