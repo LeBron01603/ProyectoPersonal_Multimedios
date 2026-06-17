@@ -12,7 +12,7 @@
     <!-- Área principal de contenido -->
     <!-- transition: animación entre cambios de pantalla -->
     <main class="game-main">
-      <transition name="screen-transition" mode="out-in" :duration="300">
+      <transition name="screen-transition" mode="out-in" :duration="350">
         <PantallaInicio
           v-if="pantallaActual === PANTALLAS.INICIO"
           key="inicio"

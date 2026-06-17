@@ -366,7 +366,6 @@ function confirmarSeleccion() {
 
 function alCancelar() {
   reproducirEfecto('click')
-  navegarA(PANTALLAS.MAPA)
   emit('salir')
 }
 </script>

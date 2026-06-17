@@ -488,7 +488,12 @@ function cargarProgreso() {
 
     if (tieneIdentidadValida) {
       if (data.pantallaActual && PANTALLAS_VALIDAS.includes(data.pantallaActual)) {
-        if (data.pantallaActual === PANTALLAS.JUEGO) {
+        // Pantallas transitorias que no deben restaurarse (no tienen estado persistente propio)
+        const pantallasTransitorias = [
+          PANTALLAS.JUEGO, PANTALLAS.VUELO, PANTALLAS.NUEVO_DIA,
+          PANTALLAS.ACTIVIDADES, PANTALLAS.TRANSICION_NOCHE, PANTALLAS.TRANSFORMACION
+        ]
+        if (pantallasTransitorias.includes(data.pantallaActual)) {
           pantallaActual.value = PANTALLAS.MAPA
         } else {
           pantallaActual.value = data.pantallaActual

@@ -55,7 +55,6 @@ const diaDeSemana = computed(() => {
 
 function comenzarNuevoDia() {
   reproducirEfecto('click')
-  navegarA(PANTALLAS.ACTIVIDADES)
   emit('comenzar')
 }
 
