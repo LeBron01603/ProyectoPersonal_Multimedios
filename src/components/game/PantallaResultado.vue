@@ -35,7 +35,7 @@
 
       <!-- Desglose de respuestas -->
       <div class="desglose-respuestas-res animate-fade-in delay-150">
-        <span>Desempeño: <strong>{{ respuestasCorrectasMision }} / {{ totalPreguntasMision }}</strong> correctas (mínimo: {{ totalPreguntasMision === 8 ? '6' : '70%' }})</span>
+        <span>Desempeño: <strong>{{ respuestasCorrectasMision }} / {{ totalPreguntasMision }}</strong> correctas (mínimo: {{ totalPreguntasMision === 8 ? '5' : '62.5%' }})</span>
       </div>
 
       <!-- Recompensas obtenidas -->
@@ -59,7 +59,7 @@
         </div>
       </div>
       <div class="recompensas-mision-resultado failed animate-fade-in delay-200" v-else-if="!misionAprobada">
-        <p class="recompensas-bloqueadas-msg">⚠️ Debes responder correctamente más del 70% (o 6 de 8) para desbloquear las recompensas únicas de esta provincia.</p>
+        <p class="recompensas-bloqueadas-msg">⚠️ Debes responder correctamente al menos 5 de 8 preguntas para desbloquear las recompensas únicas de esta provincia.</p>
       </div>
 
       <!-- Impacto Académico y Heroico -->
@@ -160,9 +160,13 @@
 
       <!-- Botones de acción -->
       <div class="acciones-resultado animate-fade-in delay-500">
-        <!-- Botón de reintentar solo visible si no se aprobó -->
-        <button v-if="!misionAprob" class="btn btn-hero btn-lg btn-danger" @click="alReintentarMision">
-          🔄 Reintentar misión
+        <!-- Primer fallo: Continuar patrullaje -->
+        <button v-if="!misionAprob && !esSegundoIntento" class="btn btn-hero btn-lg btn-danger" @click="alContinuarPatrullaje">
+          🌙 Continuar patrullaje
+        </button>
+        <!-- Segundo fallo: Volver al mapa y Volver al campus -->
+        <button v-if="!misionAprob && esSegundoIntento" class="btn btn-hero btn-lg btn-outline" @click="alVolverAlMapa">
+          🗺️ Volver al mapa
         </button>
         <button class="btn btn-hero btn-lg" :class="{ 'btn-outline': !misionAprob }" @click="alVolverAlCampus">
           🏫 Volver al campus
@@ -199,7 +203,8 @@ const {
   misionAprobada,
   misionEsPractica,
   respuestasCorrectasMision,
-  totalPreguntasMision
+  totalPreguntasMision,
+  esSegundoIntento
 } = useEstadoJuego()
 
 // Computed alias local para compatibilidad de plantilla
@@ -217,7 +222,7 @@ const emojiResultado = computed(() => {
 })
 
 const tituloResultado = computed(() => {
-  if (!misionAprobada.value) return 'Patrullaje Incompleto'
+  if (!misionAprobada.value) return 'Patrullaje Fallido'
   if (ultimoPuntajeMision.value >= 80) return '¡La Noche ha sido Salvada!'
   if (ultimoPuntajeMision.value >= 50) return '¡After Seguro Garantizado!'
   return 'Continúa patrullando, héroe'
@@ -232,7 +237,7 @@ const claseTituloResultado = computed(() => {
 
 const subtituloResultado = computed(() => {
   if (!misionAprobada.value) {
-    return `No lograste responder suficientes preguntas correctas en ${provinciaActiva.value?.nombre || ''}.`
+    return `Misión no superada. Necesitas al menos 5 de 8 respuestas correctas en ${provinciaActiva.value?.nombre || ''}.`
   }
   return `Provincia ${provinciaActiva.value?.nombre || ''} resguardada con éxito. Los estudiantes están a salvo.`
 })
@@ -286,7 +291,12 @@ function alVolverAlCampus() {
   emit('volver-al-campus')
 }
 
-function alReintentarMision() {
+function alContinuarPatrullaje() {
+  esSegundoIntento.value = true
+  navegarA(PANTALLAS.JUEGO)
+}
+
+function alVolverAlMapa() {
   navegarA(PANTALLAS.MAPA)
 }
 

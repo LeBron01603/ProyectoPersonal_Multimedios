@@ -307,6 +307,11 @@
                     <button class="btn btn-danger btn-lg" @click="abrirConfirmacionBorrar">
                       🗑️ Borrar Progreso (Reiniciar)
                     </button>
+
+                    <!-- Reiniciar Aventura -->
+                    <button class="btn btn-danger btn-lg" @click="alReiniciarAventura">
+                      🔄 Reiniciar aventura
+                    </button>
                   </div>
 
                   <!-- Feedback de Guardado Manual -->
@@ -315,6 +320,50 @@
                       {{ mensajeFeedback }}
                     </div>
                   </transition>
+                </div>
+              </div>
+
+              <!-- ================= PESTAÑA: RANKING ================= -->
+              <div v-if="tabActiva === 'ranking'" class="seccion-ranking animate-fade-in">
+                <div class="seccion-ranking-scroll">
+                  <h4>🏆 Salón de la Fama (Ranking Local)</h4>
+                  <p class="ranking-intro">Los mejores patrullajes registrados en este dispositivo:</p>
+
+                  <div v-if="rankingLocal.length > 0" class="tabla-ranking-contenedor">
+                    <table class="tabla-ranking">
+                      <thead>
+                        <tr>
+                          <th scope="col" class="col-puesto">Puesto</th>
+                          <th scope="col" class="col-heroe">Héroe</th>
+                          <th scope="col" class="col-provincia">Provincia</th>
+                          <th scope="col" class="col-resultado">Resultado</th>
+                          <th scope="col" class="col-fecha">Fecha</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(entrada, index) in rankingLocal" :key="index" :class="'puesto-' + (index + 1)">
+                          <td class="col-puesto">
+                            <span class="medalla" v-if="index === 0">🥇</span>
+                            <span class="medalla" v-else-if="index === 1">🥈</span>
+                            <span class="medalla" v-else-if="index === 2">🥉</span>
+                            <span class="puesto-numero" v-else>#{{ index + 1 }}</span>
+                          </td>
+                          <td class="col-heroe"><strong>{{ entrada.alias }}</strong></td>
+                          <td class="col-provincia">{{ entrada.provincia }}</td>
+                          <td class="col-resultado">
+                            <span class="score-badge">{{ entrada.resultado }}</span>
+                            <span class="score-percent">({{ entrada.puntaje }} pts)</span>
+                          </td>
+                          <td class="col-fecha">{{ entrada.fecha }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  <div v-else class="ranking-vacio">
+                    <p class="vacio-texto">✨ ¡El Salón de la Fama está esperando a su primer héroe! ✨</p>
+                    <p class="vacio-subtexto">Completa patrullajes en las provincias para registrar tus mejores puntuaciones aquí.</p>
+                  </div>
                 </div>
               </div>
 
@@ -443,7 +492,10 @@ const {
   guardarProgreso,
   cargarProgreso,
   borrarProgreso,
+  reiniciarProgreso,
   hayProgresoGuardado,
+  rankingLocal,
+  cargarRankingLocal,
   tituloFinal,
   ultimaMisionNombre,
   ultimaMisionResultado,
@@ -519,6 +571,7 @@ const tabs = [
   { id: 'perfil', icono: '👤', label: 'Perfil' },
   { id: 'progreso', icono: '🚩', label: 'Progreso' },
   { id: 'mochila', icono: '🎒', label: 'Mochila' },
+  { id: 'ranking', icono: '🏆', label: 'Ranking' },
   { id: 'audio', icono: '🔊', label: 'Audio' },
   { id: 'opciones', icono: '⚙️', label: 'Guardado' }
 ]
@@ -554,6 +607,7 @@ watch(() => props.mostrar, (val) => {
     tabActiva.value = 'perfil'
     modoEdicion.value = false
     comprobarExisteSave()
+    cargarRankingLocal()
   }
 })
 
@@ -723,6 +777,16 @@ function confirmarBorrarProgreso() {
   mostrarConfirmarBorrar.value = false
   comprobarExisteSave()
   emit('cerrar')
+}
+
+function alReiniciarAventura() {
+  const confirmado = window.confirm('¿Seguro que deseas reiniciar tu aventura? Esto borrará permanentemente tu partida guardada, restablecerá tu héroe y te enviará a la pantalla de inicio.')
+  if (confirmado) {
+    reproducirEfecto('subirNivel')
+    reiniciarProgreso()
+    comprobarExisteSave()
+    emit('cerrar')
+  }
 }
 
 function cerrar() {
@@ -1554,5 +1618,112 @@ function cerrar() {
   background: rgba(255, 70, 70, 0.05);
   border-color: rgba(255, 70, 70, 0.2);
   color: #ff4646;
+}
+
+/* --- Pestaña: Ranking --- */
+.seccion-ranking {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.seccion-ranking-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  text-align: left;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: var(--space-2);
+}
+
+.ranking-intro {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.tabla-ranking-contenedor {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.tabla-ranking {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--text-sm);
+}
+
+.tabla-ranking th,
+.tabla-ranking td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.tabla-ranking th {
+  font-family: var(--font-display);
+  color: var(--color-neon-blue);
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.tabla-ranking tr:hover {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.tabla-ranking tr.puesto-1 {
+  background: rgba(255, 215, 0, 0.03);
+}
+
+.tabla-ranking tr.puesto-1 td.col-heroe {
+  color: var(--color-neon-gold);
+}
+
+.col-puesto {
+  font-weight: bold;
+  text-align: center;
+  width: 60px;
+}
+
+.score-badge {
+  background: rgba(184, 79, 255, 0.15);
+  border: 1px solid rgba(184, 79, 255, 0.3);
+  color: #d896ff;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.score-percent {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.col-fecha {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.ranking-vacio {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-4);
+}
+
+.ranking-vacio .vacio-subtexto {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-2);
 }
 </style>

@@ -114,6 +114,8 @@ const misionAprobada = ref(true)
 const misionEsPractica = ref(false)
 const respuestasCorrectasMision = ref(0)
 const totalPreguntasMision = ref(0)
+const esSegundoIntento = ref(false)
+const avanceMision = ref(null)
 
 // --- TÍTULOS HEROICOS DINÁMICOS ---
 const titulosFinales = [
@@ -244,6 +246,7 @@ function iniciarMision(provincia) {
   Object.assign(estadisticasPreMision, estadisticasHeroe)
   provinciaActiva.value = provincia
   misionEsPractica.value = misionesCompletadas.value.includes(provincia.id)
+  esSegundoIntento.value = false
   mensajeAlertaMapa.value = ''
   navegarA(PANTALLAS.VUELO)
 }
@@ -278,14 +281,17 @@ function ganarExperiencia(cantidad) {
 
 /** Registra misión completada, otorga recompensas (principales, secundarias) y actualiza logros */
 function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCount) {
+  // Limpiar avance parcial de la misión al completarla o fallarla
+  avanceMision.value = null
+
   // 1. Determinar si aprueba
   let aprobado = false
   if (totalPreguntasCount === 8) {
-    aprobado = correctasCount >= 6
+    aprobado = correctasCount >= 5
   } else if (totalPreguntasCount > 0) {
-    aprobado = (correctasCount / totalPreguntasCount) >= 0.70
+    aprobado = (correctasCount / totalPreguntasCount) >= 0.625
   } else {
-    aprobado = puntaje >= 70 // fallback
+    aprobado = puntaje >= 62.5 // fallback
   }
 
   misionAprobada.value = aprobado
@@ -411,6 +417,16 @@ function completarMision(idProvincia, puntaje, correctasCount, totalPreguntasCou
     estadisticasHeroe.sospechaIdentidad = Math.min(100, estadisticasHeroe.sospechaIdentidad + 8)
   }
 
+  if (aprobado) {
+    registrarEnRanking(
+      identidadHeroe.aliasHeroe,
+      provinciaActiva.value?.nombre || idProvincia,
+      puntaje,
+      correctasCount,
+      totalPreguntasCount
+    )
+  }
+
   eventoSospechaMostradoHoy.value = false
   esModoNocturno.value = false
   navegarA(PANTALLAS.RESULTADO)
@@ -431,6 +447,7 @@ const SAVE_KEY = 'rutaTicaHeroeAfterProgreso'
 function guardarProgreso() {
   try {
     const data = {
+      avanceMision: avanceMision.value,
       identidadHeroe: { ...identidadHeroe },
       estadisticasHeroe: { ...estadisticasHeroe },
       experienciaHeroe: experienciaHeroe.value,
@@ -454,61 +471,104 @@ function guardarProgreso() {
   }
 }
 
-/** Carga el progreso del juego desde localStorage */
+/** Auxiliar para validar la integridad de los datos de progreso guardados */
+function validarProgresoData(data) {
+  // 1. Validar que data sea un objeto
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return false
+  }
+
+  // 2. Validar identidadHeroe y sus campos obligatorios
+  if (!data.identidadHeroe || typeof data.identidadHeroe !== 'object' || Array.isArray(data.identidadHeroe)) {
+    return false
+  }
+  const { nombre, universidad, carrera, personalidad, aliasHeroe } = data.identidadHeroe
+  if (
+    typeof nombre !== 'string' || nombre.trim() === '' ||
+    typeof universidad !== 'string' || universidad.trim() === '' ||
+    typeof carrera !== 'string' || carrera.trim() === '' ||
+    typeof personalidad !== 'string' || personalidad.trim() === '' ||
+    typeof aliasHeroe !== 'string' || aliasHeroe.trim() === ''
+  ) {
+    return false
+  }
+
+  // 3. Validar estadisticasHeroe y que todos sus campos obligatorios existan y sean numéricos
+  if (!data.estadisticasHeroe || typeof data.estadisticasHeroe !== 'object' || Array.isArray(data.estadisticasHeroe)) {
+    return false
+  }
+  const statsRequeridas = ['energia', 'conocimiento', 'diversion', 'responsabilidad', 'reputacionNocturna', 'sospechaIdentidad']
+  for (const stat of statsRequeridas) {
+    const val = data.estadisticasHeroe[stat]
+    if (typeof val !== 'number' || isNaN(val)) {
+      return false
+    }
+  }
+
+  // 4. Validar colecciones obligatorias
+  if (
+    !Array.isArray(data.misionesCompletadas) ||
+    !Array.isArray(data.checkpointsDesbloqueados) ||
+    !Array.isArray(data.coleccionAfter) ||
+    !Array.isArray(data.inventarioHeroe) ||
+    !Array.isArray(data.logrosHeroe)
+  ) {
+    return false
+  }
+
+  // 5. Validar pantallaActual y que pertenezca a PANTALLAS
+  const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
+  if (!data.pantallaActual || !PANTALLAS_VALIDAS.includes(data.pantallaActual)) {
+    return false
+  }
+
+  return true
+}
+
+/** Carga el progreso del juego desde localStorage con validación robusta */
 function cargarProgreso() {
   try {
     const raw = localStorage.getItem(SAVE_KEY)
     if (!raw) return false
+    
     const data = JSON.parse(raw)
-    if (data.identidadHeroe) Object.assign(identidadHeroe, data.identidadHeroe)
-    if (data.estadisticasHeroe) Object.assign(estadisticasHeroe, data.estadisticasHeroe)
+    
+    if (!validarProgresoData(data)) {
+      throw new Error('Estructura de progreso corrupta, incompleta o inválida')
+    }
+
+    // Si todo es válido, aplicamos las asignaciones de forma segura
+    Object.assign(identidadHeroe, data.identidadHeroe)
+    Object.assign(estadisticasHeroe, data.estadisticasHeroe)
     if (data.experienciaHeroe !== undefined) experienciaHeroe.value = data.experienciaHeroe
     if (data.nivelHeroe !== undefined) nivelHeroe.value = data.nivelHeroe
-    if (data.misionesCompletadas) misionesCompletadas.value = data.misionesCompletadas
-    if (data.checkpointsDesbloqueados) checkpointsDesbloqueados.value = data.checkpointsDesbloqueados
-    if (data.coleccionAfter) coleccionAfter.value = data.coleccionAfter
-    if (data.inventarioHeroe) inventarioHeroe.value = data.inventarioHeroe
-    if (data.logrosHeroe) logrosHeroe.value = data.logrosHeroe
+    misionesCompletadas.value = data.misionesCompletadas
+    checkpointsDesbloqueados.value = data.checkpointsDesbloqueados
+    coleccionAfter.value = data.coleccionAfter
+    inventarioHeroe.value = data.inventarioHeroe
+    logrosHeroe.value = data.logrosHeroe
     if (data.esModoNocturno !== undefined) esModoNocturno.value = data.esModoNocturno
     if (data.provinciaRecienDesbloqueada !== undefined) provinciaRecienDesbloqueada.value = data.provinciaRecienDesbloqueada
     if (data.ultimaMisionNombre !== undefined) ultimaMisionNombre.value = data.ultimaMisionNombre
     if (data.ultimaMisionResultado !== undefined) ultimaMisionResultado.value = data.ultimaMisionResultado
     if (data.ultimaRecompensa !== undefined) ultimaRecompensa.value = data.ultimaRecompensa
-    
-    // Si la pantalla guardada era juego, mandamos a mapa para evitar inconsistencias
-    const PANTALLAS_VALIDAS = Object.values(PANTALLAS)
-    const tieneIdentidadValida = data.identidadHeroe && 
-      data.identidadHeroe.nombre && 
-      data.identidadHeroe.nombre.trim() !== '' &&
-      data.identidadHeroe.universidad &&
-      data.identidadHeroe.carrera &&
-      data.identidadHeroe.personalidad &&
-      data.identidadHeroe.aliasHeroe &&
-      data.identidadHeroe.aliasHeroe.trim() !== ''
+    if (data.avanceMision !== undefined) avanceMision.value = data.avanceMision
 
-    if (tieneIdentidadValida) {
-      if (data.pantallaActual && PANTALLAS_VALIDAS.includes(data.pantallaActual)) {
-        // Pantallas transitorias que no deben restaurarse (no tienen estado persistente propio)
-        const pantallasTransitorias = [
-          PANTALLAS.JUEGO, PANTALLAS.VUELO, PANTALLAS.NUEVO_DIA,
-          PANTALLAS.ACTIVIDADES, PANTALLAS.TRANSICION_NOCHE, PANTALLAS.TRANSFORMACION
-        ]
-        if (pantallasTransitorias.includes(data.pantallaActual)) {
-          pantallaActual.value = PANTALLAS.MAPA
-        } else {
-          pantallaActual.value = data.pantallaActual
-        }
-      } else {
-        pantallaActual.value = PANTALLAS.MAPA
-      }
+    // Pantallas transitorias que no deben restaurarse (no tienen estado persistente propio)
+    const pantallasTransitorias = [
+      PANTALLAS.JUEGO, PANTALLAS.VUELO, PANTALLAS.NUEVO_DIA,
+      PANTALLAS.ACTIVIDADES, PANTALLAS.TRANSICION_NOCHE, PANTALLAS.TRANSFORMACION
+    ]
+    if (pantallasTransitorias.includes(data.pantallaActual)) {
+      pantallaActual.value = PANTALLAS.MAPA
     } else {
-      console.warn('[useEstadoJuego] Partida guardada incompatible o identidad incompleta. Redirigiendo a INICIO.')
-      pantallaActual.value = PANTALLAS.INICIO
+      pantallaActual.value = data.pantallaActual
     }
-    console.info('[RutaTica] Progreso cargado correctamente.')
+
+    console.info('[RutaTica] Progreso cargado y validado correctamente.')
     return true
   } catch (error) {
-    console.error('[RutaTica] Error al cargar progreso (posible formato incompatible). Limpiando datos corruptos:', error)
+    console.error('[RutaTica] Error al cargar progreso (posible formato incompatible). Limpiando datos corruptos:', error.message || error)
     try {
       localStorage.removeItem(SAVE_KEY)
       reiniciarJuego()
@@ -531,14 +591,35 @@ function borrarProgreso() {
   }
 }
 
+/** Reinicia la aventura borrando localStorage, reseteando el estado y volviendo a Inicio */
+function reiniciarProgreso() {
+  try {
+    localStorage.removeItem(SAVE_KEY)
+    reiniciarJuego()
+    pantallaActual.value = PANTALLAS.INICIO
+    console.info('[RutaTica] Aventura reiniciada correctamente.')
+  } catch (error) {
+    console.error('[RutaTica] Error al reiniciar la aventura:', error)
+  }
+}
+
 /** Comprueba si hay una partida guardada válida */
 function hayProgresoGuardado() {
   try {
     const raw = localStorage.getItem(SAVE_KEY)
     if (!raw) return false
     const parsed = JSON.parse(raw)
-    return !!(parsed && parsed.identidadHeroe && parsed.identidadHeroe.nombre)
+    const esValido = validarProgresoData(parsed)
+    if (!esValido) {
+      console.warn('[useEstadoJuego] Progreso guardado corrupto detectado. Limpiando localStorage.')
+      localStorage.removeItem(SAVE_KEY)
+      return false
+    }
+    return true
   } catch {
+    try {
+      localStorage.removeItem(SAVE_KEY)
+    } catch {}
     return false
   }
 }
@@ -557,6 +638,8 @@ function reiniciarJuego() {
   ultimoPuntajeMision.value = 0
   misionAprobada.value = true
   misionEsPractica.value = false
+  esSegundoIntento.value = false
+  avanceMision.value = null
   respuestasCorrectasMision.value = 0
   totalPreguntasMision.value = 0
   eventoSospechaMostradoHoy.value = false
@@ -585,6 +668,72 @@ function reiniciarJuego() {
 }
 
 // =========================================================
+// Sistema de Ranking Local (Salón de la Fama)
+// =========================================================
+const rankingLocal = ref([])
+const RANKING_KEY = 'rutaTicaHeroeAfterRanking'
+
+function cargarRankingLocal() {
+  try {
+    const raw = localStorage.getItem(RANKING_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed)) {
+        rankingLocal.value = parsed
+        return
+      }
+    }
+    rankingLocal.value = []
+  } catch (error) {
+    console.error('[RutaTica] Error al cargar ranking local:', error)
+    rankingLocal.value = []
+  }
+}
+
+function registrarEnRanking(alias, provincia, puntaje, correctas, total) {
+  try {
+    const raw = localStorage.getItem(RANKING_KEY)
+    let ranking = []
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed)) {
+        ranking = parsed
+      }
+    }
+    
+    const ahora = new Date()
+    const fechaStr = `${ahora.getDate().toString().padStart(2, '0')}/${(ahora.getMonth() + 1).toString().padStart(2, '0')}/${ahora.getFullYear()} ${ahora.getHours().toString().padStart(2, '0')}:${ahora.getMinutes().toString().padStart(2, '0')}`
+    
+    const nuevaEntrada = {
+      alias: alias || 'Héroe del After',
+      provincia: provincia || 'Desconocida',
+      puntaje: typeof puntaje === 'number' ? puntaje : 0,
+      resultado: `${correctas}/${total}`,
+      fecha: fechaStr
+    }
+    
+    ranking.push(nuevaEntrada)
+    
+    // Ordenar de mejor a menor puntaje
+    ranking.sort((a, b) => b.puntaje - a.puntaje)
+    
+    // Mantener máximo 10 registros
+    if (ranking.length > 10) {
+      ranking = ranking.slice(0, 10)
+    }
+    
+    rankingLocal.value = ranking
+    localStorage.setItem(RANKING_KEY, JSON.stringify(ranking))
+    console.info('[RutaTica] Ranking actualizado en localStorage.')
+  } catch (error) {
+    console.error('[RutaTica] Error al guardar en ranking:', error)
+  }
+}
+
+// Cargar ranking una vez al evaluar el script
+cargarRankingLocal()
+
+// =========================================================
 // Export del composable
 // =========================================================
 export function useEstadoJuego() {
@@ -610,11 +759,14 @@ export function useEstadoJuego() {
     misionEsPractica,
     respuestasCorrectasMision,
     totalPreguntasMision,
+    esSegundoIntento,
+    avanceMision,
     eventoSospechaMostradoHoy,
     provinciaRecienDesbloqueada,
     ultimaMisionNombre,
     ultimaMisionResultado,
     ultimaRecompensa,
+    rankingLocal,
 
     // Computed
     identidadCompleta,
@@ -633,7 +785,9 @@ export function useEstadoJuego() {
     guardarProgreso,
     cargarProgreso,
     borrarProgreso,
+    reiniciarProgreso,
     hayProgresoGuardado,
+    cargarRankingLocal,
 
     // Constantes
     PANTALLAS

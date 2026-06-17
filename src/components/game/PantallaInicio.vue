@@ -1,6 +1,14 @@
 <template>
   <section class="pantalla-inicio" aria-label="Pantalla de inicio de Ruta Tica">
 
+    <!-- Efectos de fondo premium animados -->
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="luces-ambiente" aria-hidden="true">
+      <div class="luz-ambiente luz-azul"></div>
+      <div class="luz-ambiente luz-verde"></div>
+      <div class="luz-ambiente luz-purpura"></div>
+    </div>
+
     <!-- Partículas de fondo decorativas -->
     <div class="particulas" aria-hidden="true">
       <span v-for="n in 20" :key="n" class="particula" :style="estiloParticula(n)"></span>
@@ -58,17 +66,39 @@
       </div>
 
       <!-- Botón principal de acción -->
-      <!-- emit: notifica al padre que debe cambiar de pantalla -->
       <div class="llamada-accion animate-fade-in delay-500">
-        <button
-          id="btn-iniciar-mision"
-          class="btn btn-primary btn-lg animate-bounce-subtle"
-          @click="alIniciar"
-          aria-label="Iniciar misión y crear tu héroe"
-        >
-          ⚡ Iniciar misión
-        </button>
-        <p class="sugerencia-cta">Crea tu identidad de héroe universitario</p>
+        <template v-if="tieneProgresoValido">
+          <div class="opciones-inicio-botones">
+            <button
+              id="btn-continuar-aventura"
+              class="btn btn-primary btn-lg btn-continuar-partida-inicio animate-bounce-subtle"
+              @click="alContinuarPartidaDirecto"
+              aria-label="Continuar aventura guardada"
+            >
+              📂 Continuar aventura
+            </button>
+            <button
+              id="btn-nueva-aventura"
+              class="btn btn-outline btn-lg"
+              @click="alConfirmarNuevaPartidaDirecto"
+              aria-label="Iniciar nueva aventura"
+            >
+              ✨ Nueva aventura
+            </button>
+          </div>
+          <p class="sugerencia-cta">Continúa donde lo dejaste o crea una nueva historia</p>
+        </template>
+        <template v-else>
+          <button
+            id="btn-iniciar-mision"
+            class="btn btn-primary btn-lg animate-bounce-subtle"
+            @click="alIniciar"
+            aria-label="Iniciar misión y crear tu héroe"
+          >
+            ⚡ Iniciar misión
+          </button>
+          <p class="sugerencia-cta">Crea tu identidad de héroe universitario</p>
+        </template>
       </div>
 
       <!-- Nota de responsabilidad -->
@@ -76,46 +106,6 @@
         🌿 Este juego promueve el conocimiento, el equilibrio y la responsabilidad universitaria.
       </p>
     </div>
-
-    <!-- Dialogo: Partida encontrada -->
-    <teleport to="body">
-      <transition name="modal-fade">
-        <div v-if="mostrarPartidaEncontrada" class="modal-overlay" role="dialog" aria-modal="true">
-          <div class="modal-wrapper">
-            <div class="modal-card animate-fade-in-scale">
-              <div class="modal-icon">💾</div>
-              <div class="modal-header">
-                <h3 class="modal-title">Partida Guardada Encontrada</h3>
-              </div>
-              <div class="modal-body">
-                <p class="modal-message">
-                  Hemos detectado una partida guardada anterior para el héroe:
-                  <br /><strong class="texto-heroe-guardado">{{ nombreHeroeGuardado }}</strong>.
-                  <br /><br />
-                  ¿Deseas continuar tu patrullaje o empezar de nuevo desde cero?
-                </p>
-              </div>
-              <div class="modal-actions-column">
-                <button
-                  type="button"
-                  class="btn btn-hero btn-lg btn-block btn-continuar-partida"
-                  @click="alContinuarPartida"
-                >
-                  📂 Continuar partida
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline btn-block"
-                  @click="alConfirmarNuevaPartida"
-                >
-                  ✨ Nueva partida
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </transition>
-    </teleport>
 
     <!-- Modal Confirmación para Nueva Partida -->
     <ModalConfirmacion
@@ -148,9 +138,8 @@ const { reproducirMusica, reproducirEfecto } = useAudio()
 const { hayProgresoGuardado, cargarProgreso, borrarProgreso } = useEstadoJuego()
 
 // --- Estado local ---
-const mostrarPartidaEncontrada = ref(false)
+const tieneProgresoValido = ref(false)
 const mostrarConfirmarNuevaPartida = ref(false)
-const nombreHeroeGuardado = ref('')
 
 // --- Emits: notifica al padre qué acción realizar ---
 const emit = defineEmits(['iniciar'])
@@ -160,18 +149,7 @@ onMounted(() => {
   // Iniciar música de menú
   reproducirMusica('menu')
 
-  if (hayProgresoGuardado()) {
-    try {
-      const raw = localStorage.getItem('rutaTicaHeroeAfterProgreso')
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        nombreHeroeGuardado.value = parsed.identidadHeroe?.nombre || 'Héroe del After'
-        mostrarPartidaEncontrada.value = true
-      }
-    } catch (e) {
-      console.error('Error al detectar save en PantallaInicio:', e)
-    }
-  }
+  tieneProgresoValido.value = hayProgresoGuardado()
 })
 
 /** Emitir evento de inicio hacia App.vue */
@@ -179,13 +157,12 @@ function alIniciar() {
   emit('iniciar')
 }
 
-function alContinuarPartida() {
+function alContinuarPartidaDirecto() {
   reproducirEfecto('subirNivel')
   cargarProgreso()
-  mostrarPartidaEncontrada.value = false
 }
 
-function alConfirmarNuevaPartida() {
+function alConfirmarNuevaPartidaDirecto() {
   reproducirEfecto('click')
   mostrarConfirmarNuevaPartida.value = true
 }
@@ -199,7 +176,8 @@ function comenzarNuevaPartida() {
   reproducirEfecto('subirNivel')
   borrarProgreso()
   mostrarConfirmarNuevaPartida.value = false
-  mostrarPartidaEncontrada.value = false
+  tieneProgresoValido.value = false
+  emit('iniciar')
 }
 
 /**
@@ -254,6 +232,95 @@ function estiloParticula(n) {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+/* --- Cyber Grid Overlay --- */
+.grid-overlay {
+  position: absolute;
+  inset: -100px;
+  background-image: 
+    linear-gradient(rgba(0, 200, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center center;
+  transform: perspective(500px) rotateX(20deg);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.8;
+  animation: grid-scroll 25s linear infinite;
+  will-change: transform;
+}
+
+@keyframes grid-scroll {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 500px;
+  }
+}
+
+/* --- Luces Ambientales (Auroras/Nebulosas) --- */
+.luces-ambiente {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  filter: blur(140px);
+  opacity: 0.65;
+}
+
+.luz-ambiente {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.luz-azul {
+  top: 10%;
+  left: 15%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.25) 0%, transparent 80%);
+  animation: float-luz-1 20s ease-in-out infinite alternate;
+}
+
+.luz-verde {
+  bottom: 10%;
+  right: 10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.18) 0%, transparent 80%);
+  animation: float-luz-2 24s ease-in-out infinite alternate;
+}
+
+.luz-purpura {
+  top: 40%;
+  left: 50%;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(184, 79, 255, 0.2) 0%, transparent 80%);
+  animation: float-luz-3 22s ease-in-out infinite alternate;
+}
+
+@keyframes float-luz-1 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(80px, 50px, 0) scale(1.15); }
+  100% { transform: translate3d(-40px, 90px, 0) scale(0.9); }
+}
+
+@keyframes float-luz-2 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-90px, -60px, 0) scale(0.85); }
+  100% { transform: translate3d(50px, 40px, 0) scale(1.1); }
+}
+
+@keyframes float-luz-3 {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(60px, -80px, 0) scale(1.1); }
+  100% { transform: translate3d(-70px, 50px, 0) scale(0.85); }
 }
 
 /* --- Partículas flotantes de energía --- */
@@ -665,5 +732,37 @@ function estiloParticula(n) {
 .btn-continuar-partida:hover {
   background: linear-gradient(135deg, #33ccff, #0088cc);
   box-shadow: 0 0 12px rgba(0, 200, 255, 0.4);
+}
+
+.opciones-inicio-botones {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.opciones-inicio-botones .btn {
+  min-width: 200px;
+}
+
+.btn-continuar-partida-inicio {
+  background: linear-gradient(135deg, var(--color-neon-blue) 0%, #005a9c 100%);
+  border-color: rgba(0, 200, 255, 0.4);
+  animation: pulseNeonCTA 2s infinite ease-in-out;
+}
+
+.btn-continuar-partida-inicio:hover {
+  background: linear-gradient(135deg, #33ccff 0%, #0088cc 100%);
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
+  transform: scale(1.05) translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .opciones-inicio-botones {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
 }
 </style>

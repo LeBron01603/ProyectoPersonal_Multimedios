@@ -144,13 +144,123 @@
       "preguntas": [
         {
           "id": "hr-001",
-          "texto": "[PREGUNTA PLACEHOLDER] ¿Por qué apodo es conocida la ciudad de Heredia?",
-          "opciones": ["La ciudad de las flores", "La ciudad eterna", "El Valle Hermoso", "La ciudad universitaria"],
+          "texto": "Heredia es conocida como la 'Ciudad de las Flores'. ¿A qué se atribuye principalmente el origen de este apodo?",
+          "opciones": [
+            "A la gran cantidad de flores exóticas exportadas a Europa en el siglo XIX.",
+            "Al apodo de las familias tradicionales y la belleza de sus jardines en el siglo XIX.",
+            "A una ley colonial que obligaba a sembrar flores en los frentes de las casas.",
+            "A la abundancia de orquídeas silvestres en el Volcán Barva."
+          ],
+          "correcta": 1,
+          "explicacion": "Se atribuye al poeta herediano Fabián Dobles y a la tradición oral que describía a Heredia por la belleza de las heredianas (comparadas con flores) y la gran cantidad de jardines de las casas coloniales.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Excelente! Los estudiantes celebran tu conocimiento de las tradiciones heredianas y deciden caminar admirando los jardines locales.",
+          "consecuenciaIncorrecta": "Los estudiantes se confunden con explicaciones extrañas y prefieren irse a bailar, perdiendo el hilo histórico."
+        },
+        {
+          "id": "hr-002",
+          "texto": "Estás patrullando cerca del norte de Heredia, donde se ubica una imponente elevación dentro del Parque Nacional Braulio Carrillo. ¿Cómo se llama este volcán inactivo que corona la provincia?",
+          "opciones": [
+            "Volcán Barva",
+            "Volcán Poás",
+            "Volcán Irazú",
+            "Volcán Turrialba"
+          ],
           "correcta": 0,
-          "explicacion": "Heredia es conocida como 'La Ciudad de las Flores' por su historia y tradición cafetalera y de jardines.",
+          "explicacion": "El volcán Barva es un volcán inactivo con tres lagunas en sus cráteres, situado en la provincia de Heredia, dentro del Braulio Carrillo.",
           "categoria": "Geografía",
-          "consecuenciaCorrecta": "¡Correcto! Los estudiantes heredianos te felicitan por conocer la tradición de las flores.",
-          "consecuenciaIncorrecta": "Te confundiste de apodo y los estudiantes heredianos bromearon al respecto, bajando tu reputación."
+          "consecuenciaCorrecta": "¡Guiaste al grupo de senderistas universitarios correctamente hacia el sendero del volcán Barva para su caminata matutina!",
+          "consecuenciaIncorrecta": "El grupo tomó el sendero equivocado hacia el Poás y terminó en otra provincia de madrugada."
+        },
+        {
+          "id": "hr-003",
+          "texto": "Heredia alberga el campus Omar Dengo de una de las universidades públicas más importantes del país. ¿Cuál es esta prestigiosa institución fundada en 1973?",
+          "opciones": [
+            "Universidad de Costa Rica (UCR)",
+            "Tecnológico de Costa Rica (TEC)",
+            "Universidad Nacional (UNA)",
+            "Universidad Técnica Nacional (UTN)"
+          ],
+          "correcta": 2,
+          "explicacion": "La Universidad Nacional (UNA) fue fundada en 1973 bajo la administración de José Figueres Ferrer y tiene su campus principal en Heredia.",
+          "categoria": "Universidad",
+          "consecuenciaCorrecta": "¡Perfecto! Los estudiantes de la UNA se sintieron orgullosos de su universidad y te invitaron a una tertulia estudiantil segura.",
+          "consecuenciaIncorrecta": "Los alumnos de primer ingreso se desorientaron y terminaron en el campus de otra provincia."
+        },
+        {
+          "id": "hr-004",
+          "texto": "En las zonas altas de Heredia, especialmente en el Braulio Carrillo, habita un ave emblemática del bosque nuboso con un plumaje verde resplandeciente y pecho rojo. ¿Cuál es esta mística ave venerada desde la época prehispánica?",
+          "opciones": [
+            "El Yigüirro",
+            "El Quetzal",
+            "El Tucán",
+            "El Colibrí Esmeralda"
+          ],
+          "correcta": 1,
+          "explicacion": "El Quetzal es una de las aves más hermosas del continente y habita en los bosques nubosos de las zonas altas de Costa Rica, incluyendo Heredia.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Increíble! Lograste avistar el quetzal junto a los estudiantes, promoviendo el aviturismo responsable y la conservación silvestre.",
+          "consecuenciaIncorrecta": "Hicieron mucho ruido buscando al ave y esta huyó, dejando al grupo decepcionado en la oscuridad."
+        },
+        {
+          "id": "hr-005",
+          "texto": "En el centro de Heredia destaca un monumento militar histórico de forma cilíndrica construido en 1876 durante el gobierno de Tomás Guardia. ¿Cómo se le conoce a esta estructura icono de la provincia?",
+          "opciones": [
+            "La Parroquia de las Flores",
+            "El Fortín",
+            "La Torre de la Libertad",
+            "El Cuartel del Norte"
+          ],
+          "correcta": 1,
+          "explicacion": "El Fortín de Heredia es una edificación militar construida en 1876, declarada monumento nacional en 1974 y símbolo representativo de la provincia.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Fabuloso! Detallaste la historia del Fortín. Los jóvenes se tomaron fotos seguras frente a él y apreciaron la arquitectura nacional.",
+          "consecuenciaIncorrecta": "Confundiste el Fortín con una iglesia y los lugareños se rieron de tu falta de conocimiento local."
+        },
+        {
+          "id": "hr-006",
+          "texto": "Patrullas las montañas de San Rafael de Heredia. Un grupo de senderistas te pregunta cómo se llama el hermoso bosque municipal de cipreses conocido originalmente como 'Las Chorreras', famoso por sus senderos, aire puro y áreas recreativas.",
+          "opciones": [
+            "Bosque de la Hoja",
+            "Bosque de Prusia",
+            "Bosque del Niño",
+            "Parque del Este"
+          ],
+          "correcta": 0,
+          "explicacion": "El Bosque de la Hoja (antiguamente conocido como Las Chorreras) está ubicado en San Rafael de Heredia y es el primer bosque municipal del país, caracterizado por sus senderos entre cipreses y áreas verdes.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Excelente orientación! Los senderistas disfrutaron de una caminata segura y relajante en el Bosque de la Hoja.",
+          "consecuenciaIncorrecta": "Los senderistas se confundieron de ruta y terminaron caminando por calles de asfalto en San Rafael, perdiendo la experiencia natural."
+        },
+        {
+          "id": "hr-007",
+          "texto": "En San Joaquín de Flores, Heredia, se ubica una hermosa parroquia declarada patrimonio histórico construida en el siglo XIX. ¿De qué material particular están hechas sus paredes externas de piedra labrada?",
+          "opciones": [
+            "Granito importado",
+            "Piedra andesita (canto rodado local)",
+            "Ladrillo de arcilla quemada",
+            "Marmolina de Carrara"
+          ],
+          "correcta": 1,
+          "explicacion": "La Iglesia de San Joaquín de Flores, terminada en 1886, se destaca por su sólida estructura de piedra andesita labrada extraída del río local.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Fabuloso! Llevaste a los estudiantes a apreciar la arquitectura de piedra labrada con gran orgullo de identidad.",
+          "consecuenciaIncorrecta": "Se aburrieron de esperar datos erróneos de la construcción y prefirieron marcharse."
+        },
+        {
+          "id": "hr-008",
+          "texto": "Cerca del campus de la UNA en Heredia, patrullas de noche y unos estudiantes de Biología observan orquídeas. Te preguntan por la flor nacional de Costa Rica, una orquídea de pétalos morados muy común en los jardines heredianos. ¿Cuál es?",
+          "opciones": [
+            "Guaria Morada",
+            "Flor de Loto",
+            "Lluvia de Oro",
+            "Torito"
+          ],
+          "correcta": 0,
+          "explicacion": "La Guaria Morada (Guarianthe skinneri) fue decretada Flor Nacional de Costa Rica en 1939 y florece abundantemente entre febrero y marzo.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Correcto! Los estudiantes de Biología celebraron tu conocimiento de la flora nacional y te regalaron un distintivo ecológico.",
+          "consecuenciaIncorrecta": "Confundiste la orquídea nacional con un lirio y los biólogos se burlaron del error."
         }
       ]
     },
@@ -186,13 +296,123 @@
       "preguntas": [
         {
           "id": "ct-001",
-          "texto": "[PREGUNTA PLACEHOLDER] ¿En qué año fue fundada la ciudad de Cartago?",
-          "opciones": ["1523", "1563", "1600", "1650"],
-          "correcta": 1,
-          "explicacion": "Cartago fue fundada en 1563 por Juan Vázquez de Coronado y fue la primera capital del país.",
+          "texto": "Cartago fue la capital de Costa Rica desde la época colonial. ¿En qué año y tras cuál batalla militar se decidió trasladar la capital a la ciudad de San José?",
+          "opciones": [
+            "1823, tras la Batalla de Ochomogo",
+            "1856, tras la Batalla de Rivas",
+            "1948, tras la Revolución de Liberación",
+            "1821, tras la Firma del Acta de Independencia"
+          ],
+          "correcta": 0,
+          "explicacion": "La Batalla de Ochomogo en 1823 enfrentó a republicanos (de San José y Alajuela) e imperialistas (de Cartago y Heredia), resultando en la victoria republicana y el traslado de la capital a San José.",
           "categoria": "Historia",
-          "consecuenciaCorrecta": "¡Correcto! Aclaraste el misterio histórico de la fundación cartaginesa.",
-          "consecuenciaIncorrecta": "Confundiste la fecha del cabildo de Cartago y el grupo de historia se aburrió, bajando tu reputación."
+          "consecuenciaCorrecta": "¡Brillante! Aclaraste el debate histórico de los jóvenes sobre por qué San José es la capital actual.",
+          "consecuenciaIncorrecta": "El grupo debatió erróneamente y la discusión se acaloró, bajando la armonía de la noche."
+        },
+        {
+          "id": "ct-002",
+          "texto": "Cada 1 de agosto, miles de costarricenses realizan una famosa peregrinación o 'romería' hacia un templo religioso icónico en Cartago. ¿Cómo se llama este santuario nacional?",
+          "opciones": [
+            "Basílica de Nuestra Señora de los Ángeles",
+            "Catedral de Cartago",
+            "Iglesia de Orosi",
+            "Templo de la Purísima"
+          ],
+          "correcta": 0,
+          "explicacion": "La Basílica de Nuestra Señora de los Ángeles alberga la imagen de la 'Negrita', patrona de Costa Rica, hallada en 1635 por Juana Pereira.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Excelente! Guiaste a los romeros por la ruta peatonal segura y evitaron accidentes viales.",
+          "consecuenciaIncorrecta": "Los caminantes tomaron una ruta peligrosa y terminaron cansados a la orilla de la autopista."
+        },
+        {
+          "id": "ct-003",
+          "texto": "En el macizo central de Cartago se encuentra el volcán más alto de Costa Rica, famoso por permitir ver ambos océanos en un día despejado. ¿Cuál es este volcán?",
+          "opciones": [
+            "Volcán Poás",
+            "Volcán Turrialba",
+            "Volcán Irazú",
+            "Volcán Tenorio"
+          ],
+          "correcta": 2,
+          "explicacion": "El volcán Irazú es el volcán más alto del país, con una altitud de 3.432 metros sobre el nivel del mar.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Espectacular! Aconsejaste subir temprano para ver el amanecer y el cráter principal despejado.",
+          "consecuenciaIncorrecta": "Los turistas subieron muy tarde con neblina densa y regresaron decepcionados de la cima."
+        },
+        {
+          "id": "ct-004",
+          "texto": "Cerca de Cartago se ubica el Parque Nacional Tapantí - Macizo de la Muerte. ¿Cuál es una de las características biológicas principales de esta reserva natural lluviosa?",
+          "opciones": [
+            "Es una de las zonas más secas y desérticas del país",
+            "Posee una inmensa riqueza hídrica y es cuna de cientos de especies de aves",
+            "Alberga únicamente bosques de manglar costero",
+            "Es famosa por sus extensas sabanas de pastoreo"
+          ],
+          "correcta": 1,
+          "explicacion": "Tapantí es una de las zonas más lluviosas del país, con múltiples ríos, cascadas y un hábitat ideal para aves como el quetzal e incontables anfibios.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Genial! Los estudiantes valoraron el agua como recurso vital y respetaron las normas del parque nacional.",
+          "consecuenciaIncorrecta": "Los excursionistas tiraron basura cerca del río y tuviste que detenerte a limpiar los desechos."
+        },
+        {
+          "id": "ct-005",
+          "texto": "En el centro de Cartago se encuentran las famosas 'Ruinas de Cartago'. ¿A qué edificación religiosa histórica inconclusa corresponden en realidad estas estructuras arquitectónicas?",
+          "opciones": [
+            "Un antiguo convento jesuita abandonado",
+            "La Iglesia de Santiago Apóstol, destruida por terremotos",
+            "El Palacio Municipal colonial",
+            "Una fortaleza militar contra piratas"
+          ],
+          "correcta": 1,
+          "explicacion": "Corresponden a la Iglesia de Santiago Apóstol, iniciada en el siglo XIX y destruida repetidamente por los terremotos de Santa Mónica en 1910, quedando inconclusa.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Excelente reseña histórica! Los jóvenes admiraron las ruinas con respeto y tomaron fotos artísticas.",
+          "consecuenciaIncorrecta": "Confundiste el templo con una fortaleza y los estudiantes de historia corrigieron tu error públicamente."
+        },
+        {
+          "id": "ct-006",
+          "texto": "Cerca de Paraíso de Cartago se encuentra el templo católico más antiguo del país que aún se mantiene en pie y en uso desde la época colonial. ¿Cómo se llama este histórico sitio?",
+          "opciones": [
+            "Templo Colonial de Orosi",
+            "Iglesia de Ujarrás",
+            "Ruinas de Santiago Apóstol",
+            "Ermita de San Blas"
+          ],
+          "correcta": 0,
+          "explicacion": "La Iglesia de San José de Orosi, construida por frailes franciscanos en 1743, es el templo colonial más antiguo de Costa Rica que sigue funcionando.",
+          "categoria": "Turismo",
+          "consecuenciaCorrecta": "¡Perfecto! Los jóvenes visitaron la iglesia colonial y valoraron el arte sacro e histórico.",
+          "consecuenciaIncorrecta": "El grupo fue a las ruinas de Ujarrás confundiéndolo de lugar y no pudieron entrar por la noche."
+        },
+        {
+          "id": "ct-007",
+          "texto": "En Cartago se encuentra un valle famoso por su lago artificial, represa hidroeléctrica, y miradores turísticos de gran belleza escénica. ¿Cómo se llama este valle?",
+          "opciones": [
+            "Valle de Cachí",
+            "Valle de Orosi",
+            "Valle del Guarco",
+            "Valle de Ujarrás"
+          ],
+          "correcta": 0,
+          "explicacion": "El embalse y Valle de Cachí regulan las aguas del río Reventazón y es un polo de atracción turística y de energía hidroeléctrica en Cartago.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Excelente! Recomendaste los miradores de Cachí para ver el atardecer, asombrando al grupo.",
+          "consecuenciaIncorrecta": "Los enviaste en la dirección opuesta hacia el cerro de la muerte y los agarró un frío polar."
+        },
+        {
+          "id": "ct-008",
+          "texto": "En el Jardín Botánico Lankester en Cartago, unos turistas admiran una inmensa colección científica de plantas epífitas. ¿Qué grupo botánico es la especialidad mundial de este centro de investigación de la UCR?",
+          "opciones": [
+            "Las Orquídeas",
+            "Los Helechos",
+            "Los Cactus",
+            "Los Musgos"
+          ],
+          "correcta": 0,
+          "explicacion": "El Jardín Botánico Lankester es un centro líder de la UCR dedicado al estudio, conservación y exhibición de orquídeas y otras epífitas.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Correcto! Los turistas aprendieron sobre la microflora y respetaron las plantas sin tocarlas.",
+          "consecuenciaIncorrecta": "El grupo manipuló flores delicadas en la exhibición y un oficial les llamó la atención."
         }
       ]
     },
@@ -228,13 +448,123 @@
       "preguntas": [
         {
           "id": "al-001",
-          "texto": "[PREGUNTA PLACEHOLDER] ¿Quién es el héroe nacional nacido en Alajuela recordado por la Batalla de Rivas de 1856?",
-          "opciones": ["Braulio Carrillo", "Juan Santamaría", "Juan Rafael Mora", "Juanito Mora"],
-          "correcta": 1,
-          "explicacion": "Juan Santamaría quemó el mesón en la Batalla de Rivas y es el héroe nacional oficial de Costa Rica.",
+          "texto": "Alajuela es conocida como la 'Ciudad de los Mangos'. ¿A qué héroe de la Campaña Nacional de 1856 rinde homenaje el principal monumento y parque en el centro de la ciudad?",
+          "opciones": [
+            "Juan Santamaría",
+            "Juan Rafael Mora Porras",
+            "Juan de Dios Cevallos",
+            "Florentino Alfaro"
+          ],
+          "correcta": 0,
+          "explicacion": "El soldado Juan Santamaría, nacido en Alajuela, es el héroe nacional que se sacrificó quemando el Mesón de Guerra en la Batalla de Rivas en 1856.",
           "categoria": "Historia",
-          "consecuenciaCorrecta": "¡Correcto! Inspiraste al grupo con el valor del héroe del erizo.",
-          "consecuenciaIncorrecta": "Fallaste al reconocer al héroe de Alajuela y el grupo de historia se confundió de monumento."
+          "consecuenciaCorrecta": "¡Sensacional! Narraste la historia del erizo y los jóvenes sintieron patriotismo y orgullo nacional.",
+          "consecuenciaIncorrecta": "Se te olvidó el nombre del héroe y tuviste que buscarlo en internet frente a los estudiantes."
+        },
+        {
+          "id": "al-002",
+          "texto": "Estás patrullando cerca de las faldas del volcán Poás en Alajuela. Este volcán es famoso por poseer uno de los cráteres activos más grandes del mundo. ¿Qué laguna de agua ácida y caliente se aloja en su cráter principal?",
+          "opciones": [
+            "Laguna Botos",
+            "Laguna Caliente",
+            "Laguna del Sol",
+            "Laguna de Prusia"
+          ],
+          "correcta": 1,
+          "explicacion": "El volcán Poás cuenta con dos lagunas: la Laguna Botos (fría e inactiva) y la Laguna Caliente (ácida, termal y activa en el cráter principal).",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Excelente! Diste instrucciones de seguridad correctas para visitar el mirador del volcán Poás.",
+          "consecuenciaIncorrecta": "Ignoraste las alertas de gases y el grupo de turistas sufrió irritación leve de garganta."
+        },
+        {
+          "id": "al-003",
+          "texto": "En el cantón de Sarchí, Alajuela, se fabrica una de las artesanías más famosas del país, declarada Patrimonio Cultural de la Humanidad. ¿De qué colorido objeto típico se trata?",
+          "opciones": [
+            "La Máscara de Boruca",
+            "La Carreta Típica de madera pintada",
+            "La Vasija de Barro Chorotega",
+            "La Hamaca de Cabuya"
+          ],
+          "correcta": 1,
+          "explicacion": "La carreta típica de madera decorada con vibrantes colores y diseños geométricos es el símbolo nacional del trabajo costarricense, con cuna en Sarchí.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Fabuloso! Llevaste a los estudiantes a apreciar el trabajo artesanal de Sarchí, apoyando el comercio local.",
+          "consecuenciaIncorrecta": "El grupo terminó comprando imitaciones baratas de plástico importado, afectando la experiencia cultural."
+        },
+        {
+          "id": "al-004",
+          "texto": "En la zona norte de Alajuela, cerca de San Carlos, se encuentra una joya cónica del vulcanismo costarricense rodeada de bosque lluvioso y aguas termales. ¿Cuál es este famoso volcán?",
+          "opciones": [
+            "Volcán Arenal",
+            "Volcán Tenorio",
+            "Volcán Miravalles",
+            "Volcán Rincón de la Vieja"
+          ],
+          "correcta": 0,
+          "explicacion": "El volcán Arenal es un estratovolcán cónico casi perfecto situado en La Fortuna de San Carlos, Alajuela, y uno de los destinos turísticos más populares.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Impresionante! Aconsejaste la mejor ruta de senderismo en los flujos de lava antiguos del Arenal.",
+          "consecuenciaIncorrecta": "El grupo se desvió del sendero oficial y terminó caminando entre barro espeso, desgastando su energía."
+        },
+        {
+          "id": "al-005",
+          "texto": "En Alajuela se ubica el Museo Histórico Cultural Juan Santamaría. ¿En qué edificio histórico restaurado del siglo XIX se asienta este importante museo?",
+          "opciones": [
+            "El Antiguo Cuartel de Alajuela y la Cárcel de la ciudad",
+            "La Estación de Ferrocarril al Pacífico",
+            "La Antigua Casa de Gobierno Colonial",
+            "Un antiguo convento franciscano"
+          ],
+          "correcta": 0,
+          "explicacion": "El museo se encuentra en el Antiguo Cuartel de Armas de Alajuela y la Cárcel de la ciudad, edificaciones militares del siglo XIX declaradas de interés histórico.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Correcto! Los estudiantes conocieron la antigua arquitectura carcelaria y militar con gran respeto.",
+          "consecuenciaIncorrecta": "Los turistas se confundieron de edificio y terminaron en las oficinas municipales por error."
+        },
+        {
+          "id": "al-006",
+          "texto": "Al oeste de Alajuela se encuentra Atenas. Este cantón es famoso a nivel mundial por recibir un apodo relacionado con las condiciones saludables de su aire y temperatura. ¿Cuál es?",
+          "opciones": [
+            "El mejor clima del mundo",
+            "La sucursal del cielo",
+            "El valle de la salud",
+            "La ciudad de los vientos"
+          ],
+          "correcta": 0,
+          "explicacion": "La National Geographic catalogó a Atenas en los años 1960 con 'el mejor clima del mundo' por la calidez y estabilidad de su atmósfera.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Perfecto! Los turistas disfrutaron de una parada relajante en Atenas comiendo toronjas rellenas.",
+          "consecuenciaIncorrecta": "El grupo tomó una ruta empinada sin aire acondicionado y terminaron sofocados en la noche."
+        },
+        {
+          "id": "al-007",
+          "texto": "En Alajuela se ubica el cantón de San Ramón, cuna de importantes escritores, poetas y de tres expresidentes de la República. ¿Por qué apodo cultural es conocido este cantón?",
+          "opciones": [
+            "Tierra de Poetas",
+            "Cuna de la Independencia",
+            "El Olimpo Tico",
+            "La Atenas de Costa Rica"
+          ],
+          "correcta": 0,
+          "explicacion": "San Ramón de Alajuela es conocido como la 'Tierra de Poetas' por albergar figuras literarias clave como Lisímaco Chavarría y Félix Ángel Salas.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Brillante! Diste una charla de literatura costarricense improvisada que fascinó a los jóvenes locales.",
+          "consecuenciaIncorrecta": "Los jóvenes se aburrieron con explicaciones confusas y decidieron irse a dormir temprano."
+        },
+        {
+          "id": "al-008",
+          "texto": "En las llanuras del norte de Alajuela habita una especie de lapa en peligro de extinción, asociada al árbol de almendro de montaña de cuyas semillas se alimenta. ¿Cuál es?",
+          "opciones": [
+            "Lapa Verde",
+            "Lapa Roja",
+            "Loro de Frente Blanca",
+            "Perico Coronirrojo"
+          ],
+          "correcta": 0,
+          "explicacion": "La lapa verde (Ara ambiguus) habita en los bosques húmedos del norte de Costa Rica (Alajuela y Heredia) y depende vitalmente del almendro de montaña.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Extraordinario! Lograste concientizar al grupo sobre la protección del almendro de montaña para la lapa verde.",
+          "consecuenciaIncorrecta": "El grupo hizo fogatas en una zona de anidación protegida, asustando a la fauna local."
         }
       ]
     },
@@ -270,13 +600,123 @@
       "preguntas": [
         {
           "id": "gn-001",
-          "texto": "[PREGUNTA PLACEHOLDER] ¿Cuál es el árbol nacional de Costa Rica, símbolo de esta provincia?",
-          "opciones": ["Roble Sabana", "Árbol de Guanacaste", "Corteza Amarilla", "Ceibo"],
+          "texto": "El 25 de julio de 1824 se conmemora un hito histórico fundamental para Costa Rica relacionado con Guanacaste. ¿Cuál fue este gran acontecimiento político y social?",
+          "opciones": [
+            "La Anexión del Partido de Nicoya a Costa Rica",
+            "La Batalla de Santa Rosa contra filibusteros",
+            "La Fundación de la Ciudad de Liberia",
+            "El Descubrimiento de la Península de Nicoya"
+          ],
+          "correcta": 0,
+          "explicacion": "La Anexión del Partido de Nicoya a Costa Rica se dio el 25 de julio de 1824 bajo el lema 'De la patria por nuestra voluntad', decidiendo unirse libremente al territorio nacional.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Extraordinario! Explicaste el origen de la anexión. Los jóvenes celebraron con gritos de bomba al estilo guanacasteco.",
+          "consecuenciaIncorrecta": "Dijeste que fue una invasión y los locales se indignaron con tu falta de conocimiento cívico."
+        },
+        {
+          "id": "gn-002",
+          "texto": "Guanacaste es cuna de la música folclórica tica. ¿Qué instrumento musical de percusión hecho de madera, declarado símbolo nacional, es el centro de las fiestas populares guanacastecas?",
+          "opciones": [
+            "El Quijongo",
+            "La Marimba",
+            "La Ocarina Chorotega",
+            "El Tambor Sabanero"
+          ],
           "correcta": 1,
-          "explicacion": "El árbol de Guanacaste es el símbolo nacional del país y da nombre a esta hermosa provincia norteña.",
+          "explicacion": "La marimba es el instrumento nacional de Costa Rica y representa el corazón del folclore, el ritmo sabanero y la identidad guanacasteca.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Fabuloso! Pusiste a bailar a todos al ritmo de la marimba en una fiesta nocturna segura.",
+          "consecuenciaIncorrecta": "Confundiste la marimba con un piano y los músicos tradicionales bromearon sobre tus datos."
+        },
+        {
+          "id": "gn-003",
+          "texto": "En Guanacaste se encuentra un Parque Nacional histórico que alberga la Casona donde se libró la histórica Batalla del 20 de marzo de 1856 contra los filibusteros de William Walker. ¿Cómo se llama?",
+          "opciones": [
+            "Parque Nacional Santa Rosa",
+            "Parque Nacional Barra Honda",
+            "Parque Nacional Palo Verde",
+            "Parque Nacional Guanacaste"
+          ],
+          "correcta": 0,
+          "explicacion": "El Parque Nacional Santa Rosa resguarda la histórica Casona de Santa Rosa, escenario de la rápida expulsión de las fuerzas filibusteras en 1856.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Excelente! El grupo de historia conoció el valor patriótico de Santa Rosa y el bosque seco tropical.",
+          "consecuenciaIncorrecta": "El grupo tomó una vereda prohibida y terminaron picados por avispas del bosque seco."
+        },
+        {
+          "id": "gn-004",
+          "texto": "Cada año, miles de tortugas loras llegan masivamente a desovar en una famosa playa de Guanacaste, evento conocido como 'arribada'. ¿Cómo se llama esta reserva natural?",
+          "opciones": [
+            "Refugio Nacional de Vida Silvestre Ostional",
+            "Parque Nacional Marino Las Baulas",
+            "Playa Hermosa",
+            "Bahía Salinas"
+          ],
+          "correcta": 0,
+          "explicacion": "El Refugio de Ostional es uno de los pocos sitios en el mundo donde ocurre el fenómeno de la arribada masiva de tortugas marinas lora.",
           "categoria": "Ambiente",
-          "consecuenciaCorrecta": "¡Correcto! Los sabaneros te felicitan por conocer el árbol de la provincia.",
-          "consecuenciaIncorrecta": "Confundiste el árbol nacional y los locales sintieron desconfianza de tus raíces ticas."
+          "consecuenciaCorrecta": "¡Magnífico! Lograste organizar un tour de avistamiento responsable con guías locales autorizados.",
+          "consecuenciaIncorrecta": "Los turistas encendieron linternas y asustaron a las tortugas, alterando el ciclo natural."
+        },
+        {
+          "id": "gn-005",
+          "texto": "En la Península de Nicoya se elabora una hermosa cerámica heredada de los indígenas chorotegas, moldeada a mano y pintada con curioles naturales. ¿En qué cantón destaca esta tradición?",
+          "opciones": [
+            "Guaitil de Santa Cruz",
+            "Tamarindo",
+            "Tilarán",
+            "Cañas"
+          ],
+          "correcta": 0,
+          "explicacion": "La cerámica chorotega de Guaitil (Santa Cruz) mantiene técnicas ancestrales precolombinas usando arcilla local y pigmentos minerales ('curioles').",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Fabuloso! Apoyaste el arte chorotega comprando piezas auténticas y promoviendo la herencia indígena.",
+          "consecuenciaIncorrecta": "El grupo compró cerámica industrial de imitación, perdiéndose la verdadera herencia cultural."
+        },
+        {
+          "id": "gn-006",
+          "texto": "Durante la época de la colonia, los vaqueros de las haciendas guanacastecas desarrollaron una vestimenta y estilo de vida ganadero icónico que define la cultura folclórica. ¿Cómo se le conoce a este personaje?",
+          "opciones": [
+            "El Sabanero",
+            "El Concho",
+            "El Boyero",
+            "El Montaraz"
+          ],
+          "correcta": 0,
+          "explicacion": "El sabanero es el vaquero o jinete guanacasteco que trabaja en las haciendas ganaderas de la provincia, símbolo del folclore local.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Genial! Los lugareños celebraron tu conocimiento del sabanero y te invitaron a cantar coplas guanacastecas.",
+          "consecuenciaIncorrecta": "Confundiste al sabanero con un boyero y la gente local se burló de tu falta de conocimiento rural."
+        },
+        {
+          "id": "gn-007",
+          "texto": "Cerca de Liberia se encuentra un volcán activo que genera energía geotérmica para el país, famoso por sus pailas de barro hirviente y fumarolas. ¿Cómo se llama?",
+          "opciones": [
+            "Volcán Rincón de la Vieja",
+            "Volcán Miravalles",
+            "Volcán Orosí",
+            "Volcán Arenal"
+          ],
+          "correcta": 0,
+          "explicacion": "El volcán Rincón de la Vieja es famoso por sus manifestaciones termales de barro hirviente en el sector Las Pailas y su energía geotérmica.",
+          "categoria": "Turismo",
+          "consecuenciaCorrecta": "¡Excelente! Recomendaste a los excursionistas caminar con cuidado por los senderos de azufre y lodo.",
+          "consecuenciaIncorrecta": "Los turistas se salieron del sendero oficial de las fumarolas y sufrieron quemaduras leves de vapor."
+        },
+        {
+          "id": "gn-008",
+          "texto": "En la costa de Guanacaste, cerca de Brasilito, se ubica una playa única en el país y famosa mundialmente por su composición geológica y ecológica singular: su orilla no está formada por arena tradicional, sino por millones de pequeñas conchas pulverizadas y pulidas. ¿Cuál es?",
+          "opciones": [
+            "Playa Conchal",
+            "Playa Tamarindo",
+            "Playa Flamingo",
+            "Playa Hermosa"
+          ],
+          "correcta": 0,
+          "explicacion": "Playa Conchal destaca por sus aguas turquesas y su playa compuesta de conchas trituradas. Requiere de un turismo responsable y sostenible para evitar el saqueo ilegal de estas conchas por parte de los visitantes.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Extraordinario! Los excursionistas entendieron la importancia ecológica de no llevarse conchas de recuerdo y disfrutaron de un baño seguro en sus aguas cristalinas.",
+          "consecuenciaIncorrecta": "Varios visitantes intentaron recolectar y llevarse botellas llenas de conchas de la playa, lo que te obligó a intervenir para explicarles las leyes de conservación."
         }
       ]
     },
@@ -312,13 +752,123 @@
       "preguntas": [
         {
           "id": "pt-001",
-          "texto": "[PREGUNTA PLACEHOLDER] ¿Cuál es el parque nacional famoso por su biodiversidad ubicado en el cantón de Osa, Puntarenas?",
-          "opciones": ["Parque Nacional Manuel Antonio", "Parque Nacional Corcovado", "Parque Nacional Carara", "Parque Nacional Marino Ballena"],
-          "correcta": 1,
-          "explicacion": "El Parque Nacional Corcovado en Puntarenas es considerado uno de los lugares biológicamente más intensos del planeta.",
+          "texto": "Puntarenas cuenta con un famoso paseo marítimo peatonal repleto de quioscos gastronómicos donde se acostumbra comer el postre helado 'Churchill'. ¿Cómo se llama esta avenida costera?",
+          "opciones": [
+            "Paseo de los Turistas",
+            "Playa Doña Ana",
+            "Paseo del Puerto",
+            "Costanera Sur"
+          ],
+          "correcta": 0,
+          "explicacion": "El Paseo de los Turistas es el bulevar costero icónico de Puntarenas centro, famoso por sus vigorones, pescados fritos y el tradicional granizado 'Churchill'.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Delicioso! Los estudiantes disfrutaron de un refrescante Churchill bajo la brisa del puerto.",
+          "consecuenciaIncorrecta": "El grupo comió en un puesto antihigiénico y terminó con malestar estomacal de madrugada."
+        },
+        {
+          "id": "pt-002",
+          "texto": "Estás patrullando cerca de la desembocadura del río Tárcoles en Puntarenas, famoso mundialmente por albergar una inmensa concentración de qué especie animal salvaje?",
+          "opciones": [
+            "Cocodrilo Americano",
+            "Manatí del Caribe",
+            "Tiburón Toro",
+            "Tortuga Baula"
+          ],
+          "correcta": 0,
+          "explicacion": "El río Grande de Tárcoles en Puntarenas alberga una de las poblaciones más grandes del mundo de cocodrilos americanos silvestres, visibles desde el famoso puente.",
           "categoria": "Ambiente",
-          "consecuenciaCorrecta": "¡Correcto! Orientaste a los biólogos hacia la Península de Osa sin contratiempos.",
-          "consecuenciaIncorrecta": "Los enviaste en la dirección incorrecta hacia la costa central y se demoraron un día entero."
+          "consecuenciaCorrecta": "¡Excelente! Advertiste a los jóvenes mantener distancia segura sobre el puente del Tárcoles.",
+          "consecuenciaIncorrecta": "Un estudiante intentó acercarse demasiado a la orilla del río para una foto y tuviste que intervenir con fuerza."
+        },
+        {
+          "id": "pt-003",
+          "texto": "¿Qué benemérito expresidente de Costa Rica y héroe de la Campaña de 1856 fue fusilado trágicamente en el puerto de Puntarenas en 1860?",
+          "opciones": [
+            "Juan Rafael Mora Porras",
+            "Juan Mora Fernández",
+            "Tomás Guardia Gutiérrez",
+            "Braulio Carrillo Colina"
+          ],
+          "correcta": 0,
+          "explicacion": "'Juanito' Mora fue derrocado de la presidencia y posteriormente fusilado en Puntarenas el 30 de septiembre de 1860, defendiendo la soberanía nacional.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Impresionante! Explicaste el sacrificio de Juanito Mora y los jóvenes valoraron la historia patria.",
+          "consecuenciaIncorrecta": "Confundiste los datos del prócer y el grupo de historia se aburrió con explicaciones erróneas."
+        },
+        {
+          "id": "pt-004",
+          "texto": "Frente al puerto de Puntarenas, cruzando el Golfo de Nicoya, se encuentra una hermosa y emblemática isla turística, sumamente famosa por sus playas de arena blanca, paseos en catamarán y aguas turquesas. ¿Cuál es?",
+          "opciones": [
+            "Isla Tortuga",
+            "Isla del Coco",
+            "Isla Chira",
+            "Isla San Lucas"
+          ],
+          "correcta": 0,
+          "explicacion": "Isla Tortuga (conformada por las islas Alcatraz y Tolinga) es un destino turístico icónico del Golfo de Nicoya, reconocido por su playa de arena blanca, aguas tranquilas y actividades de snorkel.",
+          "categoria": "Turismo",
+          "consecuenciaCorrecta": "¡Perfecto! Organizaste un viaje ecológico de snorkel seguro para los universitarios.",
+          "consecuenciaIncorrecta": "Los jóvenes abordaron una de las embarcaciones informales sin chalecos salvavidas, lo que te obligó a suspender la salida."
+        },
+        {
+          "id": "pt-005",
+          "texto": "En la cordillera de Tilarán, entre Puntarenas y Alajuela, se ubica una mundialmente famosa Reserva Biológica caracterizada por su neblina constante, líquenes y musgos. ¿Cuál es?",
+          "opciones": [
+            "Reserva de Bosque Nuboso Monteverde",
+            "Parque Nacional Manuel Antonio",
+            "Parque Nacional Corcovado",
+            "Reserva de Cabo Blanco"
+          ],
+          "correcta": 0,
+          "explicacion": "Monteverde es una reserva biológica nubosa de renombre internacional que alberga miles de especies de plantas, insectos y aves como el quetzal.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Maravilloso! Los estudiantes aprendieron sobre el dosel del bosque nuboso y la conservación hídrica.",
+          "consecuenciaIncorrecta": "El grupo caminó fuera de los senderos de madera demarcados, dañando la flora delicada del bosque nuboso."
+        },
+        {
+          "id": "pt-006",
+          "texto": "El pueblo indígena Boruca de Puntarenas celebra cada año una danza tradicional que representa la lucha histórica de su cultura contra los colonizadores españoles. ¿Cómo se llama esta fiesta?",
+          "opciones": [
+            "Juego de los Diablitos",
+            "Danza de la Yegüita",
+            "El Baile del Sol",
+            "La Romería Indígena"
+          ],
+          "correcta": 0,
+          "explicacion": "El Juego de los Diablitos de Boruca recrea la resistencia de los indígenas (diablitos) frente a los conquistadores españoles (representados por un toro de madera).",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Espectacular! Llevaste a los universitarios a valorar las máscaras de Boruca y la soberanía cultural indígena.",
+          "consecuenciaIncorrecta": "El grupo malinterpretó la ceremonia, ofendiendo a los artesanos locales."
+        },
+        {
+          "id": "pt-007",
+          "texto": "En el Pacífico Sur de Puntarenas se ubica una playa famosa porque su formación de arrecifes rocosos y arena simula perfectamente la cola de una ballena gigante. ¿Cómo se llama este sitio?",
+          "opciones": [
+            "Playa Uvita (Parque Marino Ballena)",
+            "Playa Hermosa de Jacó",
+            "Playa Dominical",
+            "Playa Drake"
+          ],
+          "correcta": 0,
+          "explicacion": "El Parque Nacional Marino Ballena en Uvita posee una formación natural llamada el 'tómbolo', que vista desde el aire tiene forma de cola de ballena.",
+          "categoria": "Geografía",
+          "consecuenciaCorrecta": "¡Correcto! Aprovechaste la marea baja para llevar al grupo a caminar sobre la cola de ballena de forma segura.",
+          "consecuenciaIncorrecta": "La marea subió y atrapó a varios turistas distraídos en las rocas, teniendo que rescatarlos."
+        },
+        {
+          "id": "pt-008",
+          "texto": "En el Parque Nacional Manuel Antonio en Puntarenas habita una de las subespecies de monos más amenazadas del país, reconocidos por su cara blanca de antifaz y tamaño pequeño. ¿Cuál es?",
+          "opciones": [
+            "Mono Tití (Saimiri oerstedii)",
+            "Mono Congo",
+            "Mono Carablanca",
+            "Mono Araña"
+          ],
+          "correcta": 0,
+          "explicacion": "El mono tití o mono ardilla habita en los bosques costeros del Pacífico Central de Costa Rica y es una especie en peligro de extinción protegida en Manuel Antonio.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Excelente! Lograste evitar que los turistas alimentaran a los monos tití, respetando las leyes de conservación.",
+          "consecuenciaIncorrecta": "Los visitantes les dieron comida chatarra a los monos tití, causándoles malestares digestivos graves."
         }
       ]
     },
@@ -354,13 +904,123 @@
       "preguntas": [
         {
           "id": "lm-001",
-          "texto": "[PREGUNTA PLACEHOLDER] ¿Qué manifestación musical caribeña, declarada patrimonio cultural inmaterial, destaca en Limón?",
-          "opciones": ["Marimba", "Calipso Limonense", "Salsa", "Cumbia Tica"],
+          "texto": "Cada 12 de octubre, Limón se llena de ritmo, color y baile para celebrar su festividad cultural más famosa del año. ¿De qué evento se trata?",
+          "opciones": [
+            "Los Carnavales de Limón (Día de las Culturas)",
+            "El Festival del Calipso de Cahuita",
+            "Las Fiestas Cívicas de Puerto Viejo",
+            "La Fiesta de los Diablitos"
+          ],
+          "correcta": 0,
+          "explicacion": "Los Carnavales de Limón celebran la herencia pluricultural y multiétnica del Caribe costarricense con desfiles de comparsas, música y carrozas.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Espectacular! Te uniste al desfile de comparsas promoviendo el respeto cultural y la alegría colectiva.",
+          "consecuenciaIncorrecta": "Los turistas se dispersaron por la aglomeración de personas y terminaron desorientados."
+        },
+        {
+          "id": "lm-002",
+          "texto": "¿Qué manifestación musical caribeña, declarada patrimonio cultural inmaterial, destaca en Limón?",
+          "opciones": [
+            "Marimba",
+            "Calipso Limonense",
+            "Salsa",
+            "Cumbia Tica"
+          ],
           "correcta": 1,
           "explicacion": "El calipso es el ritmo representativo del Caribe costarricense, con figuras emblemáticas como Walter Ferguson.",
           "categoria": "Cultura",
           "consecuenciaCorrecta": "¡Correcto! Pusiste a bailar calipso a todo el Roots con gran carisma.",
           "consecuenciaIncorrecta": "Confundiste el calipso caribeño y los músicos sintieron desilusión de tus conocimientos musicales."
+        },
+        {
+          "id": "lm-003",
+          "texto": "En la costa sur de Limón se ubica un Parque Nacional famoso por albergar el arrecife de coral más importante de Costa Rica y senderos de arena blanca. ¿Cómo se llama?",
+          "opciones": [
+            "Parque Nacional Cahuita",
+            "Refugio Nacional Gandoca-Manzanillo",
+            "Parque Nacional Tortuguero",
+            "Parque Nacional Braulio Carrillo"
+          ],
+          "correcta": 0,
+          "explicacion": "El Parque Nacional Cahuita protege un extenso arrecife coralino y cuenta con senderos costeros repletos de monos, perezosos y mapaches.",
+          "categoria": "Turismo",
+          "consecuenciaCorrecta": "¡Estupendo! Los excursionistas hicieron snorkel responsable sin tocar los corales marinos.",
+          "consecuenciaIncorrecta": "Varios turistas intentaron pararse sobre el arrecife y dañaron coral vivo antes de que pudieras advertirles."
+        },
+        {
+          "id": "lm-004",
+          "texto": "Al norte de Limón se encuentra una red de canales fluviales navegables en medio de la selva tropical, famosa mundialmente por el desove de la tortuga verde. ¿Cómo se llama?",
+          "opciones": [
+            "Parque Nacional Tortuguero",
+            "Refugio Barra del Colorado",
+            "Canales de Moín",
+            "Parque Nacional Cahuita"
+          ],
+          "correcta": 0,
+          "explicacion": "Tortuguero es conocido como el 'Amazonas de Costa Rica' por su red de canales y es la cuna de conservación de la tortuga marina verde del Caribe.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Sensacional! Navegaron los canales en canoas eléctricas silenciosas sin perturbar a la fauna.",
+          "consecuenciaIncorrecta": "El grupo encendió luces intensas en la playa y ahuyentó a las tortugas verdes que intentaban desovar."
+        },
+        {
+          "id": "lm-005",
+          "texto": "En 1872 se inició en Limón una megaobra de infraestructura que transformó el comercio y la demografía de Costa Rica, impulsando la inmigración china, italiana y afrocaribeña. ¿Qué obra fue?",
+          "opciones": [
+            "El Ferrocarril al Atlántico",
+            "El Puerto de Moín",
+            "La Carretera Braulio Carrillo",
+            "El Canal Interoceánico"
+          ],
+          "correcta": 0,
+          "explicacion": "La construcción del Ferrocarril al Atlántico, bajo la dirección de Minor Keith, impulsó la llegada de miles de trabajadores de diversas etnias, configurando la multiculturalidad limonense.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Fascinante relato! Los estudiantes reflexionaron sobre el esfuerzo y legado de las comunidades afro e inmigrantes.",
+          "consecuenciaIncorrecta": "Te confundiste de fecha y los estudiantes de ingeniería civil cuestionaron tus datos técnicos."
+        },
+        {
+          "id": "lm-006",
+          "texto": "La gastronomía limonense es única en el país. ¿Cómo se llama el plato caribeño tradicional a base de arroz y frijoles cocinados con leche de coco, tomillo y chile panameño?",
+          "opciones": [
+            "Rice and Beans",
+            "Gallo Pinto Tradicional",
+            "Casado Caribeño",
+            "Sopa de Mariscos con Coco"
+          ],
+          "correcta": 0,
+          "explicacion": "El Rice and Beans es el plato estrella del Caribe costarricense, diferenciándose del gallo pinto por el uso de leche de coco y chile panameño.",
+          "categoria": "Cultura",
+          "consecuenciaCorrecta": "¡Delicioso! Los estudiantes universitarios cenaron un auténtico Rice and Beans en Puerto Viejo.",
+          "consecuenciaIncorrecta": "El grupo comió un pinto reseco creyendo que era Rice and Beans, frustrados por la comida."
+        },
+        {
+          "id": "lm-007",
+          "texto": "En 1502, Cristóbal Colón llegó a territorio costarricense en su cuarto viaje, anclando su carabela frente a una hermosa isla caribeña situada frente a Limón. ¿Cómo se llama esta isla?",
+          "opciones": [
+            "Isla Quiribrí (Isla Uvita)",
+            "Isla Tortuga",
+            "Isla del Coco",
+            "Isla San Lucas"
+          ],
+          "correcta": 0,
+          "explicacion": "Colón llegó a la isla Quiribrí en septiembre de 1502, bautizándola como 'La Huerta', hoy declarada monumento nacional como Isla Uvita.",
+          "categoria": "Historia",
+          "consecuenciaCorrecta": "¡Excelente! Llevaste a los estudiantes a recorrer la isla histórica Quiribrí con total respeto cultural.",
+          "consecuenciaIncorrecta": "El grupo se desvió del sendero de la isla y dañó flora protegida sin darte cuenta."
+        },
+        {
+          "id": "lm-008",
+          "texto": "En los bosques tropicales húmedos del Caribe Sur de Limón se protege activamente a un mamífero lento que pasa la mayor parte del tiempo colgado de los árboles alimentándose de hojas. ¿Cuál es?",
+          "opciones": [
+            "Perezoso de dos o tres dedos",
+            "Oso Hormiguero",
+            "Mono Aullador",
+            "Pizote"
+          ],
+          "correcta": 0,
+          "explicacion": "Costa Rica es cuna mundial del rescate de perezosos, existiendo santuarios especializados en el Caribe Sur de Limón para rehabilitar estas dóciles especies.",
+          "categoria": "Ambiente",
+          "consecuenciaCorrecta": "¡Impresionante! El grupo avistó perezosos y comprendió la importancia de no tocarlos ni sacarlos de su hábitat silvestre.",
+          "consecuenciaIncorrecta": "Los visitantes intentaron alzar un perezoso para una foto y la criatura se estresó demasiado, alterándose."
         }
       ]
     }

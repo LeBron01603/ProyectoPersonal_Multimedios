@@ -133,18 +133,18 @@ function habilitarAudio() {
 if (typeof window !== 'undefined') {
   const activarEnPrimerClick = () => {
     habilitarAudio()
-    window.removeEventListener('click', activarEnPrimerClick)
-    window.removeEventListener('keydown', activarEnPrimerClick)
+    window.removeEventListener('click', activarEnPrimerClick, { capture: true })
+    window.removeEventListener('keydown', activarEnPrimerClick, { capture: true })
   }
-  window.addEventListener('click', activarEnPrimerClick)
-  window.addEventListener('keydown', activarEnPrimerClick)
+  window.addEventListener('click', activarEnPrimerClick, { capture: true })
+  window.addEventListener('keydown', activarEnPrimerClick, { capture: true })
 }
 
 // =========================================================
 // Reproducción de SFX
 // =========================================================
 function reproducirEfecto(clave) {
-  if (efectosSilenciados.value || !audioHabilitadoPorUsuario.value) return
+  if (efectosSilenciados.value) return
 
   const ruta = RUTAS_AUDIO.efecto[clave]
   if (!ruta) {
@@ -154,7 +154,11 @@ function reproducirEfecto(clave) {
 
   const audio = new Audio(ruta)
   audio.volume = volumenEfectos.value   // Aplica volumen actual de efectos
-  audio.play().catch(err => {
+  audio.play().then(() => {
+    if (!audioHabilitadoPorUsuario.value) {
+      habilitarAudio()
+    }
+  }).catch(err => {
     console.warn(`[useAudio] No se pudo reproducir efecto '${clave}':`, err.message)
   })
 }

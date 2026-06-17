@@ -1,7 +1,7 @@
 <template>
   <!-- PantallaJuego: pantalla de juego activo (preguntas de la misión) -->
   <section class="pantalla-juego" aria-label="Pantalla de juego activo">
-    <div class="contenedor-juego animate-fade-in-scale">
+    <div class="contenedor-juego animate-fade-in-scale" :class="{ 'con-ancho-extendido': respuestaSeleccionada !== null && subEstadoPantalla === 'pregunta' }">
 
       <!-- ================= NARRATIVA INICIAL ================= -->
       <div v-if="subEstadoPantalla === 'narrativa_inicial'" class="tarjeta-narrativa card text-center animate-fade-in">
@@ -32,22 +32,24 @@
         </div>
 
         <span class="icono-narrativa animate-float">🎉</span>
-        <h2 class="titulo-narrativa text-neon-green">CHECKPOINT DESBLOQUEADO</h2>
-        <h3 class="subtitulo-checkpoint">🍻 BRINDIS TICO</h3>
+        <h2 class="titulo-narrativa" :class="checkpointRendimiento?.clase">
+          {{ checkpointRendimiento?.titulo }}
+        </h2>
+        <h3 class="subtitulo-checkpoint">
+          {{ provinciaActiva?.recompensaSecundaria?.emoji || '🍻' }} {{ provinciaActiva?.recompensaSecundaria?.nombre?.toUpperCase() || 'AVANCE NARRATIVO' }}
+        </h3>
         <div class="divisoria-neon green"></div>
-        <p class="texto-narrativa-principal">
-          ¡Excelente! Has demostrado que conoces el alma de San José.
-        </p>
-        <p class="texto-narrativa-secundario">
-          Los estudiantes de Montes de Oca confían cada vez más en ti. Tu reputación aumenta y la noche avanza de forma segura.
-        </p>
+        <p class="texto-narrativa-principal" v-html="checkpointRendimiento?.principal"></p>
+        <p class="texto-narrativa-secundario" v-html="checkpointRendimiento?.secundario"></p>
         
         <div class="recompensas-checkpoint-caja">
           <p class="rec-title">Recompensas Obtenidas:</p>
           <div class="rec-badges-flex">
             <span class="rec-badge-item">⭐ +20 XP</span>
             <span class="rec-badge-item">🤝 +10 Reputación</span>
-            <span class="rec-badge-item">🎁 Recuerdo: Brindis Tico</span>
+            <span class="rec-badge-item" v-if="provinciaActiva?.recompensaSecundaria">
+              🎁 Recuerdo: {{ provinciaActiva.recompensaSecundaria.nombre }}
+            </span>
           </div>
         </div>
 
@@ -73,7 +75,7 @@
         <h3 class="subtitulo-checkpoint">🎉 AFTER SEGURO</h3>
         <div class="divisoria-neon purple"></div>
         <p class="texto-narrativa-principal">
-          ¡Fabuloso! Tu reputación nocturna como héroe del after se esparce por toda la capital.
+          ¡Fabuloso! Tu reputación nocturna como héroe del after se esparce por todo {{ provinciaActiva?.nombre }}.
         </p>
         <p class="texto-narrativa-secundario">
           Los estudiantes se sienten completamente seguros bajo tu cuidado. Te aproximas al reto definitivo en la ciudad.
@@ -100,7 +102,7 @@
         <h3 class="subtitulo-desafio">{{ provinciaActiva?.nombre?.toUpperCase() }}</h3>
         <div class="divisoria-neon red"></div>
         <p class="texto-narrativa-principal">
-          La noche en San José depende enteramente de tus acciones. Se reporta un conato de incendio en el Teatro Melico Salazar.
+          La noche en {{ provinciaActiva?.nombre }} depende enteramente de tus acciones. Se reporta un conato de incendio en el Teatro Melico Salazar.
         </p>
         <p class="texto-narrativa-secundario">
           Responde correctamente bajo presión extrema para salvar la provincia, guiar a los bomberos y consolidarte como leyenda nacional.
@@ -135,10 +137,10 @@
         <h3 class="subtitulo-victoria">{{ provinciaActiva?.nombre }}</h3>
         <div class="divisoria-neon green"></div>
         <p class="texto-narrativa-principal">
-          ¡Héroe! Lograste salvar la noche en la capital. Los estudiantes universitarios celebran en La Cali gracias a tu gran cuidado y guía responsable.
+          ¡Héroe! Lograste salvar la noche en {{ provinciaActiva?.nombre }}. Los estudiantes universitarios celebran en {{ provinciaActiva?.lugarAfter }} gracias a tu gran cuidado y guía responsable.
         </p>
         <p class="texto-narrativa-secundario">
-          Todos disfrutan de un after divertido y enriquecedor. Tu reputación nocturna se ha consolidado en la capital.
+          Todos disfrutan de un after divertido y enriquecedor. Tu reputación nocturna se ha consolidado en {{ provinciaActiva?.nombre }}.
         </p>
 
         <div class="recompensas-victoria-caja">
@@ -150,7 +152,8 @@
             <span class="rec-badge-item" v-if="provinciaActiva.recompensaSecundaria">
               {{ provinciaActiva.recompensaSecundaria.emoji }} {{ provinciaActiva.recompensaSecundaria.nombre }}
             </span>
-            <span class="rec-badge-item next-prov">➡️ Siguiente Provincia: Heredia</span>
+            <span class="rec-badge-item next-prov" v-if="siguienteProvinciaNombre !== 'Fin de la Aventura'">➡️ Siguiente Provincia: {{ siguienteProvinciaNombre }}</span>
+            <span class="rec-badge-item next-prov" v-else>🎉 ¡Aventura Completada!</span>
           </div>
         </div>
 
@@ -168,8 +171,15 @@
               {{ provinciaActiva?.emoji }}
             </span>
             <div>
-              <p class="etiqueta-mision">Misión activa</p>
-              <h2 class="nombre-mision">{{ provinciaActiva?.tituloMision }}</h2>
+              <p class="etiqueta-mision" :class="{ 'alerta-segundo-intento-etiqueta': esSegundoIntento }">
+                {{ esSegundoIntento ? '⚠️ SEGUNDO INTENTO' : 'Misión activa' }}
+              </p>
+              <h2 class="nombre-mision" :class="{ 'alerta-segundo-intento-nombre': esSegundoIntento }">
+                {{ provinciaActiva?.tituloMision }}
+              </h2>
+              <span v-if="esSegundoIntento" class="aviso-tension animate-pulse">
+                🚨 Última oportunidad nocturna. Queda poco tiempo.
+              </span>
             </div>
           </div>
 
@@ -197,101 +207,126 @@
           ></div>
         </div>
 
-        <!-- Área de pregunta -->
-        <div class="area-pregunta" v-if="preguntaActualDatos">
-          <div 
-            class="tarjeta-pregunta card animate-fade-in"
-            :class="{
-              'pregunta-glow-verde': respuestaSeleccionada !== null && esCorrecta,
-              'pregunta-shake-rojo': respuestaSeleccionada !== null && !esCorrecta
-            }"
-          >
-            <!-- Barra de tiempo de la pregunta -->
-            <div class="pista-tiempo-pregunta">
+        <!-- Cuerpo de Trivia (Dos Columnas en Escritorio con Feedback) -->
+        <div class="cuerpo-trivia" :class="{ 'con-retroalimentacion': respuestaSeleccionada !== null }">
+          
+          <!-- Columna Principal: Pregunta y Opciones -->
+          <div class="columna-principal-trivia">
+            <!-- Área de pregunta -->
+            <div class="area-pregunta" v-if="preguntaActualDatos">
               <div 
-                class="relleno-tiempo-pregunta" 
-                :style="{ width: (tiempoRestante / tiempoMaximoPregunta * 100) + '%' }"
-                :class="{ 'tiempo-alerta': tiempoRestante <= 5 }"
-              ></div>
+                class="tarjeta-pregunta card animate-fade-in"
+                :class="{
+                  'pregunta-glow-verde': respuestaSeleccionada !== null && esCorrecta,
+                  'pregunta-shake-rojo': respuestaSeleccionada !== null && !esCorrecta
+                }"
+              >
+                <!-- Barra de tiempo de la pregunta -->
+                <div class="pista-tiempo-pregunta">
+                  <div 
+                    class="relleno-tiempo-pregunta" 
+                    :style="{ width: (tiempoRestante / tiempoMaximoPregunta * 100) + '%' }"
+                    :class="{ 'tiempo-alerta': tiempoRestante <= 5 }"
+                  ></div>
+                </div>
+
+                <p class="categoria-pregunta">
+                  📂 {{ preguntaActualDatos.categoria }}
+                </p>
+                <h3 class="texto-pregunta">
+                  {{ preguntaActualDatos.texto }}
+                </h3>
+              </div>
+
+              <!-- Opciones de respuesta -->
+              <div class="cuadricula-opciones">
+                <button
+                  v-for="(opcion, idx) in preguntaActualDatos.opciones"
+                  :key="idx"
+                  class="boton-opcion"
+                  :class="{
+                    'opcion-correcta':   respuestaSeleccionada !== null && idx === preguntaActualDatos.correcta,
+                    'opcion-incorrecta': respuestaSeleccionada === idx && idx !== preguntaActualDatos.correcta,
+                    'opcion-revelada':   respuestaSeleccionada !== null && idx === preguntaActualDatos.correcta
+                  }"
+                  :disabled="respuestaSeleccionada !== null"
+                  @click="seleccionarRespuesta(idx)"
+                  :aria-label="`Opción ${idx + 1}: ${opcion}`"
+                >
+                  <span class="letra-opcion">
+                    <template v-if="respuestaSeleccionada !== null">
+                      <span v-if="idx === preguntaActualDatos.correcta" class="simbolo-feedback correcto">✓</span>
+                      <span v-else-if="respuestaSeleccionada === idx" class="simbolo-feedback incorrecto">✗</span>
+                      <span v-else>{{ letrasOpciones[idx] }}</span>
+                    </template>
+                    <template v-else>
+                      {{ letrasOpciones[idx] }}
+                    </template>
+                  </span>
+                  <span class="texto-opcion">{{ opcion }}</span>
+                </button>
+              </div>
             </div>
 
-            <p class="categoria-pregunta">
-              📂 {{ preguntaActualDatos.categoria }}
-            </p>
-            <h3 class="texto-pregunta">
-              {{ preguntaActualDatos.texto }}
-            </h3>
+            <!-- Controles de juego -->
+            <div class="controles-juego">
+              <button class="btn btn-outline" @click="alSalir">
+                ← Volver al mapa
+              </button>
+              <button
+                v-if="respuestaSeleccionada !== null"
+                class="btn btn-primary"
+                @click="alSiguientePregunta"
+              >
+                {{ preguntaActual + 1 >= totalPreguntas ? '🏆 Terminar Misión' : '→ Siguiente pregunta' }}
+              </button>
+            </div>
           </div>
 
-          <!-- Opciones de respuesta -->
-          <div class="cuadricula-opciones">
-            <button
-              v-for="(opcion, idx) in preguntaActualDatos.opciones"
-              :key="idx"
-              class="boton-opcion"
-              :class="{
-                'opcion-correcta':   respuestaSeleccionada !== null && idx === preguntaActualDatos.correcta,
-                'opcion-incorrecta': respuestaSeleccionada === idx && idx !== preguntaActualDatos.correcta,
-                'opcion-revelada':   respuestaSeleccionada !== null && idx === preguntaActualDatos.correcta
-              }"
-              :disabled="respuestaSeleccionada !== null"
-              @click="seleccionarRespuesta(idx)"
-              :aria-label="`Opción ${idx + 1}: ${opcion}`"
-            >
-              <span class="letra-opcion">{{ letrasOpciones[idx] }}</span>
-              <span class="texto-opcion">{{ opcion }}</span>
-            </button>
-          </div>
-        </div>
+          <!-- Columna Lateral: Resultado y Explicación -->
+          <div class="columna-lateral-trivia" v-if="respuestaSeleccionada !== null">
+            <!-- Panel de resultado de respuesta con Consecuencias Narrativas -->
+            <transition name="fade">
+              <div class="retroalimentacion-respuesta" :class="esCorrecta ? 'retroalimentacion-correcta' : 'retroalimentacion-incorrecta'">
+                <span class="icono-retroalimentacion">
+                  {{ respuestaSeleccionada === -1 ? '⏱️' : (esCorrecta ? '✅' : '❌') }}
+                </span>
+                <div class="contenido-retroalimentacion">
+                  <p class="texto-retroalimentacion">
+                    <strong>
+                      {{ respuestaSeleccionada === -1 ? '¡Tiempo agotado!' : (esCorrecta ? '¡Éxito Narrativo!' : 'Consecuencia Narrativa:') }}
+                    </strong>
+                  </p>
+                  
+                  <!-- Texto Narrativo -->
+                  <p class="narrativa-consecuencia">
+                    {{ respuestaSeleccionada === -1 ? 'Los estudiantes se desorientaron al expirar el tiempo de búsqueda y se perdieron en ' + (provinciaActiva?.nombre || 'la provincia') + '.' : (esCorrecta ? (preguntaActualDatos?.consecuenciaCorrecta || '¡Lograste orientar y guiar al grupo con total éxito!') : (preguntaActualDatos?.consecuenciaIncorrecta || 'Los estudiantes se confundieron de dirección y terminaron lejos del after.')) }}
+                  </p>
 
-        <!-- Panel de resultado de respuesta con Consecuencias Narrativas -->
-        <transition name="fade">
-          <div v-if="respuestaSeleccionada !== null" class="retroalimentacion-respuesta" :class="esCorrecta ? 'retroalimentacion-correcta' : 'retroalimentacion-incorrecta'">
-            <span class="icono-retroalimentacion">
-              {{ respuestaSeleccionada === -1 ? '⏱️' : (esCorrecta ? '✅' : '❌') }}
-            </span>
-            <div class="contenido-retroalimentacion">
-              <p class="texto-retroalimentacion">
-                <strong>
-                  {{ respuestaSeleccionada === -1 ? '¡Tiempo agotado!' : (esCorrecta ? '¡Éxito Narrativo!' : 'Consecuencia Narrativa:') }}
-                </strong>
-              </p>
-              
-              <!-- Texto Narrativo -->
-              <p class="narrativa-consecuencia">
-                {{ respuestaSeleccionada === -1 ? 'Los estudiantes se desorientaron al expirar el tiempo de búsqueda y se perdieron en la capital.' : (esCorrecta ? (preguntaActualDatos?.consecuenciaCorrecta || '¡Lograste orientar y guiar al grupo con total éxito!') : (preguntaActualDatos?.consecuenciaIncorrecta || 'Los estudiantes se confundieron de dirección y terminaron lejos del after.')) }}
-              </p>
+                  <!-- Atributos Afectados -->
+                  <div class="cambios-atributos-pregunta">
+                    <span class="badge-cambio-atributo" :class="esCorrecta ? 'sube' : 'baja'">
+                      {{ esCorrecta ? '🤝 Reputación +5' : (respuestaSeleccionada === -1 ? '🤝 Reputación -5, ⚡ Energía -5' : catCarreraPenalidad) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </transition>
 
-              <!-- Explicación Educativa -->
-              <div class="explicacion-educativa-seccion">
-                <span class="etiqueta-explicacion">💡 Sabías que...</span>
-                <p class="explicacion-retroalimentacion">
+            <!-- Tarjeta de Explicación Educativa -->
+            <transition name="slide-up">
+              <div class="tarjeta-explicacion-educativa card">
+                <div class="cabecera-explicacion">
+                  <span class="icono-explicacion">💡</span>
+                  <h4 class="titulo-explicacion">Sabías que...</h4>
+                </div>
+                <p class="explicacion-texto">
                   {{ preguntaActualDatos?.explicacion }}
                 </p>
               </div>
-
-              <!-- Atributos Afectados -->
-              <div class="cambios-atributos-pregunta">
-                <span class="badge-cambio-atributo" :class="esCorrecta ? 'sube' : 'baja'">
-                  {{ esCorrecta ? '🤝 Reputación +5' : (respuestaSeleccionada === -1 ? '🤝 Reputación -5, ⚡ Energía -5' : catCarreraPenalidad) }}
-                </span>
-              </div>
-            </div>
+            </transition>
           </div>
-        </transition>
 
-        <!-- Controles de juego -->
-        <div class="controles-juego">
-          <button class="btn btn-outline" @click="alSalir">
-            ← Volver al mapa
-          </button>
-          <button
-            v-if="respuestaSeleccionada !== null"
-            class="btn btn-primary"
-            @click="alSiguientePregunta"
-          >
-            {{ preguntaActual + 1 >= totalPreguntas ? '🏆 Terminar Misión' : '→ Siguiente pregunta' }}
-          </button>
         </div>
       </div>
 
@@ -312,7 +347,7 @@ import { useTemporizador } from '../../composables/useTemporizador.js'
 const emit = defineEmits(['salir', 'completar'])
 
 // --- Estado del juego ---
-const { provinciaActiva, completarMision, navegarA, ganarExperiencia, identidadHeroe, estadisticasHeroe, PANTALLAS } = useEstadoJuego()
+const { provinciaActiva, completarMision, navegarA, ganarExperiencia, identidadHeroe, estadisticasHeroe, PANTALLAS, esSegundoIntento, avanceMision, guardarProgreso } = useEstadoJuego()
 
 // --- Audio ---
 const { reproducirEfecto, reproducirMusica } = useAudio()
@@ -485,6 +520,34 @@ const catCarreraPenalidad = computed(() => {
   }
 })
 
+// --- Computed: mensajes dinámicos de rendimiento en Checkpoint 1 ---
+const checkpointRendimiento = computed(() => {
+  const correctas = respuestasCorrectasCount.value
+  
+  if (correctas === 4) {
+    return {
+      titulo: "🏆 ¡RENDIMIENTO PERFECTO!",
+      principal: `¡Espectacular! Has demostrado un conocimiento absoluto del alma de ${provinciaActiva.value?.nombre || 'la provincia'}.`,
+      secundario: `Los estudiantes de ${provinciaActiva.value?.lugarPrincipal || 'la zona'} están maravillados con tu guía. ¡La noche avanza bajo el cuidado de una verdadera leyenda!`,
+      clase: "text-neon-green"
+    }
+  } else if (correctas >= 2) {
+    return {
+      titulo: "✨ BUEN CAMINO",
+      principal: `¡Excelente esfuerzo! Estás guiando al grupo y demostrando conocer bastante bien ${provinciaActiva.value?.nombre || 'la provincia'}.`,
+      secundario: `Los estudiantes de ${provinciaActiva.value?.lugarPrincipal || 'la zona'} agradecen tu ayuda. Con un poco más de precisión, la noche será un éxito rotundo.`,
+      clase: "text-neon-blue"
+    }
+  } else {
+    return {
+      titulo: "⚠️ ALERTA DE NOCHE DIFÍCIL",
+      principal: `La noche en ${provinciaActiva.value?.nombre || 'la provincia'} se está complicando. Has tenido algunas dudas en el camino.`,
+      secundario: `Los estudiantes de ${provinciaActiva.value?.lugarPrincipal || 'la zona'} se sienten algo desorientados. ¡Es hora de concentrarse y recuperar el control para salvar el after!`,
+      clase: "text-neon-red"
+    }
+  }
+})
+
 // --- Iniciar la pregunta activa y su temporizador ---
 function iniciarPregunta() {
   respuestaSeleccionada.value = null
@@ -499,6 +562,12 @@ function iniciarPregunta() {
   if (esInformatica.value && esDificil) {
     maxTiempo = 25
   }
+  
+  // SEGUNDO INTENTO: reducir tiempo límite en 5 segundos
+  if (esSegundoIntento.value) {
+    maxTiempo = Math.max(5, maxTiempo - 5)
+  }
+  
   tiempoMaximoPregunta.value = maxTiempo
 
   reiniciar(false, alAgotarTiempo)
@@ -589,12 +658,22 @@ function seleccionarRespuesta(idx) {
 function alSiguientePregunta() {
   const esSanJose = provinciaActiva.value?.id === 'san-jose'
   
-  // San José: Checkpoint 1 tras la pregunta 4 (index 3)
-  if (esSanJose && preguntaActual.value === 3 && subEstadoPantalla.value === 'pregunta') {
+  // Checkpoint 1 tras la pregunta 4 (index 3) en cualquier provincia
+  if (preguntaActual.value === 3 && subEstadoPantalla.value === 'pregunta') {
     subEstadoPantalla.value = 'checkpoint_1'
     ganarExperiencia(20) // +20 XP por Checkpoint
     estadisticasHeroe.reputacionNocturna = Math.min(100, estadisticasHeroe.reputacionNocturna + 10) // +10 reputación
     reproducirEfecto('desbloquear')
+    
+    // Guardar avance parcial al superar el checkpoint de la pregunta 4
+    avanceMision.value = {
+      idProvincia: provinciaActiva.value?.id,
+      preguntaActual: 4, // continua en la pregunta 5 (index 4)
+      respuestasCorrectasCount: respuestasCorrectasCount.value,
+      yaPasoCheckpoint: true,
+      esSegundoIntento: esSegundoIntento.value
+    }
+    guardarProgreso()
   } 
   // San José: Checkpoint 2 tras la pregunta 7 (index 6)
   else if (esSanJose && preguntaActual.value === 6 && subEstadoPantalla.value === 'pregunta') {
@@ -603,10 +682,14 @@ function alSiguientePregunta() {
     estadisticasHeroe.reputacionNocturna = Math.min(100, estadisticasHeroe.reputacionNocturna + 15) // +15 reputación
     reproducirEfecto('desbloquear')
   } 
-  // Finalizar preguntas y pasar a Outro Narrativo
+  // Finalizar preguntas y pasar a Outro Narrativo o directamente a resultados
   else if (preguntaActual.value + 1 >= totalPreguntas.value) {
-    subEstadoPantalla.value = 'narrativa_final'
-    reproducirEfecto('desbloquear')
+    if (respuestasCorrectasCount.value >= 5) {
+      subEstadoPantalla.value = 'narrativa_final'
+      reproducirEfecto('desbloquear')
+    } else {
+      finalizarMisionAventura()
+    }
   } 
   // Flujo normal de incremento
   else {
@@ -739,6 +822,31 @@ function alPresionarTecla(e) {
 onMounted(() => {
   reproducirMusica('juego')
   window.addEventListener('keydown', alPresionarTecla)
+  
+  if (esSegundoIntento.value) {
+    subEstadoPantalla.value = 'pregunta'
+    preguntaActual.value = 0
+    respuestasCorrectasCount.value = 0
+    
+    // Limpiar el avance parcial al iniciar un segundo intento
+    avanceMision.value = null
+    guardarProgreso()
+    
+    iniciarPregunta()
+  } else {
+    // Si hay un avance parcial guardado para esta misma provincia
+    if (avanceMision.value && avanceMision.value.idProvincia === provinciaActiva.value?.id) {
+      subEstadoPantalla.value = 'pregunta'
+      preguntaActual.value = avanceMision.value.preguntaActual // 4 (pregunta 5)
+      respuestasCorrectasCount.value = avanceMision.value.respuestasCorrectasCount
+      esSegundoIntento.value = avanceMision.value.esSegundoIntento
+      iniciarPregunta()
+    } else {
+      subEstadoPantalla.value = 'narrativa_inicial'
+      preguntaActual.value = 0
+      respuestasCorrectasCount.value = 0
+    }
+  }
 })
 
 onUnmounted(() => {
@@ -753,7 +861,7 @@ onUnmounted(() => {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-2) var(--space-4);
 }
 
 .contenedor-juego {
@@ -761,7 +869,19 @@ onUnmounted(() => {
   max-width: 720px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-3);
+  transition: max-width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.contenedor-juego.con-ancho-extendido {
+  max-width: 1080px;
+}
+
+.flujo-pregunta-activo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
 }
 
 /* --- Estilos de Aventura Narrativa y Checkpoints --- */
@@ -916,18 +1036,18 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
 .insignia-mision {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .emoji-provincia-mision {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 
 .etiqueta-mision {
@@ -938,6 +1058,12 @@ onUnmounted(() => {
   margin: 0;
 }
 
+.etiqueta-mision.alerta-segundo-intento-etiqueta {
+  color: #ff4646 !important;
+  font-weight: var(--font-bold);
+  text-shadow: 0 0 5px rgba(255, 70, 70, 0.3);
+}
+
 .nombre-mision {
   font-family: var(--font-display);
   font-size: var(--text-xl);
@@ -945,10 +1071,24 @@ onUnmounted(() => {
   margin: 0;
 }
 
+.nombre-mision.alerta-segundo-intento-nombre {
+  color: #ff6b6b !important;
+  text-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+}
+
+.aviso-tension {
+  font-size: 0.75rem;
+  color: #ff4646;
+  font-weight: var(--font-bold);
+  text-shadow: 0 0 5px rgba(255, 70, 70, 0.4);
+  display: block;
+  margin-top: 2px;
+}
+
 .encabezado-derecha-juego {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .temporizador-badge {
@@ -1004,13 +1144,14 @@ onUnmounted(() => {
 .area-pregunta {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-2);
 }
 
 .tarjeta-pregunta {
   position: relative;
   overflow: hidden;
-  padding-top: var(--space-6);
+  padding: var(--space-3) var(--space-4) !important;
+  padding-top: var(--space-4) !important;
 }
 
 .pista-tiempo-pregunta {
@@ -1037,14 +1178,14 @@ onUnmounted(() => {
   color: var(--color-neon-blue);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--space-1);
 }
 
 .texto-pregunta {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   color: var(--color-text-primary);
-  line-height: 1.4;
+  line-height: 1.35;
   margin: 0;
 }
 
@@ -1052,14 +1193,14 @@ onUnmounted(() => {
 .cuadricula-opciones {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .boton-opcion {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   background: rgba(255,255,255,0.04);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -1076,7 +1217,17 @@ onUnmounted(() => {
   transform: translateX(3px);
 }
 
-.boton-opcion:disabled { cursor: default; }
+.boton-opcion:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  transform: none !important;
+}
+
+.boton-opcion.opcion-correcta:disabled,
+.boton-opcion.opcion-incorrecta:disabled,
+.boton-opcion.opcion-revelada:disabled {
+  opacity: 1 !important;
+}
 
 .letra-opcion {
   font-family: var(--font-display);
@@ -1101,12 +1252,29 @@ onUnmounted(() => {
   background: rgba(0,255,136,0.08) !important;
 }
 
+.simbolo-feedback {
+  font-size: 1.1rem;
+  font-weight: var(--font-bold);
+  display: inline-block;
+  line-height: 1;
+}
+
+.simbolo-feedback.correcto {
+  color: var(--color-neon-green);
+  text-shadow: 0 0 5px var(--color-neon-green);
+}
+
+.simbolo-feedback.incorrecto {
+  color: #ff4646;
+  text-shadow: 0 0 5px #ff4646;
+}
+
 /* --- Feedback --- */
 .retroalimentacion-respuesta {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-lg);
   border: 1px solid;
 }
@@ -1139,28 +1307,61 @@ onUnmounted(() => {
 .narrativa-consecuencia {
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
-  line-height: 1.5;
-  margin: 0 0 var(--space-2);
+  line-height: 1.4;
+  margin: 0 0 var(--space-1);
 }
 
-.explicacion-educativa-seccion {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: var(--space-2);
-  margin-top: var(--space-1);
+/* --- Tarjeta de Explicación Educativa --- */
+.tarjeta-explicacion-educativa {
+  background: rgba(0, 200, 255, 0.03) !important;
+  border: 1px dashed var(--color-neon-blue) !important;
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.08) !important;
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: 0;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
 }
 
-.etiqueta-explicacion {
-  font-size: 0.7rem;
+.tarjeta-explicacion-educativa::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-neon-blue);
+}
+
+.cabecera-explicacion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.icono-explicacion {
+  font-size: 1.2rem;
+}
+
+.titulo-explicacion {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
   font-weight: var(--font-bold);
   color: var(--color-neon-blue);
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
 }
 
-.explicacion-retroalimentacion {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  line-height: 1.4;
-  margin: 0 0 var(--space-2);
+.explicacion-texto {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
 }
 
 .cambios-atributos-pregunta {
@@ -1193,11 +1394,52 @@ onUnmounted(() => {
   display: flex;
   gap: var(--space-3);
   justify-content: space-between;
+  margin-top: 0;
 }
 
-/* --- Transición --- */
+/* --- Cuerpo de Trivia (Dos Columnas en Escritorio) --- */
+.cuerpo-trivia {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.columna-principal-trivia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.columna-lateral-trivia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@media (min-width: 800px) {
+  .cuerpo-trivia.con-retroalimentacion {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: start;
+    gap: var(--space-4);
+  }
+}
+
+/* --- Transiciones --- */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+.slide-up-enter-active, .slide-up-leave-active {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(15px);
+}
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-15px);
+}
 
 /* --- Responsive --- */
 @media (max-width: 640px) {
