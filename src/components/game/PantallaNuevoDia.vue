@@ -76,7 +76,7 @@ function comenzarNuevoDia() {
 }
 
 onMounted(() => {
-  reproducirMusica('amanecer')
+  reproducirMusica('campus')
 })
 </script>
 
