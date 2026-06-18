@@ -554,7 +554,7 @@
 
             <div class="opciones-botones-vertical">
               <button class="btn btn-hero btn-guardar-manual" @click="guardarManualmente" aria-label="Guardar progreso actual manualmente">
-                💾 Guardar Progreso Actual
+                💾 Guardar y salir al inicio
               </button>
 
               <div class="cargar-seccion">
@@ -674,7 +674,7 @@ onMounted(() => {
 })
 
 const estadoSuspicionNombre = computed(() => {
-  if (exposicionRevelada.value || marcasExposicion.value >= 2) return 'Identidad Revelada'
+  if (exposicionRevelada.value || marcasExposicion.value >= 3) return 'Identidad Revelada'
   if (enCrisis.value || estadisticasHeroe.sospechaIdentidad >= 100) return 'Crisis'
   const s = estadisticasHeroe.sospechaIdentidad
   if (s <= 25) return 'Normal'
@@ -861,8 +861,8 @@ function mostrarNotifError(msg) {
 function guardarManualmente() {
   reproducirEfecto('click')
   guardarProgreso()
-  mostrarNotifExito('✓ Partida guardada correctamente')
   existeSave.value = hayProgresoGuardado()
+  navegarA(PANTALLAS.INICIO)
 }
 
 function cargarManualmente() {

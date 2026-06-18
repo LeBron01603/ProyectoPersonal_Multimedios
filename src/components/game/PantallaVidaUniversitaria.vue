@@ -1,6 +1,11 @@
 <template>
   <!-- PantallaVidaUniversitaria: actividades civiles diurnas del héroe -->
   <section class="pantalla-vida-u" aria-label="Pantalla de actividades universitarias">
+    <!-- Partículas ambientales cibernéticas -->
+    <div class="particles-background" aria-hidden="true">
+      <span v-for="n in 8" :key="'particle-' + n" class="particle-leaf"></span>
+    </div>
+
     <div class="contenedor-vida-u animate-fade-in-scale">
       
       <!-- Contexto Temporal -->
@@ -132,7 +137,7 @@
                 <div class="incidente-nivel-wrapper">
                   <span class="nivel-label">ESTADO ACTUAL:</span>
                   <span class="badge-rango-sospecha-tactico" :class="claseSospecha(estadisticasHeroe.sospechaIdentidad)">
-                    <span v-if="exposicionRevelada || marcasExposicion >= 2">⚠️ Expuesto</span>
+                    <span v-if="exposicionRevelada || marcasExposicion >= 3">⚠️ Expuesto</span>
                     <span v-else-if="claseSospecha(estadisticasHeroe.sospechaIdentidad) === 'segura'">🟢 Identidad Segura</span>
                     <span v-else-if="claseSospecha(estadisticasHeroe.sospechaIdentidad) === 'rumores'">🟡 Rumores</span>
                     <span v-else-if="claseSospecha(estadisticasHeroe.sospechaIdentidad) === 'alta'">🟠 Sospechas</span>
@@ -442,20 +447,64 @@ function alCancelar() {
   align-items: center;
   justify-content: center;
   padding: var(--space-8) var(--space-4);
+  position: relative;
+  background: radial-gradient(circle at 50% 30%, rgba(18, 24, 48, 0.95) 0%, rgba(5, 7, 18, 0.98) 100%);
+  overflow: hidden;
+}
+
+.pantalla-vida-u::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(184, 79, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184, 79, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pantalla-vida-u::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 30%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.08) 0%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+  animation: background-glow-drift 12s infinite alternate ease-in-out;
+}
+
+@keyframes background-glow-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(100px, 50px) scale(1.2); }
 }
 
 .contenedor-vida-u {
+  position: relative;
+  z-index: 2;
   width: 100%;
   max-width: 800px;
-  background: var(--gradient-card);
-  border: 1px solid var(--color-border);
+  background: rgba(6, 10, 24, 0.82);
+  border: 1px solid rgba(184, 79, 255, 0.45);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
-  box-shadow: var(--shadow-card), var(--shadow-neon-purple);
+  box-shadow: 0 0 25px rgba(184, 79, 255, 0.15), inset 0 0 15px rgba(184, 79, 255, 0.05);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.contenedor-vida-u:hover {
+  border-color: rgba(0, 200, 255, 0.65);
+  box-shadow: 0 0 35px rgba(0, 200, 255, 0.25), inset 0 0 20px rgba(0, 200, 255, 0.08);
 }
 
 /* --- Reloj context --- */
@@ -840,12 +889,20 @@ function alCancelar() {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(4, 5, 12, 0.95);
-  backdrop-filter: blur(15px);
+  background: rgba(3, 8, 20, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
+  box-shadow: inset 0 0 100px rgba(255, 157, 0, 0.15);
+  animation: screen-alert-pulse 4s infinite alternate ease-in-out;
+}
+
+@keyframes screen-alert-pulse {
+  0% { box-shadow: inset 0 0 80px rgba(255, 157, 0, 0.15); }
+  100% { box-shadow: inset 0 0 120px rgba(255, 157, 0, 0.25); }
 }
 
 .modal-wrapper {
@@ -1166,9 +1223,10 @@ function alCancelar() {
 
 .btn-opcion-evento-tactico:hover {
   border-color: var(--color-neon-blue);
-  background: rgba(0, 240, 255, 0.06);
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+  background: rgba(0, 240, 255, 0.1);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 }
 
 .btn-opcion-evento-tactico:hover .opcion-icono-bocadillo {
@@ -1184,5 +1242,71 @@ function alCancelar() {
   .panel-informacion-u {
     grid-template-columns: 1fr;
   }
+}
+
+/* --- Ambient Particles --- */
+.particles-background {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle-leaf {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(0, 200, 255, 0.25);
+  box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+  border-radius: 50%;
+  animation: float-particle 10s infinite linear;
+}
+
+.particle-leaf:nth-child(even) {
+  background: rgba(184, 79, 255, 0.25);
+  box-shadow: 0 0 10px rgba(184, 79, 255, 0.5);
+}
+
+.particle-leaf:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; animation-duration: 8s; }
+.particle-leaf:nth-child(2) { left: 85%; top: 15%; animation-delay: 2s; animation-duration: 12s; }
+.particle-leaf:nth-child(3) { left: 25%; top: 70%; animation-delay: 1s; animation-duration: 9s; }
+.particle-leaf:nth-child(4) { left: 70%; top: 65%; animation-delay: 3s; animation-duration: 11s; }
+.particle-leaf:nth-child(5) { left: 45%; top: 85%; animation-delay: 4s; animation-duration: 10s; }
+.particle-leaf:nth-child(6) { left: 50%; top: 10%; animation-delay: 1.5s; animation-duration: 13s; }
+.particle-leaf:nth-child(7) { left: 90%; top: 80%; animation-delay: 5s; animation-duration: 7s; }
+.particle-leaf:nth-child(8) { left: 5%; top: 60%; animation-delay: 2.5s; animation-duration: 14s; }
+
+@keyframes float-particle {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+/* --- Animaciones de Transición del Modal --- */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.modal-fade-enter-active .modal-card-suspicion {
+  animation: modal-card-in 0.35s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+.modal-fade-leave-active .modal-card-suspicion {
+  animation: modal-card-out 0.3s ease forwards;
+}
+
+@keyframes modal-card-in {
+  from { transform: translateY(-30px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes modal-card-out {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(15px) scale(0.97); opacity: 0; }
 }
 </style>

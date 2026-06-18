@@ -115,7 +115,7 @@
           No lograste responder adecuadamente. Las sospechas sobre tu alias siguen creciendo en los pasillos de la universidad.
         </p>
         <p class="texto-narrativa-secundario" style="color: #ff6b6b; font-weight: bold;">
-          Has sumado +1 marca de exposición. Si acumulas 2 marcas, tu identidad será completamente revelada.
+          Has sumado +1 marca de exposición. Si acumulas 3 marcas, tu identidad será completamente revelada.
         </p>
         <button class="btn btn-hero btn-lg btn-danger" @click="concluirReto(false)">
           Volver a Operaciones
@@ -231,7 +231,7 @@ function concluirReto(exito) {
     navegarA(PANTALLAS.MAPA)
   } else {
     marcasExposicion.value++
-    if (marcasExposicion.value >= 2) {
+    if (marcasExposicion.value >= 3) {
       navegarA(PANTALLAS.GAMEOVER)
     } else {
       estadisticasHeroe.sospechaIdentidad = 80

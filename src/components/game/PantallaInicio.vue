@@ -257,7 +257,6 @@
                 <div v-for="(entry, index) in rankingLocal.slice(0, 4)" :key="index" class="ranking-item">
                   <span class="ranking-pos" :class="'pos-' + (index + 1)">#{{ index + 1 }}</span>
                   <span class="ranking-alias">{{ entry.alias }}</span>
-                  <span class="ranking-score text-neon">{{ entry.puntaje }} pts</span>
                 </div>
               </div>
               <div class="ranking-vacio" v-else>
@@ -280,8 +279,9 @@
 • Provincias completadas
 • XP y nivel
 • Estadísticas
-• Ranking local
-• Progreso de historia"
+• Progreso de historia
+
+Nota: El ranking local se conserva."
       textoConfirmar="Reiniciar Aventura"
       textoCancelar="Cancelar"
       @confirmar="comenzarNuevaPartida"
