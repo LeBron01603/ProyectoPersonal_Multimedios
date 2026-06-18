@@ -10,7 +10,7 @@
 
 ## 🔗 Demo en Línea
 El proyecto se encuentra desplegado y listo para ser probado en el siguiente enlace de Vercel:
-👉 **[Demo en Vercel (https://ruta-tica-heroe-after.vercel.app/)](https://ruta-tica-el-heroe-del-after.vercel.app/)** 
+👉 **[https://ruta-tica-el-heroe-del-after.vercel.app/](https://ruta-tica-el-heroe-del-after.vercel.app/)** 
 
 ---
 
