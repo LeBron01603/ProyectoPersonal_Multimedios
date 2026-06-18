@@ -74,6 +74,10 @@
           v-else-if="pantallaActual === PANTALLAS.GAMEOVER"
           key="gameover"
         />
+        <CentroHeroeView
+          v-else-if="pantallaActual === PANTALLAS.CENTRO_HEROE"
+          key="centro_heroe"
+        />
         <PantallaInicio
           v-else
           key="inicio-fallback"
@@ -113,6 +117,7 @@ import PantallaResultado         from './components/game/PantallaResultado.vue'
 import PantallaNuevoDia          from './components/game/PantallaNuevoDia.vue'
 import PantallaCrisis            from './components/game/PantallaCrisis.vue'
 import PantallaGameOver          from './components/game/PantallaGameOver.vue'
+import CentroHeroeView          from './components/game/CentroHeroeView.vue'
 
 // --- Composables ---
 import { useEstadoJuego, PANTALLAS } from './composables/useEstadoJuego.js'

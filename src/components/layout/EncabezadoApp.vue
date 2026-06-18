@@ -42,7 +42,7 @@
           class="control-btn"
           title="Centro del Héroe"
           aria-label="Ver perfil de héroe"
-          @click="mostrarCentroHeroe = true"
+          @click="origenCentroHeroe = 'operaciones'; navegarA(PANTALLAS.CENTRO_HEROE)"
         >
           👤
         </button>
@@ -90,11 +90,6 @@
       @cancelar="cerrarConfirmarReinicio"
     />
 
-    <!-- Componente del Centro del Héroe (Modal) -->
-    <CentroHeroe
-      :mostrar="mostrarCentroHeroe"
-      @cerrar="mostrarCentroHeroe = false"
-    />
   </header>
 </template>
 
@@ -105,7 +100,6 @@ import { ref, computed } from 'vue'
 // --- Componentes hijos ---
 import IndicadorEstadistica from '../game/IndicadorEstadistica.vue'
 import ModalConfirmacion from '../game/ModalConfirmacion.vue'
-import CentroHeroe from '../game/CentroHeroe.vue'
 
 // --- Composables ---
 import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
@@ -120,14 +114,15 @@ const {
   reiniciarJuego,
   nivelHeroe,
   experienciaHeroe,
-  PANTALLAS
+  PANTALLAS,
+  navegarA,
+  origenCentroHeroe
 } = useEstadoJuego()
 
 // --- Audio ---
 const { estaSilenciado, alternarSilencio, reproducirEfecto } = useAudio()
 
 // --- Estado local para modal ---
-const mostrarCentroHeroe = ref(false)
 const mostrarModalConfirmar = ref(false)
 
 // --- Computed: mostrar estadísticas solo en pantallas de juego ---

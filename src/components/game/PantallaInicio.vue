@@ -161,15 +161,15 @@
             <div class="botones-secundarios-wrapper" v-if="tieneProgresoValido">
               <button
                 id="btn-nueva-aventura"
-                class="btn-aaa btn-secondary-aaa"
+                class="btn-aaa btn-danger-aaa"
                 @click="alConfirmarNuevaPartidaDirecto"
-                aria-label="Nueva aventura"
+                aria-label="Reiniciar aventura"
               >
-                ✨ COMENZAR AVENTURA
+                🔄 REINICIAR AVENTURA
               </button>
               <button
                 class="btn-aaa btn-secondary-aaa"
-                @click="mostrarCentroHeroe = true"
+                @click="origenCentroHeroe = 'inicio'; navegarA(PANTALLAS.CENTRO_HEROE)"
                 aria-label="Ver perfil del héroe"
               >
                 👤 CENTRO DEL HÉROE
@@ -275,26 +275,25 @@
     <!-- Modal Confirmación para Nueva Partida -->
     <ModalConfirmacion
       :mostrar="mostrarConfirmarNuevaPartida"
-      titulo="¿Iniciar nueva partida?"
-      mensaje="¿Seguro que deseas iniciar una nueva partida? Esto eliminará de forma irreversible tu progreso anterior."
-      textoConfirmar="Empezar de nuevo"
+      titulo="¿Deseas borrar toda tu partida?"
+      mensaje="Se perderán:
+• Provincias completadas
+• XP y nivel
+• Estadísticas
+• Ranking local
+• Progreso de historia"
+      textoConfirmar="Reiniciar Aventura"
       textoCancelar="Cancelar"
       @confirmar="comenzarNuevaPartida"
       @cancelar="cerrarConfirmarNuevaPartida"
     />
 
-    <!-- Componente del Centro del Héroe (Modal) -->
-    <CentroHeroe
-      :mostrar="mostrarCentroHeroe"
-      @cerrar="mostrarCentroHeroe = false"
-    />
   </section>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import ModalConfirmacion from './ModalConfirmacion.vue'
-import CentroHeroe from './CentroHeroe.vue'
 import { useAudio } from '../../composables/useAudio.js'
 import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 
@@ -313,13 +312,14 @@ const {
   misionesCompletadas,
   nivelHeroe,
   experienciaHeroe,
-  rankingLocal
+  rankingLocal,
+  navegarA,
+  origenCentroHeroe
 } = useEstadoJuego()
 
 // --- Estado local ---
 const tieneProgresoValido = ref(false)
 const mostrarConfirmarNuevaPartida = ref(false)
-const mostrarCentroHeroe = ref(false)
 
 const emit = defineEmits(['iniciar'])
 
@@ -920,6 +920,26 @@ function estiloSpark(n) {
   border-color: #d800ff;
   background: rgba(184, 79, 255, 0.2);
   box-shadow: 0 0 25px rgba(184, 79, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-danger-aaa {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-sm);
+  background: rgba(15, 5, 5, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 70, 70, 0.5);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 70, 70, 0.2);
+  text-shadow: 0 0 6px rgba(255, 70, 70, 0.6);
+  flex: 1;
+}
+
+.btn-danger-aaa:hover {
+  border-color: #ff4646;
+  background: rgba(255, 70, 70, 0.2);
+  box-shadow: 0 0 25px rgba(255, 70, 70, 0.6);
   transform: translateY(-2px);
 }
 

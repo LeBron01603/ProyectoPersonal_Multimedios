@@ -20,7 +20,8 @@ export const PANTALLAS = {
   RESULTADO: 'resultado',
   NUEVO_DIA: 'nuevo_dia',
   CRISIS:    'crisis',
-  GAMEOVER:  'gameover'
+  GAMEOVER:  'gameover',
+  CENTRO_HEROE: 'centro_heroe'
 }
 
 // --- Estado global reactivo (singleton por sesión) ---
@@ -28,6 +29,7 @@ const pantallaActual = ref(PANTALLAS.INICIO)
 const estaCargando   = ref(false)
 const esModoNocturno = ref(false)
 const mensajeAlertaMapa = ref('')
+const origenCentroHeroe = ref('operaciones')
 
 // Watcher to guarantee pantallaActual is always valid and fallback to INICIO if invalid
 watch(pantallaActual, (nueva) => {
@@ -818,6 +820,7 @@ export function useEstadoJuego() {
     marcasExposicion,
     enCrisis,
     exposicionRevelada,
+    origenCentroHeroe,
 
     // Computed
     identidadCompleta,

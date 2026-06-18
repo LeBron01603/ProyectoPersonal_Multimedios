@@ -135,6 +135,7 @@ const idUnico = ref(Math.random().toString(36).substring(2, 9))
   color: var(--color-text-secondary);
   line-height: 1.5;
   margin: 0;
+  white-space: pre-wrap;
 }
 
 /* --- Acciones --- */
