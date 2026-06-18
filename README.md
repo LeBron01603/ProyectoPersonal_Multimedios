@@ -1,16 +1,16 @@
 # Ruta Tica: El Héroe del After 🦸🇨🇷
 
-## Escuela de Ciencias de la Computación e Informática
+## Informática Empresarial
 ### Universidad de Costa Rica
 **Curso:** IF7102 Multimedios  
 **Estudiante:** Emiliano Martínez  
-**Proyecto Final (Fase 3) - Opción 5: Juego Educativo de Un Nivel**
+**Proyecto Personal - Opción 5: Juego Educativo de Un Nivel**
 
 ---
 
 ## 🔗 Demo en Línea
 El proyecto se encuentra desplegado y listo para ser probado en el siguiente enlace de Vercel:
-👉 **[Demo en Vercel (https://ruta-tica-heroe-after.vercel.app/)](https://ruta-tica-heroe-after.vercel.app/)** *(Enlace provisional para entrega final)*
+👉 **[Demo en Vercel (https://ruta-tica-heroe-after.vercel.app/)](https://ruta-tica-el-heroe-del-after.vercel.app/)** 
 
 ---
 
