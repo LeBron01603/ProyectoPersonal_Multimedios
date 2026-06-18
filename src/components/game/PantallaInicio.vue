@@ -1,111 +1,276 @@
 <template>
   <section class="pantalla-inicio" aria-label="Pantalla de inicio de Ruta Tica">
+    <!-- Fondo fijo e inmutable detrás de la escena -->
+    <div class="fondo-fijo-inicio" aria-hidden="true"></div>
+    
+    <!-- Capa de overlay holográfico con scanlines muy suaves -->
+    <div class="hologram-scanlines" aria-hidden="true"></div>
 
-    <!-- Efectos de fondo premium animados -->
-    <div class="grid-overlay" aria-hidden="true"></div>
-    <div class="luces-ambiente" aria-hidden="true">
-      <div class="luz-ambiente luz-azul"></div>
-      <div class="luz-ambiente luz-verde"></div>
-      <div class="luz-ambiente luz-purpura"></div>
+    <!-- Efecto ambiental de partículas flotantes (Morpho y Luces) -->
+    <div class="particulas-ambientales" aria-hidden="true">
+      <!-- Mariposas Morpho Azul animadas -->
+      <span v-for="n in 6" :key="'morpho-' + n" class="ambient-morpho" :style="estiloMorpho(n)">🦋</span>
+      <!-- Chispas neón -->
+      <span v-for="n in 12" :key="'spark-' + n" class="ambient-spark" :style="estiloSpark(n)"></span>
     </div>
 
-    <!-- Partículas de fondo decorativas -->
-    <div class="particulas" aria-hidden="true">
-      <span v-for="n in 20" :key="n" class="particula" :style="estiloParticula(n)"></span>
-    </div>
-
-    <!-- Contenido principal -->
-    <div class="contenido-inicio animate-fade-in">
-
-      <!-- Emblema del héroe -->
-      <div class="emblema-heroe animate-float" aria-hidden="true">
-        <div class="anillo-emblema anillo-emblema--exterior"></div>
-        <div class="anillo-emblema anillo-emblema--interior"></div>
-        <span class="icono-emblema">🦸</span>
-      </div>
-
-      <!-- Título del juego -->
-      <header class="encabezado-inicio">
-        <p class="lema-inicio animate-slide-left delay-100">🇨🇷 Juego Educativo Universitario</p>
-        <h1 class="titulo-inicio animate-slide-right delay-200">
-          <span class="titulo-ruta">Ruta Tica</span>
-          <br />
-          <span class="titulo-heroe">El Héroe del After</span>
-        </h1>
-        <div class="divisor-titulo" aria-hidden="true"></div>
-      </header>
-
-      <!-- Descripción del concepto -->
-      <div class="descripcion-inicio animate-fade-in delay-300">
-        <p class="descripcion-principal">
-          De día estudias, entrenas y cumples tus responsabilidades universitarias.
-          De noche, tu identidad secreta despierta para recorrer las 7 provincias de Costa Rica.
-        </p>
-        <p class="descripcion-mision">
-          🗺️ Responde preguntas sobre turismo, cultura, historia y geografía.<br />
-          ⚡ Defiende el equilibrio entre diversión, conocimiento y responsabilidad.
-        </p>
-      </div>
-
-      <!-- Estadísticas del juego (decorativas) -->
-      <div class="estadisticas-inicio animate-fade-in delay-400" aria-hidden="true">
-        <div class="estadistica-inicio">
-          <span class="numero-estadistica">7</span>
-          <span class="etiqueta-estadistica">Provincias</span>
-        </div>
-        <div class="divisor-estadistica"></div>
-        <div class="estadistica-inicio">
-          <span class="numero-estadistica">4</span>
-          <span class="etiqueta-estadistica">Atributos</span>
-        </div>
-        <div class="divisor-estadistica"></div>
-        <div class="estadistica-inicio">
-          <span class="numero-estadistica">∞</span>
-          <span class="etiqueta-estadistica">Aventuras</span>
-        </div>
-      </div>
-
-      <!-- Botón principal de acción -->
-      <div class="llamada-accion animate-fade-in delay-500">
-        <template v-if="tieneProgresoValido">
-          <div class="opciones-inicio-botones">
-            <button
-              id="btn-continuar-aventura"
-              class="btn btn-primary btn-lg btn-continuar-partida-inicio animate-bounce-subtle"
-              @click="alContinuarPartidaDirecto"
-              aria-label="Continuar aventura guardada"
-            >
-              📂 Continuar aventura
-            </button>
-            <button
-              id="btn-nueva-aventura"
-              class="btn btn-outline btn-lg"
-              @click="alConfirmarNuevaPartidaDirecto"
-              aria-label="Iniciar nueva aventura"
-            >
-              ✨ Nueva aventura
-            </button>
+    <div class="inicio-hero">
+      <!-- Contenedor del Grid Principal (HUD de Videojuego AAA) -->
+      <div class="hud-main-grid animate-fade-in">
+        
+        <!-- COLUMNA IZQUIERDA: Estado del Héroe (Glassmorphism) -->
+        <aside class="hud-panel glass-panel panel-izquierdo">
+          <div class="panel-header">
+            <span class="panel-icon">👤</span>
+            <h2>ESTADO DEL HÉROE</h2>
           </div>
-          <p class="sugerencia-cta">Continúa donde lo dejaste o crea una nueva historia</p>
-        </template>
-        <template v-else>
-          <button
-            id="btn-iniciar-mision"
-            class="btn btn-primary btn-lg animate-bounce-subtle"
-            @click="alIniciar"
-            aria-label="Iniciar misión y crear tu héroe"
-          >
-            ⚡ Iniciar misión
-          </button>
-          <p class="sugerencia-cta">Crea tu identidad de héroe universitario</p>
-        </template>
-      </div>
+          <div class="panel-body">
+            <div v-if="tieneProgresoValido" class="stats-heroe-container">
+              <div class="heroe-perfil-resumen">
+                <div class="avatar-neon-wrapper">
+                  <span class="avatar-emoji">🦸</span>
+                  <div class="neon-ring"></div>
+                </div>
+                <div class="heroe-meta">
+                  <h3 class="heroe-alias text-neon-blue">{{ identidadHeroe.aliasHeroe || 'Héroe del After' }}</h3>
+                  <p class="heroe-carrera">{{ identidadHeroe.carrera }}</p>
+                  <div class="heroe-nivel-badge">Nivel {{ nivelHeroe }}</div>
+                </div>
+              </div>
 
-      <!-- Nota de responsabilidad -->
-      <p class="descargo-responsabilidad animate-fade-in delay-600">
-        🌿 Este juego promueve el conocimiento, el equilibrio y la responsabilidad universitaria.
-      </p>
+              <!-- Atributos -->
+              <div class="atributos-lista">
+                <div class="atributo-item">
+                  <div class="atributo-meta">
+                    <span>⚡ Energía</span>
+                    <span>{{ estadisticasHeroe.energia }}/100</span>
+                  </div>
+                  <div class="barra-progreso-bg">
+                    <div class="barra-progreso-fill bar-energia" :style="{ width: estadisticasHeroe.energia + '%' }"></div>
+                  </div>
+                </div>
+                <div class="atributo-item">
+                  <div class="atributo-meta">
+                    <span>📚 Conocimiento</span>
+                    <span>{{ estadisticasHeroe.conocimiento }}/100</span>
+                  </div>
+                  <div class="barra-progreso-bg">
+                    <div class="barra-progreso-fill bar-conocimiento" :style="{ width: estadisticasHeroe.conocimiento + '%' }"></div>
+                  </div>
+                </div>
+                <div class="atributo-item">
+                  <div class="atributo-meta">
+                    <span>🎓 Responsabilidad</span>
+                    <span>{{ estadisticasHeroe.responsabilidad }}/100</span>
+                  </div>
+                  <div class="barra-progreso-bg">
+                    <div class="barra-progreso-fill bar-responsabilidad" :style="{ width: estadisticasHeroe.responsabilidad + '%' }"></div>
+                  </div>
+                </div>
+                <div class="atributo-item">
+                  <div class="atributo-meta">
+                    <span>🤝 Reputación</span>
+                    <span>{{ estadisticasHeroe.reputacionNocturna }}/100</span>
+                  </div>
+                  <div class="barra-progreso-bg">
+                    <div class="barra-progreso-fill bar-reputacion" :style="{ width: estadisticasHeroe.reputacionNocturna + '%' }"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sospecha de Identidad -->
+              <div class="sospecha-seccion">
+                <div class="sospecha-meta">
+                  <span class="texto-advertencia-titulo">🕵️ Sospecha de Identidad</span>
+                  <span class="valor-sospecha" :class="claseSospecha">{{ estadisticasHeroe.sospechaIdentidad }}%</span>
+                </div>
+                <div class="barra-progreso-bg">
+                  <div class="barra-progreso-fill bar-sospecha" :class="claseSospecha" :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }"></div>
+                </div>
+                <p class="sospecha-mensaje" :class="claseSospecha">
+                  {{ mensajeSospecha }}
+                </p>
+              </div>
+
+              <!-- Próxima misión -->
+              <div class="proxima-mision-caja">
+                <div class="caja-etiqueta">PRÓXIMA PROVINCIA</div>
+                <div class="caja-valor text-neon">{{ proximaMisionNombre }}</div>
+              </div>
+            </div>
+
+            <div v-else class="lore-bienvenida">
+              <p class="lore-texto">
+                De día cumples tus responsabilidades académicas. De noche, recorres el territorio costarricense como el <strong>Héroe del After</strong>.
+              </p>
+              <div class="lore-valores">
+                <div class="valor-ficha"><span class="emoji">🌸</span> <strong>Guaria Morada</strong> de Honor</div>
+                <div class="valor-ficha"><span class="emoji">🛞</span> <strong>Carreta</strong> del Esfuerzo</div>
+                <div class="valor-ficha"><span class="emoji">🦜</span> <strong>Lapa</strong> de la Sabiduría</div>
+              </div>
+              <div class="consejo-bienvenida">
+                ¡Crea tu perfil de héroe y defiende la noche!
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- COLUMNA CENTRAL: Logo Cyberpunk Neón y Botones Centrados -->
+        <main class="hud-centro">
+          
+          <!-- Logo Reconstruido Estilo Videojuego AAA -->
+          <header class="logo-cyber-container">
+            <p class="lema-juego-tico">🇨🇷 EL VIAJE HEROICO ACADÉMICO-CULTURAL 🇨🇷</p>
+            <h1 class="titulo-juego-logo">
+              <span class="logo-ruta-neon">RUTA TICA</span>
+              <span class="logo-after-neon">EL HÉROE DEL AFTER</span>
+            </h1>
+            <div class="logo-divider-neon">
+              <span class="logo-morpho-center">🦋</span>
+            </div>
+          </header>
+
+          <!-- Botones de Acción Centrados -->
+          <div class="acciones-centradas-container">
+            
+            <!-- Botón Principal (Comenzar / Continuar) -->
+            <div class="btn-principal-wrapper">
+              <button
+                v-if="tieneProgresoValido"
+                id="btn-continuar-aventura"
+                class="btn-aaa btn-primary-aaa animate-pulse-glow"
+                @click="alContinuarPartidaDirecto"
+                aria-label="Continuar aventura"
+              >
+                <span class="aaa-glow"></span>
+                📂 CONTINUAR AVENTURA
+              </button>
+              <button
+                v-else
+                id="btn-iniciar-mision"
+                class="btn-aaa btn-primary-aaa animate-pulse-glow"
+                @click="alIniciar"
+                aria-label="Comenzar aventura"
+              >
+                <span class="aaa-glow"></span>
+                ⚡ COMENZAR AVENTURA
+              </button>
+            </div>
+
+            <!-- Botones Secundarios Opcionales -->
+            <div class="botones-secundarios-wrapper" v-if="tieneProgresoValido">
+              <button
+                id="btn-nueva-aventura"
+                class="btn-aaa btn-secondary-aaa"
+                @click="alConfirmarNuevaPartidaDirecto"
+                aria-label="Nueva aventura"
+              >
+                ✨ COMENZAR AVENTURA
+              </button>
+              <button
+                class="btn-aaa btn-secondary-aaa"
+                @click="mostrarCentroHeroe = true"
+                aria-label="Ver perfil del héroe"
+              >
+                👤 CENTRO DEL HÉROE
+              </button>
+            </div>
+          </div>
+
+          <!-- Tarjeta Académica Compacta Integrada -->
+          <div class="tarjeta-academica-compacta glass-panel">
+            <div class="academica-titulo text-neon-purple">Ruta Tica: El Héroe del After</div>
+            <div class="academica-autor text-neon-blue">Emiliano Martínez • IF7102 Multimedios • UCR</div>
+            <div class="academica-tech text-neon-gold">Vue 3 + Vite + JS • 2026</div>
+          </div>
+        </main>
+
+        <!-- COLUMNA DERECHA: Datos del Sistema y Ranking (Glassmorphism) -->
+        <aside class="hud-panel glass-panel panel-derecho">
+          <div class="panel-header">
+            <span class="panel-icon">📊</span>
+            <h2>DATOS DEL SISTEMA</h2>
+          </div>
+          <div class="panel-body">
+            
+            <div class="grid-cards-datos">
+              <!-- Provincias -->
+              <div class="card-dato-neon">
+                <span class="card-icon">🗺️</span>
+                <div class="card-content">
+                  <span class="card-title">Provincias</span>
+                  <span class="card-num text-neon-blue">
+                    {{ tieneProgresoValido && misionesCompletadas ? misionesCompletadas.length : '0' }}<span class="card-max">/7</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Preguntas -->
+              <div class="card-dato-neon">
+                <span class="card-icon">❓</span>
+                <div class="card-content">
+                  <span class="card-title">Preguntas</span>
+                  <span class="card-num text-neon-green">56</span>
+                </div>
+              </div>
+
+              <!-- Misiones -->
+              <div class="card-dato-neon">
+                <span class="card-icon">⚡</span>
+                <div class="card-content">
+                  <span class="card-title">Misiones</span>
+                  <span class="card-num text-neon-purple">7</span>
+                </div>
+              </div>
+
+              <!-- Bosque Nuboso / Referencias -->
+              <div class="card-dato-neon">
+                <span class="card-icon">🌿</span>
+                <div class="card-content">
+                  <span class="card-title">Exploración</span>
+                  <span class="card-num text-neon-gold">100%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bitácora de Viaje (Referencias a Cartago y Guanacaste) -->
+            <div class="bitacora-viaje-neon">
+              <div class="bitacora-header">🗺️ BITÁCORA DE VIAJE</div>
+              <div class="bitacora-body">
+                <div class="bitacora-item">
+                  <span class="prov-badge cartago">Cartago</span>
+                  <span class="prov-details">Volcán Irazú, Ruinas históricas y Bosque nuboso.</span>
+                </div>
+                <div class="bitacora-item">
+                  <span class="prov-badge guanacaste">Guanacaste</span>
+                  <span class="prov-details">Playas del Pacífico, Tradición y Anexión.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Salón de la Fama -->
+            <div class="ranking-panel-scroll">
+              <div class="ranking-header">
+                <h3>🏆 SALÓN DE LA FAMA</h3>
+              </div>
+              <div class="ranking-lista" v-if="rankingLocal && rankingLocal.length > 0">
+                <div v-for="(entry, index) in rankingLocal.slice(0, 4)" :key="index" class="ranking-item">
+                  <span class="ranking-pos" :class="'pos-' + (index + 1)">#{{ index + 1 }}</span>
+                  <span class="ranking-alias">{{ entry.alias }}</span>
+                  <span class="ranking-score text-neon">{{ entry.puntaje }} pts</span>
+                </div>
+              </div>
+              <div class="ranking-vacio" v-else>
+                Sin puntuaciones guardadas aún.
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
     </div>
+
+
 
     <!-- Modal Confirmación para Nueva Partida -->
     <ModalConfirmacion
@@ -117,49 +282,61 @@
       @confirmar="comenzarNuevaPartida"
       @cancelar="cerrarConfirmarNuevaPartida"
     />
+
+    <!-- Componente del Centro del Héroe (Modal) -->
+    <CentroHeroe
+      :mostrar="mostrarCentroHeroe"
+      @cerrar="mostrarCentroHeroe = false"
+    />
   </section>
 </template>
 
 <script setup>
-// --- Importaciones de Vue 3 Composition API ---
-import { ref, onMounted, watch } from 'vue'
-
-// --- Componentes hijos ---
+import { ref, onMounted, watch, computed } from 'vue'
 import ModalConfirmacion from './ModalConfirmacion.vue'
-
-// --- Composables ---
+import CentroHeroe from './CentroHeroe.vue'
 import { useAudio } from '../../composables/useAudio.js'
 import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 
 // --- Audio ---
 const { reproducirMusica, reproducirEfecto } = useAudio()
 
-// --- Estado global ---
-const { hayProgresoGuardado, cargarProgreso, borrarProgreso, pantallaActual, PANTALLAS } = useEstadoJuego()
+// --- Estado global reactivo ---
+const {
+  hayProgresoGuardado,
+  cargarProgreso,
+  borrarProgreso,
+  pantallaActual,
+  PANTALLAS,
+  identidadHeroe,
+  estadisticasHeroe,
+  misionesCompletadas,
+  nivelHeroe,
+  experienciaHeroe,
+  rankingLocal
+} = useEstadoJuego()
 
 // --- Estado local ---
 const tieneProgresoValido = ref(false)
 const mostrarConfirmarNuevaPartida = ref(false)
+const mostrarCentroHeroe = ref(false)
 
-// --- Emits: notifica al padre qué acción realizar ---
 const emit = defineEmits(['iniciar'])
 
-// --- Watcher para actualizar el estado al volver a Inicio ---
+// --- Watcher ---
 watch(pantallaActual, (nuevaPantalla) => {
   if (nuevaPantalla === PANTALLAS.INICIO) {
     tieneProgresoValido.value = hayProgresoGuardado()
   }
 })
 
-// --- Ciclo de vida: onMounted ---
+// --- Ciclo de vida ---
 onMounted(() => {
-  // Iniciar música de menú
   reproducirMusica('menu')
-
   tieneProgresoValido.value = hayProgresoGuardado()
 })
 
-/** Emitir evento de inicio hacia App.vue */
+// --- Acciones ---
 function alIniciar() {
   emit('iniciar')
 }
@@ -187,693 +364,903 @@ function comenzarNuevaPartida() {
   emit('iniciar')
 }
 
-/**
- * Genera estilos aleatorios para cada partícula decorativa.
- * @param {number} n - Índice de la partícula (1-20)
- */
-function estiloParticula(n) {
-  const x = (n * 37 + 15) % 100
-  const y = (n * 53 + 10) % 100
-  const size = ((n * 7) % 3) + 2
-  const delay = (n * 0.3) % 3
-  const duration = 4 + (n % 4)
+// --- Computeds ---
+const proximaMisionNombre = computed(() => {
+  const rutaOrdenada = ['san-jose', 'heredia', 'cartago', 'alajuela', 'guanacaste', 'puntarenas', 'limon']
+  if (!misionesCompletadas.value) return 'San José'
+  const proximaId = rutaOrdenada.find(id => !misionesCompletadas.value.includes(id))
+  if (!proximaId) return '¡Todas completadas!'
+  const nombres = {
+    'san-jose': 'San José',
+    'heredia': 'Heredia',
+    'cartago': 'Cartago',
+    'alajuela': 'Alajuela',
+    'guanacaste': 'Guanacaste',
+    'puntarenas': 'Puntarenas',
+    'limon': 'Limón'
+  }
+  return nombres[proximaId] || proximaId
+})
+
+const claseSospecha = computed(() => {
+  const val = estadisticasHeroe?.sospechaIdentidad || 0
+  if (val >= 75) return 'sospecha-critica'
+  if (val >= 50) return 'sospecha-advertencia'
+  return 'sospecha-segura'
+})
+
+const mensajeSospecha = computed(() => {
+  const val = estadisticasHeroe?.sospechaIdentidad || 0
+  if (val >= 75) return '🚨 ¡Alerta Crítica! Sospecha muy alta.'
+  if (val >= 50) return '⚠️ Compañeros notan tus ausencias.'
+  return '👤 Identidad secreta resguardada.'
+})
+
+// --- Estilos para elementos dinámicos costarricenses ---
+function estiloMorpho(n) {
+  const x = (n * 17 + 8) % 100
+  const y = (n * 23 + 15) % 100
+  const delay = n * 1.5
+  const size = 1.0 + (n % 3) * 0.2
+  return {
+    left: `${x}%`,
+    top: `${y}%`,
+    transform: `scale(${size})`,
+    animationDelay: `${delay}s`,
+    animationDuration: `${12 + (n % 4) * 3}s`
+  }
+}
+
+function estiloSpark(n) {
+  const x = (n * 31 + 5) % 100
+  const y = (n * 41 + 10) % 100
+  const size = ((n * 5) % 3) + 2
+  const delay = n * 0.4
   return {
     left: `${x}%`,
     top: `${y}%`,
     width: `${size}px`,
     height: `${size}px`,
     animationDelay: `${delay}s`,
-    animationDuration: `${duration}s`,
-    opacity: 0.3 + (n % 4) * 0.1
+    animationDuration: `${5 + (n % 3) * 2}s`
   }
 }
 </script>
 
 <style scoped>
-/* --- Contenedor principal con gradiente neón animado --- */
 .pantalla-inicio {
   position: relative;
-  min-height: calc(100vh - 64px);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  overflow: hidden; /* Entire screen fits in one view without scroll on desktop */
+  z-index: 1;
+}
+
+@media (max-width: 1100px) {
+  .pantalla-inicio {
+    overflow-y: auto; /* Scroll allowed on smaller viewports where content wraps */
+  }
+}
+
+.inicio-hero {
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8) var(--space-4);
-  overflow: hidden;
-  background: radial-gradient(circle at center, #060a17 0%, #010205 100%);
+  padding: var(--space-4) var(--space-6);
+  box-sizing: border-box;
 }
 
-/* Fondo decorativo con ondas de energía futuristas */
-.pantalla-inicio::before {
+/* Integrated compact academic card styles */
+.tarjeta-academica-compacta {
+  padding: var(--space-3) var(--space-4) !important;
+  background: rgba(5, 10, 25, 0.65);
+  border: 1.5px solid rgba(0, 200, 255, 0.25);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 460px;
+  margin-top: var(--space-2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+.academica-titulo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+.academica-autor {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.academica-tech {
+  font-size: 0.65rem;
+  font-family: 'Orbitron', sans-serif;
+  color: var(--color-text-muted);
+}
+
+
+/* Fondo fijo e inmutable */
+.fondo-fijo-inicio {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/images/fondo-ruta-tica-inicio.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.fondo-fijo-inicio::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(0, 200, 255, 0.05) 0%, transparent 50%),
-              radial-gradient(circle at 80% 70%, rgba(184, 79, 255, 0.06) 0%, transparent 60%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 100%);
   pointer-events: none;
-  z-index: 0;
 }
 
-/* --- Cyber Grid Overlay --- */
-.grid-overlay {
+/* Hologram Scanlines Effect */
+.hologram-scanlines {
   position: absolute;
-  inset: -100px;
-  background-image: 
-    linear-gradient(rgba(0, 200, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 200, 255, 0.03) 1px, transparent 1px);
-  background-size: 55px 55px;
-  background-position: center center;
-  transform: perspective(500px) rotateX(25deg);
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+  background-size: 100% 4px, 6px 100%;
   pointer-events: none;
-  z-index: 0;
-  opacity: 0.85;
-  animation: grid-scroll 20s linear infinite;
-  will-change: transform;
+  z-index: 2;
+  opacity: 0.3;
 }
 
-@keyframes grid-scroll {
-  from { background-position: 0 0; }
-  to { background-position: 0 550px; }
-}
-
-/* --- Luces Ambientales (Auroras/Nebulosas) --- */
-.luces-ambiente {
+/* Mariposas Morpho Azul flotantes */
+.particulas-ambientales {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-  filter: blur(120px);
-  opacity: 0.8;
+  z-index: 1;
 }
 
-.luz-ambiente {
+.ambient-morpho {
   position: absolute;
-  border-radius: 50%;
-  mix-blend-mode: screen;
-  will-change: transform;
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.9));
+  animation: morpho-flutter 15s linear infinite;
+  opacity: 0;
 }
 
-.luz-azul {
-  top: 5%;
-  left: 10%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(0, 200, 255, 0.3) 0%, transparent 80%);
-  animation: float-luz-1 22s ease-in-out infinite alternate;
+@keyframes morpho-flutter {
+  0% {
+    transform: translate3d(0, 100vh, 0) scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% {
+    transform: translate3d(-100px, -20vh, 0) scale(1.1) rotate(360deg);
+    opacity: 0;
+  }
 }
 
-.luz-verde {
-  bottom: 5%;
-  right: 5%;
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(0, 255, 136, 0.22) 0%, transparent 80%);
-  animation: float-luz-2 26s ease-in-out infinite alternate;
-}
-
-.luz-purpura {
-  top: 35%;
-  left: 45%;
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(184, 79, 255, 0.25) 0%, transparent 80%);
-  animation: float-luz-3 24s ease-in-out infinite alternate;
-}
-
-@keyframes float-luz-1 {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(60px, 40px, 0) scale(1.1); }
-  100% { transform: translate3d(-30px, 70px, 0) scale(0.95); }
-}
-
-@keyframes float-luz-2 {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-70px, -50px, 0) scale(0.9); }
-  100% { transform: translate3d(40px, 30px, 0) scale(1.05); }
-}
-
-@keyframes float-luz-3 {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(40px, -60px, 0) scale(1.05); }
-  100% { transform: translate3d(-50px, 40px, 0) scale(0.9); }
-}
-
-/* --- Partículas flotantes de energía --- */
-.particulas {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.particula {
+.ambient-spark {
   position: absolute;
   border-radius: 50%;
   background: var(--color-neon-green);
   box-shadow: 0 0 8px var(--color-neon-green-glow);
-  animation: particle-float linear infinite;
-  will-change: transform, opacity;
+  animation: spark-float 8s linear infinite;
+  opacity: 0.3;
 }
 
-.particula:nth-child(odd) {
-  background: var(--color-neon-blue);
-  box-shadow: 0 0 8px var(--color-neon-blue-glow);
-}
-
-.particula:nth-child(3n) {
-  background: var(--color-neon-purple);
-  box-shadow: 0 0 8px var(--color-neon-purple-glow);
-}
-
-@keyframes particle-float {
+@keyframes spark-float {
   0% {
-    transform: translateY(120vh) translateX(0) scale(0.6);
+    transform: translateY(110vh) scale(0.5);
     opacity: 0;
   }
-  15% { opacity: 0.6; }
-  85% { opacity: 0.6; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.6; }
   100% {
-    transform: translateY(-20vh) translateX(30px) scale(1.1);
+    transform: translateY(-10vh) scale(1.2);
     opacity: 0;
   }
 }
 
-/* --- Contenido --- */
-.contenido-inicio {
+/* HUD Grid de Videojuego AAA */
+.hud-main-grid {
   position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 330px 1fr 330px;
   gap: var(--space-8);
   width: 100%;
-  max-width: 650px;
-  text-align: center;
+  max-width: 1440px;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
-/* GRID LAYOUT EN ESCRITORIO */
-@media (min-width: 850px) {
-  .contenido-inicio {
-    display: grid;
-    grid-template-columns: 1.25fr 0.75fr;
-    grid-template-rows: auto auto auto auto;
-    text-align: left;
-    max-width: 1120px;
-    gap: var(--space-6) var(--space-12);
-    align-items: center;
-  }
-  
-  .encabezado-inicio {
-    grid-column: 1;
-    grid-row: 1;
-    align-items: flex-start !important;
-    text-align: left !important;
-  }
-  
-  .divisor-titulo {
-    margin-left: 0 !important;
-  }
-  
-  .descripcion-inicio {
-    grid-column: 1;
-    grid-row: 2;
-    text-align: left;
-  }
-  
-  .llamada-accion {
-    grid-column: 1;
-    grid-row: 3;
-    align-items: flex-start !important;
-  }
-  
-  .descargo-responsabilidad {
-    grid-column: 1;
-    grid-row: 4;
-    text-align: left;
-  }
-  
-  .emblema-heroe {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    margin: 0 auto !important;
-    transform: scale(1.2) !important;
-  }
-  
-  .estadisticas-inicio {
-    grid-column: 2;
-    grid-row: 3 / span 2;
-    margin: var(--space-4) auto 0 !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    max-width: 290px !important;
-    gap: var(--space-4) !important;
-    padding: var(--space-6) var(--space-8) !important;
-  }
-  
-  .divisor-estadistica {
-    width: 100% !important;
-    height: 1px !important;
-  }
+/* Paneles Estilo Glassmorphic con Neon suave */
+.glass-panel {
+  background: rgba(5, 10, 25, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(0, 200, 255, 0.25);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 200, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* --- Emblema del héroe con Zoom y Glow Progresivo --- */
-.emblema-heroe {
+.glass-panel:hover {
+  border-color: rgba(0, 255, 136, 0.45);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 255, 136, 0.2);
+}
+
+.panel-header {
+  background: rgba(0, 200, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+  padding: var(--space-3) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panel-header h2 {
+  font-size: var(--text-sm);
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  letter-spacing: 0.12em;
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 8px var(--color-neon-blue-glow);
+  margin: 0;
+}
+
+.panel-body {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Lado izquierdo - Estadísticas */
+.heroe-perfil-resumen {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+}
+
+.avatar-neon-wrapper {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-2);
-  animation: introLogoZoom 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.emblema-heroe::before {
-  content: '';
-  position: absolute;
-  width: 260px;
-  height: 260px;
+  background: rgba(184, 79, 255, 0.15);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(184, 79, 255, 0.18) 0%, rgba(0, 200, 255, 0.08) 45%, transparent 75%);
-  filter: blur(20px);
-  z-index: -1;
-  animation: pulse-glow-hero 4s ease-in-out infinite alternate;
+  border: 2px solid var(--color-neon-purple);
+  box-shadow: 0 0 10px var(--color-neon-purple-glow);
 }
 
-@keyframes pulse-glow-hero {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  100% { transform: scale(1.15); opacity: 1; }
+.avatar-emoji { font-size: 1.6rem; }
+
+.heroe-meta { display: flex; flex-direction: column; }
+.heroe-alias { font-size: var(--text-base); font-family: 'Orbitron', sans-serif; margin: 0; }
+.heroe-carrera { font-size: 0.72rem; color: var(--color-text-muted); margin: 0; }
+
+.heroe-nivel-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.68rem;
+  background: var(--color-neon-purple-glow);
+  color: var(--color-neon-purple);
+  border: 1px solid var(--color-neon-purple);
+  border-radius: var(--radius-sm);
+  padding: 1px var(--space-2);
+  margin-top: var(--space-1);
+  font-weight: var(--font-bold);
 }
 
-.anillo-emblema {
-  position: absolute;
-  border-radius: 50%;
-  border: 2.5px solid transparent;
-  animation: spin-slow linear infinite;
-}
-
-.anillo-emblema--exterior {
-  inset: 0;
-  border-color: var(--color-neon-green);
-  box-shadow: 0 0 20px var(--color-neon-green-glow),
-              inset 0 0 12px var(--color-neon-green-glow);
-  animation-duration: 9s;
-}
-
-.anillo-emblema--interior {
-  inset: 15px;
-  border-color: var(--color-neon-blue);
-  box-shadow: 0 0 12px var(--color-neon-blue-glow);
-  animation-duration: 6s;
-  animation-direction: reverse;
-}
-
-.icono-emblema {
-  font-size: 3.5rem;
-  position: relative;
-  z-index: 1;
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.4));
-}
-
-@keyframes introLogoZoom {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* --- Header --- */
-.encabezado-inicio {
+.atributos-lista {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--space-3);
 }
 
-.lema-inicio {
-  font-size: var(--text-xs);
-  color: var(--color-neon-blue);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  margin: 0;
-  font-weight: var(--font-bold);
-  text-shadow: 0 0 8px var(--color-neon-blue-glow);
-}
-
-.titulo-inicio {
-  font-family: var(--font-display);
-  margin: 0;
-  line-height: 1.1;
-}
-
-.titulo-ruta {
-  font-size: clamp(3.2rem, 9vw, 5.4rem);
-  font-weight: var(--font-extrabold);
-  background: linear-gradient(135deg, #00ff88, #00c8ff, #b84fff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  display: block;
-  filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.45)) drop-shadow(0 0 35px rgba(0, 200, 255, 0.25));
-  letter-spacing: -0.01em;
-}
-
-.titulo-heroe {
-  font-size: clamp(1.3rem, 4.2vw, 2.1rem);
-  color: #f1f5f9;
-  font-weight: var(--font-bold);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(0, 200, 255, 0.3);
-}
-
-.divisor-titulo {
-  width: 140px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--color-neon-green), var(--color-neon-blue), transparent);
-  border-radius: var(--radius-full);
-  box-shadow: 0 0 12px var(--color-neon-green-glow);
-  margin-top: var(--space-2);
-}
-
-/* --- Descripción --- */
-.descripcion-inicio {
+.atributo-item {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  max-width: 580px;
-}
-
-.descripcion-principal {
-  font-size: var(--text-lg);
-  color: #f8fafc;
-  line-height: 1.65;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-}
-
-.descripcion-mision {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  line-height: 1.7;
-  background: rgba(8, 12, 28, 0.7);
-  border: 1px solid rgba(0, 200, 255, 0.25);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
-  margin: 0;
-  backdrop-filter: blur(8px);
-  box-shadow: inset 0 0 20px rgba(0, 200, 255, 0.08);
-}
-
-/* --- Stats decorativas --- */
-.estadisticas-inicio {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: var(--space-6);
-  background: rgba(7, 10, 25, 0.75);
-  border: 1px solid rgba(0, 200, 255, 0.3);
-  border-radius: var(--radius-xl);
-  padding: var(--space-4) var(--space-8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 200, 255, 0.15), inset 0 0 10px rgba(0, 200, 255, 0.05);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.estadisticas-inicio:hover {
-  border-color: rgba(0, 255, 136, 0.4);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 255, 136, 0.2), inset 0 0 10px rgba(0, 255, 136, 0.05);
-}
-
-.estadistica-inicio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: var(--space-1);
 }
 
-.numero-estadistica {
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  font-weight: var(--font-extrabold);
-  color: var(--color-neon-green);
-  text-shadow: 0 0 12px var(--color-neon-green-glow);
-  line-height: 1;
-}
-
-.etiqueta-estadistica {
+.atributo-meta {
+  display: flex;
+  justify-content: space-between;
   font-size: var(--text-xs);
   color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
-.divisor-estadistica {
-  width: 1px;
-  height: 40px;
-  background: rgba(0, 200, 255, 0.15);
+.barra-progreso-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
 }
 
-/* --- CTA con Pulso Neón --- */
-.llamada-accion {
+.barra-progreso-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+.bar-energia { background: var(--color-neon-gold); box-shadow: 0 0 8px var(--color-neon-gold-glow); }
+.bar-conocimiento { background: var(--color-neon-blue); box-shadow: 0 0 8px var(--color-neon-blue-glow); }
+.bar-responsabilidad { background: var(--color-neon-green); box-shadow: 0 0 8px var(--color-neon-green-glow); }
+.bar-reputacion { background: var(--color-neon-purple); box-shadow: 0 0 8px var(--color-neon-purple-glow); }
+
+.sospecha-seccion {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-  width: 100%;
+  gap: var(--space-2);
 }
 
-.llamada-accion .btn {
-  transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease, background 0.25s ease;
-}
-
-.llamada-accion .btn-primary {
-  padding: var(--space-4) var(--space-10);
-  font-size: var(--text-xl);
-  font-weight: var(--font-bold);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, var(--color-neon-green) 0%, #00a85d 100%);
-  border: 1px solid rgba(0, 255, 136, 0.6);
-  box-shadow: 0 0 22px rgba(0, 255, 136, 0.35);
-  animation: pulseNeonCTA 2.5s infinite ease-in-out;
-}
-
-.llamada-accion .btn-primary:hover {
-  background: linear-gradient(135deg, #00ffaa 0%, #00c069 100%);
-  box-shadow: 0 0 35px rgba(0, 255, 136, 0.65), 0 0 15px rgba(0, 200, 255, 0.35);
-  transform: scale(1.06) translateY(-3px);
-}
-
-@keyframes pulseNeonCTA {
-  0% { box-shadow: 0 0 18px rgba(0, 255, 136, 0.3); }
-  50% { box-shadow: 0 0 32px rgba(0, 255, 136, 0.6), 0 0 15px rgba(0, 200, 255, 0.35); }
-  100% { box-shadow: 0 0 18px rgba(0, 255, 136, 0.3); }
-}
-
-.llamada-accion .btn-outline {
-  border-color: rgba(0, 200, 255, 0.4);
-  color: var(--color-neon-blue);
-  background: rgba(0, 200, 255, 0.03);
-}
-
-.llamada-accion .btn-outline:hover {
-  background: rgba(0, 200, 255, 0.1);
-  border-color: var(--color-neon-blue);
-  box-shadow: 0 0 20px rgba(0, 200, 255, 0.35);
-  transform: scale(1.05) translateY(-2px);
-}
-
-.sugerencia-cta {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 0;
-  opacity: 0.95;
-}
-
-/* --- Disclaimer --- */
-.descargo-responsabilidad {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  max-width: 480px;
-  line-height: 1.5;
-  margin: 0;
-  opacity: 0.85;
-}
-
-/* --- Estilos Modal de Partida Encontrada --- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-  background: rgba(3, 4, 10, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.modal-wrapper {
-  width: 100%;
-  height: 100%;
+.sospecha-meta {
   display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+}
+
+.valor-sospecha.sospecha-segura { color: var(--color-neon-blue); }
+.valor-sospecha.sospecha-advertencia { color: var(--color-neon-gold); }
+.valor-sospecha.sospecha-critica { color: #ff4646; }
+
+.bar-sospecha.sospecha-segura { background: var(--color-neon-blue); box-shadow: 0 0 6px var(--color-neon-blue-glow); }
+.bar-sospecha.sospecha-advertencia { background: var(--color-neon-gold); box-shadow: 0 0 6px var(--color-neon-gold-glow); }
+.bar-sospecha.sospecha-critica { background: #ff4646; box-shadow: 0 0 8px rgba(255, 70, 70, 0.6); }
+
+.sospecha-mensaje { font-size: 0.7rem; margin: 0; line-height: 1.35; }
+.sospecha-mensaje.sospecha-segura { color: var(--color-text-muted); }
+.sospecha-mensaje.sospecha-advertencia { color: var(--color-neon-gold); }
+.sospecha-mensaje.sospecha-critica { color: #ff8c8c; font-weight: bold; }
+
+.proxima-mision-caja {
+  background: rgba(0, 200, 255, 0.05);
+  border: 1px dashed rgba(0, 200, 255, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  text-align: center;
+}
+
+.caja-etiqueta { font-size: 0.65rem; letter-spacing: 0.1em; color: var(--color-text-muted); margin-bottom: 2px; }
+.caja-valor { font-family: 'Orbitron', var(--font-display), sans-serif; font-size: var(--text-base); font-weight: var(--font-bold); }
+
+/* Lore de bienvenida */
+.lore-bienvenida { display: flex; flex-direction: column; gap: var(--space-4); }
+.lore-texto { font-size: 0.82rem; line-height: 1.6; color: var(--color-text-secondary); margin: 0; }
+.lore-valores { display: flex; flex-direction: column; gap: var(--space-2); }
+.valor-ficha {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.consejo-bienvenida {
+  font-size: 0.75rem;
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 6px var(--color-neon-blue-glow);
+  text-align: center;
+  border-top: 1px solid rgba(0, 200, 255, 0.15);
+  padding-top: var(--space-3);
+}
+
+/* COLUMNA CENTRAL: Logo y Botones */
+.hud-centro {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
+  padding: var(--space-6);
+  gap: var(--space-10);
+  text-align: center;
 }
 
-.modal-card {
-  width: 100%;
-  max-width: 440px;
-  background: var(--gradient-card);
-  border: 1px solid rgba(184, 79, 255, 0.4);
-  border-radius: var(--radius-xl);
-  padding: var(--space-6) var(--space-8);
-  box-shadow: var(--shadow-card), 0 0 25px rgba(184, 79, 255, 0.2);
+.logo-cyber-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
 }
 
-.modal-icon {
-  font-size: 2.8rem;
-  animation: pulse-neon-purple 2.5s infinite;
-}
-
-@keyframes pulse-neon-purple {
-  0% { filter: drop-shadow(0 0 4px rgba(184, 79, 255, 0.3)); }
-  50% { filter: drop-shadow(0 0 15px rgba(184, 79, 255, 0.8)); }
-  100% { filter: drop-shadow(0 0 4px rgba(184, 79, 255, 0.3)); }
-}
-
-.modal-title {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: var(--font-bold);
-  color: var(--color-neon-purple);
-  text-shadow: 0 0 10px var(--color-neon-purple-glow);
-  margin: 0;
-}
-
-.modal-message {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-  margin: 0;
-}
-
-.texto-heroe-guardado {
+.lema-juego-tico {
+  font-size: var(--text-xs);
   color: var(--color-neon-blue);
-  text-shadow: 0 0 5px var(--color-neon-blue-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  text-shadow: 0 0 10px var(--color-neon-blue-glow);
+  margin: 0;
+  font-weight: 700;
 }
 
-.modal-actions-column {
+.titulo-juego-logo {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  width: 100%;
+  align-items: center;
+  line-height: 1.0;
+}
+
+.logo-ruta-neon {
+  font-size: clamp(3.8rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #00ffaa 0%, #00f0ff 50%, #d800ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 15px rgba(0, 255, 170, 0.75));
+}
+
+.logo-after-neon {
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(216, 0, 255, 0.8);
   margin-top: var(--space-2);
 }
 
-.btn-block {
-  width: 100%;
-  justify-content: center;
-}
-
-.btn-continuar-partida {
-  background: linear-gradient(135deg, var(--color-neon-blue), #005a9c);
-  border-color: rgba(0, 200, 255, 0.4);
-}
-
-.btn-continuar-partida:hover {
-  background: linear-gradient(135deg, #33ccff, #0088cc);
-  box-shadow: 0 0 12px rgba(0, 200, 255, 0.4);
-}
-
-.opciones-inicio-botones {
+.logo-divider-neon {
+  position: relative;
+  width: 250px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-neon-green), var(--color-neon-blue), transparent);
+  margin-top: var(--space-3);
   display: flex;
-  flex-direction: row;
+  align-items: center;
   justify-content: center;
+}
+
+.logo-morpho-center {
+  position: absolute;
+  font-size: 1.1rem;
+  background: #03040a;
+  padding-inline: var(--space-2);
+  filter: drop-shadow(0 0 6px var(--color-neon-blue-glow));
+}
+
+/* Botones de acción AAA Centrados */
+.acciones-centradas-container {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-4);
   width: 100%;
+  max-width: 420px;
+  align-items: center;
+  margin-top: var(--space-4);
 }
 
-.opciones-inicio-botones .btn {
-  min-width: 200px;
+.btn-principal-wrapper {
+  width: 100%;
 }
 
-.btn-continuar-partida-inicio {
-  background: linear-gradient(135deg, var(--color-neon-blue) 0%, #005a9c 100%);
+.btn-aaa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-weight: 900;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  position: relative;
+}
+
+.btn-primary-aaa {
+  width: 100%;
+  padding: var(--space-4) var(--space-12);
+  font-size: var(--text-xl);
+  background: linear-gradient(135deg, #7b2cbf 0%, #9d4edd 50%, #ff007f 100%);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 0, 127, 0.85);
+  box-shadow: 0 0 30px rgba(255, 0, 127, 0.45), 0 0 45px rgba(157, 78, 221, 0.25), inset 0 0 10px rgba(255, 0, 127, 0.25);
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.08em;
+}
+
+.btn-primary-aaa:hover {
+  background: linear-gradient(135deg, #7b2cbf 0%, #9d4edd 50%, #ff007f 100%);
+  filter: brightness(1.2) saturate(1.2);
+  box-shadow: 0 0 45px rgba(255, 0, 127, 0.75), 0 0 60px rgba(157, 78, 221, 0.45), inset 0 0 12px rgba(255, 255, 255, 0.35);
+  transform: translateY(-4px) scale(1.03);
+}
+
+.btn-secondary-aaa {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-sm);
+  background: rgba(5, 10, 25, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(184, 79, 255, 0.5);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(184, 79, 255, 0.2);
+  text-shadow: 0 0 6px rgba(184, 79, 255, 0.6);
+  flex: 1;
+}
+
+.btn-secondary-aaa:hover {
+  border-color: #d800ff;
+  background: rgba(184, 79, 255, 0.2);
+  box-shadow: 0 0 25px rgba(184, 79, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.botones-secundarios-wrapper {
+  display: flex;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.aaa-glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  animation: shine-sweep 5s infinite linear;
+}
+
+@keyframes shine-sweep {
+  0% { left: -100%; }
+  25% { left: 150%; }
+  100% { left: 150%; }
+}
+
+.fauna-flora-decoracion {
+  display: flex;
+  gap: var(--space-6);
+  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: var(--space-2) var(--space-6);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+}
+
+.decor-item {
+  cursor: help;
+  transition: transform 0.3s ease;
+}
+.decor-item:hover {
+  transform: scale(1.3) rotate(10deg);
+}
+
+/* COLUMNA DERECHA - Datos del Sistema */
+.grid-cards-datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.card-dato-neon {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(0, 200, 255, 0.15);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-dato-neon:hover {
   border-color: rgba(0, 200, 255, 0.4);
-  animation: pulseNeonCTA-blue 2.5s infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(0, 200, 255, 0.15);
 }
 
-@keyframes pulseNeonCTA-blue {
-  0% { box-shadow: 0 0 15px rgba(0, 200, 255, 0.25); }
-  50% { box-shadow: 0 0 25px rgba(0, 200, 255, 0.5), 0 0 10px rgba(184, 79, 255, 0.25); }
-  100% { box-shadow: 0 0 15px rgba(0, 200, 255, 0.25); }
+.card-icon { font-size: 1.25rem; }
+.card-content { display: flex; flex-direction: column; }
+.card-title { font-size: 0.65rem; color: var(--color-text-muted); text-transform: uppercase; }
+.card-num { font-size: var(--text-base); font-weight: 800; font-family: 'Orbitron', sans-serif; }
+.card-max { font-size: 0.72rem; color: var(--color-text-muted); font-weight: normal; }
+
+/* Bitácora de Viaje */
+.bitacora-viaje-neon {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(184, 79, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-.btn-continuar-partida-inicio:hover {
-  background: linear-gradient(135deg, #33ccff 0%, #0088cc 100%);
-  box-shadow: 0 0 25px rgba(0, 200, 255, 0.55);
-  transform: scale(1.06) translateY(-3px);
+.bitacora-header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: var(--color-neon-purple);
+  text-shadow: 0 0 8px var(--color-neon-purple-glow);
+  letter-spacing: 0.05em;
 }
 
-/* --- Responsive adicional --- */
-@media (max-width: 640px) {
-  .estadisticas-inicio {
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-5);
+.bitacora-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.bitacora-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.prov-badge {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  align-self: flex-start;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.prov-badge.cartago {
+  color: var(--color-neon-blue);
+  background: rgba(0, 200, 255, 0.12);
+  border: 1px solid rgba(0, 200, 255, 0.25);
+}
+.prov-badge.guanacaste {
+  color: var(--color-neon-green);
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+}
+
+.prov-details {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+}
+
+/* Ranking de Jugadores */
+.ranking-panel-scroll {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ranking-header h3 {
+  font-size: 0.72rem;
+  color: var(--color-neon-gold);
+  text-shadow: 0 0 6px var(--color-neon-gold-glow);
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.ranking-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  padding: 4px var(--space-3);
+  font-size: 0.75rem;
+}
+
+.ranking-pos {
+  font-weight: bold;
+  font-size: 0.7rem;
+  margin-right: var(--space-2);
+  width: 20px;
+}
+.ranking-pos.pos-1 { color: var(--color-neon-gold); }
+.ranking-pos.pos-2 { color: #cbd5e1; }
+.ranking-pos.pos-3 { color: #cd7f32; }
+
+.ranking-alias {
+  flex: 1;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking-score { font-weight: bold; }
+.ranking-vacio { font-size: 0.72rem; color: var(--color-text-muted); text-align: center; }
+
+/* RESPONSIVE LAYOUTS */
+@media (max-width: 1100px) {
+  .hud-main-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    max-width: 800px;
   }
-  .numero-estadistica {
-    font-size: var(--text-2xl);
+  .hud-centro {
+    grid-column: 1 / span 2;
+    grid-row: 1;
   }
-  .emblema-heroe {
-    width: 100px;
-    height: 100px;
-  }
-  .icono-emblema {
-    font-size: 3rem;
-  }
-  .contenido-inicio {
+}
+
+@media (max-width: 768px) {
+  .hud-main-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    max-width: 420px;
     gap: var(--space-6);
   }
-  .opciones-inicio-botones {
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-3);
+  .hud-centro {
+    grid-column: 1;
+    grid-row: 1;
   }
-  .opciones-inicio-botones .btn {
-    width: 100%;
+  .glass-panel {
+    background: rgba(5, 10, 25, 0.65); /* slightly higher opacity for reading on mobile */
   }
 }
 
 /* Prefers Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .grid-overlay,
-  .luz-azul,
-  .luz-verde,
-  .luz-purpura,
-  .particula,
-  .emblema-heroe::before,
-  .anillo-emblema,
-  .llamada-accion .btn-primary,
-  .btn-continuar-partida-inicio,
-  .modal-icon {
+  .ambient-morpho, .ambient-spark, .aaa-glow {
     animation: none !important;
   }
-  .particula {
-    display: none;
-  }
-  .btn {
+  .btn-aaa {
     transition: none !important;
+  }
+}
+
+/* FOOTER ACADÉMICO COHERENTE CON NEÓN/GLASSMORPHISM */
+.footer-academico {
+  width: 100%;
+  max-width: 1440px;
+  margin-top: var(--space-8);
+  margin-bottom: 0;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  border-bottom: none;
+  background: rgba(5, 10, 25, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1.5px solid rgba(0, 200, 255, 0.3);
+  border-left: 1.5px solid rgba(0, 200, 255, 0.15);
+  border-right: 1.5px solid rgba(0, 200, 255, 0.15);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 200, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.footer-academico:hover {
+  border-top-color: rgba(0, 255, 136, 0.45);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 136, 0.2);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.project-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: var(--text-base);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.project-option {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+.footer-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.author-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.academic-info {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.tech-badges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: 2px;
+  margin-bottom: var(--space-2);
+}
+
+.tech-badge {
+  font-size: 0.68rem;
+  font-family: 'Orbitron', sans-serif;
+  padding: 2px 8px;
+  background: rgba(0, 200, 255, 0.1);
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  color: var(--color-neon-blue);
+  border-radius: var(--radius-sm);
+  text-shadow: 0 0 4px var(--color-neon-blue-glow);
+}
+
+.year-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+}
+
+.year-val {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+}
+
+/* Ajustes Responsive */
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    text-align: center;
+  }
+  .footer-col {
+    align-items: center;
+  }
+  .tech-badges {
+    justify-content: center;
+  }
+  .footer-academico {
+    border-radius: var(--radius-xl);
+    border-bottom: 1.5px solid rgba(0, 200, 255, 0.25);
+    margin-bottom: var(--space-4);
   }
 }
 </style>

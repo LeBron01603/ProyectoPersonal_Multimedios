@@ -21,14 +21,16 @@
       </div>
     </div>
 
-    <!-- Header del mapa -->
+    <!-- Header del mapa (Tarjeta Premium Centro de Operaciones) -->
     <div class="encabezado-mapa animate-fade-in">
       <div class="info-heroe-mapa">
-        <span class="avatar-heroe-mapa" aria-hidden="true">🦸</span>
-        <div>
+        <div class="avatar-glow-wrapper">
+          <span class="avatar-heroe-mapa" aria-hidden="true">🦸</span>
+          <div class="avatar-glow-ring"></div>
+        </div>
+        <div class="heroe-details-wrapper">
           <h2 class="titulo-mapa">
-            <span v-if="esModoNocturno">🛡️ Centro de Operaciones</span>
-            <span v-else>🏫 Preparación Académica</span>
+            <span class="nombre-heroe-destacado text-neon-blue">{{ identidadHeroe.aliasHeroe || identidadHeroe.nombre || 'Héroe del After' }}</span>
             <span class="titulo-heroico-mapa-badge" :title="tituloFinal?.descripcion" v-if="tituloFinal">
               {{ tituloFinal?.emoji }} {{ tituloFinal?.nombre }}
             </span>
@@ -41,17 +43,22 @@
             </div>
           </div>
           <p class="subtitulo-mapa">
-            <span v-if="esModoNocturno">Elige una provincia y comienza tu misión nocturna ⚡</span>
-            <span v-else>Panel central de preparación académica y progreso universitario ☀️</span>
+            <span v-if="esModoNocturno">🛡️ Centro de Operaciones — Planifica tu incursión ⚡</span>
+            <span v-else>🏫 Preparación Académica — Gestión de progreso diurno ☀️</span>
           </p>
         </div>
       </div>
 
       <!-- Controles y perfil -->
       <div class="controles-perfil-mapa">
-        <button class="btn btn-outline btn-sm btn-editar-perfil" @click="abrirEditarPerfil">
-          ⚙️ Editar Perfil
-        </button>
+        <div class="controles-acciones-wrapper" style="display: flex; gap: var(--space-2); margin-bottom: var(--space-2); flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm btn-guardar-salir" @click="guardarYSalir">
+            💾 Guardar y salir
+          </button>
+          <button class="btn btn-outline btn-sm btn-editar-perfil" @click="abrirEditarPerfil">
+            ⚙️ Editar Perfil
+          </button>
+        </div>
         <div class="estadisticas-mapa">
           <IndicadorEstadistica
             v-for="stat in listaEstadisticasHeroe"
@@ -96,9 +103,47 @@
       <button class="btn btn-outline btn-sm" @click="cargarMisiones">🔄 Reintentar</button>
     </div>
 
-    <!-- Contenedor principal: Mapa y Detalle -->
+    <!-- Contenedor principal: Mapa y Detalle en 3 Columnas Cyberpunk (Dashboard Premium) -->
     <div v-else class="contenido-mapa-grid">
-      <!-- Selector de Vista e Visor Izquierdo -->
+      
+      <!-- Columna 1 (Izquierda): Monitor de Estado del Héroe -->
+      <div class="seccion-operaciones-izquierda">
+        <div class="card panel-lateral-izquierdo glass-panel animate-fade-in">
+          <div class="panel-header-sub">
+            <span class="panel-icon">🕵️</span>
+            <h3>MONITOR DE SOSPECHA</h3>
+          </div>
+          <div class="panel-body-sub">
+            <div class="stat-group">
+              <div class="stat-lbl-row">
+                <span>Sospecha General</span>
+                <span class="stat-val-lbl" :class="claseSospechaRango">{{ estadisticasHeroe.sospechaIdentidad }}%</span>
+              </div>
+              <div class="pista-progreso-neon">
+                <div class="relleno-progreso-neon" :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }" :class="claseSospechaRango"></div>
+              </div>
+            </div>
+
+            <div class="estado-alerta-box" :class="claseSospechaRango">
+              <span class="alert-indicator-dot"></span>
+              <span class="estado-label">ESTADO: {{ textoSospechaEstado }}</span>
+            </div>
+
+            <div class="exposicion-box">
+              <div class="exposicion-lbl">Marcas de Exposición</div>
+              <div class="exposicion-valor">
+                <span v-for="n in 3" :key="n" class="expo-dot" :class="{ 'activo': marcasExposicion >= n }">⚠️</span>
+                <span class="expo-num">({{ marcasExposicion }}/3)</span>
+              </div>
+              <p class="exposicion-desc">
+                A las 3 marcas de exposición, los profesores y compañeros del campus revelarán tu identidad secreta.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna 2 (Centro): Selector de Vista e Visor Central del Mapa -->
       <div class="seccion-visor-izquierdo" :class="{ 'modo-diurno-mapa': !esModoNocturno }">
         <!-- Selector de Vista del Mapa -->
         <div class="selector-vista-mapa">
@@ -145,83 +190,159 @@
         </div>
       </div>
 
-      <!-- Panel de preparación diurna o detalle de provincia nocturna -->
-      <div class="seccion-detalle-derecha">
-        <!-- Panel de Preparación Diurna (Modo Día) -->
-        <div v-if="!esModoNocturno" class="panel-preparacion-diurna card text-center animate-fade-in">
-          <div class="estado-dia-header">
-            <span class="emoji-sol-grande animate-float">☀️</span>
-            <h3 class="titulo-preparacion-diurna">Aún es de día</h3>
-            <span class="badge-fase-dia">Modo Diurno</span>
-          </div>
-          
-          <p class="desc-preparacion">
-            El sol brilla en el campus de la <strong>{{ identidadHeroe.universidad }}</strong>, sede <strong>{{ nombreSedeLegible(identidadHeroe.universidad, identidadHeroe.sedeUniversitaria) }}</strong>. Asiste a tus clases y mantén tu rendimiento.
-          </p>
-
-          <div class="divisoria-neon blue"></div>
-
-          <div class="info-preparacion-campus">
-            <p><strong>Semestre:</strong> {{ identidadHeroe.semestre }}° Semestre</p>
-            <p><strong>Semana Académica:</strong> Semana {{ identidadHeroe.semanaAcademica }} de 16</p>
-            <p><strong>Promedio:</strong> ⭐ {{ identidadHeroe.promedio }}</p>
-            <p><strong>Club:</strong> {{ identidadHeroe.clubUniversitario || 'Ninguno' }}</p>
-            <p><strong>Deporte:</strong> {{ deporteLegible(identidadHeroe.deporte) }}</p>
-          </div>
-
-          <button
-            class="btn btn-hero btn-lg btn-iniciar-jornada animate-pulse"
-            @click="navegarA(PANTALLAS.NUEVO_DIA)"
-            id="btn-comenzar-clases"
-          >
-            Comenzar clases / Iniciar jornada 🏫
-          </button>
-        </div>
-
-        <!-- Panel de detalle de provincia seleccionada (Modo Noche) -->
-        <transition name="slide-up" v-else>
-          <div v-if="provinciaSeleccionada && !idProvinciaActiva" class="detalle-provincia animate-fade-in">
-            <div class="tipo-mision-badge" :style="{ background: provinciaSeleccionada.color + '25', borderColor: provinciaSeleccionada.color }">
-              🏝️ {{ provinciaSeleccionada.tipoMision || 'Misión Nocturna' }}
+      <!-- Columna 3 (Derecha): Panel de planificación de misiones / recompensas -->
+      <div class="seccion-operaciones-derecha">
+        <!-- Subtarjeta 1: Detalle de Misión Activa -->
+        <div class="panel-detalle-principal">
+          <!-- Panel de Preparación Diurna (Modo Día) -->
+          <div v-if="!esModoNocturno" class="panel-preparacion-diurna card text-center animate-fade-in">
+            <div class="estado-dia-header">
+              <span class="emoji-sol-grande animate-float">☀️</span>
+              <h3 class="titulo-preparacion-diurna">Aún es de día</h3>
+              <span class="badge-fase-dia">Modo Diurno</span>
             </div>
-            <h3 class="titulo-detalle">{{ provinciaSeleccionada.emoji }} {{ provinciaSeleccionada.tituloMision }}</h3>
             
-            <div class="detalles-lugares">
-              <p><strong>📍 Principal:</strong> {{ provinciaSeleccionada.lugarPrincipal }}</p>
-              <p><strong>🍻 After Party:</strong> {{ provinciaSeleccionada.lugarAfter }}</p>
-            </div>
+            <p class="desc-preparacion">
+              El sol brilla en el campus de la <strong>{{ identidadHeroe.universidad }}</strong>, sede <strong>{{ nombreSedeLegible(identidadHeroe.universidad, identidadHeroe.sedeUniversitaria) }}</strong>. Asiste a tus clases y mantén tu rendimiento.
+            </p>
 
-            <p class="desc-detalle">{{ provinciaSeleccionada.descripcionMision }}</p>
-            
-            <!-- Recompensas de la misión -->
-            <div class="detalles-recompensas" v-if="provinciaSeleccionada.recompensaPrincipal">
-              <p class="titulo-recompensas-mision">🎁 Recompensas de Misión:</p>
-              <div class="recompensas-iconos-grid">
-                <span class="recompensa-item-badge" title="Recompensa Principal">
-                  {{ provinciaSeleccionada.recompensaPrincipal.emoji }} {{ provinciaSeleccionada.recompensaPrincipal.nombre }}
-                </span>
-                <span class="recompensa-item-badge" title="Recompensa Secundaria">
-                  {{ provinciaSeleccionada.recompensaSecundaria.emoji }} {{ provinciaSeleccionada.recompensaSecundaria.nombre }}
-                </span>
-              </div>
-            </div>
+            <div class="divisoria-neon blue"></div>
 
-            <!-- Advertencia de Práctica / Repetida -->
-            <div v-if="misionesCompletadas.includes(provinciaSeleccionada.id)" class="caja-alerta-practica">
-              <span>💡 Esta provincia ya fue completada. Puedes repetirla como práctica, pero no obtendrás recompensas únicas otra vez.</span>
+            <div class="info-preparacion-campus">
+              <p><strong>Semestre:</strong> {{ identidadHeroe.semestre }}° Semestre</p>
+              <p><strong>Semana:</strong> Semana {{ identidadHeroe.semanaAcademica }} de 16</p>
+              <p><strong>Promedio:</strong> ⭐ {{ identidadHeroe.promedio }}</p>
             </div>
 
             <button
-              class="btn btn-primary btn-lg"
-              @click="alIniciarMision(provinciaSeleccionada)"
-              :disabled="!provinciaSeleccionada.desbloqueada"
-              id="btn-iniciar-mision-mapa"
+              class="btn btn-hero btn-iniciar-jornada animate-pulse"
+              @click="navegarA(PANTALLAS.NUEVO_DIA)"
+              id="btn-comenzar-clases"
             >
-              ⚡ Iniciar misión en {{ provinciaSeleccionada.nombre }}
+              Comenzar clases / Iniciar jornada 🏫
             </button>
           </div>
-        </transition>
+
+          <!-- Panel de detalle de provincia seleccionada (Modo Noche) -->
+          <transition name="slide-up" v-else>
+            <div v-if="provinciaSeleccionada && !idProvinciaActiva" class="detalle-provincia rpg-card-premium animate-fade-in">
+              <!-- RPG Header / Dossier style -->
+              <div class="rpg-header">
+                <span class="rpg-dossier-label">FICHA DE MISIÓN ACTIVA</span>
+                <div class="rpg-dossier-decor"></div>
+              </div>
+
+              <!-- Provincia Destacada -->
+              <div class="provincia-destacada-row">
+                <span class="provincia-label">PROVINCIA:</span>
+                <h3 class="provincia-val text-neon-blue">{{ provinciaSeleccionada.nombre }}</h3>
+              </div>
+
+              <div class="tipo-mision-badge" :style="{ background: provinciaSeleccionada.color + '25', borderColor: provinciaSeleccionada.color }">
+                🏝️ {{ provinciaSeleccionada.tipoMision || 'Misión Nocturna' }}
+              </div>
+              <h4 class="titulo-detalle">{{ provinciaSeleccionada.emoji }} {{ provinciaSeleccionada.tituloMision }}</h4>
+              
+              <!-- RPG Stats/Parameters block (Dificultad + Lugares + Estado) -->
+              <div class="rpg-parameters-box">
+                <div class="rpg-parameter">
+                  <span class="param-lbl">📊 Estado de Incursión:</span>
+                  <span class="param-val" :class="{
+                    'text-neon-green': misionesCompletadas.includes(provinciaSeleccionada.id),
+                    'text-neon-blue': avanceMision && avanceMision.idProvincia === provinciaSeleccionada.id,
+                    'text-neon-gold': !misionesCompletadas.includes(provinciaSeleccionada.id) && !(avanceMision && avanceMision.idProvincia === provinciaSeleccionada.id)
+                  }">
+                    {{ misionesCompletadas.includes(provinciaSeleccionada.id) ? 'COMPLETADA 🏆' : (avanceMision && avanceMision.idProvincia === provinciaSeleccionada.id ? 'EN CURSO ⚡' : 'DISPONIBLE 🔓') }}
+                  </span>
+                </div>
+
+                <!-- Progreso de Checkpoint si ya inició -->
+                <div v-if="avanceMision && avanceMision.idProvincia === provinciaSeleccionada.id" class="rpg-parameter">
+                  <span class="param-lbl">📈 Progreso Guardado:</span>
+                  <span class="param-val text-neon-blue" style="font-size: 0.75rem;">
+                    Pregunta {{ avanceMision.preguntaActual + 1 }} / 8 ({{ avanceMision.respuestasCorrectasCount }} correctas)
+                  </span>
+                </div>
+
+                <div class="rpg-parameter">
+                  <span class="param-lbl">🔥 Dificultad:</span>
+                  <span class="param-val text-neon-gold">
+                    {{ '★'.repeat(provinciaSeleccionada.dificultad || 1) }}
+                    <span class="dificultad-tag">{{ ({ 1: 'Fácil', 2: 'Media', 3: 'Difícil', 4: 'Pesadilla' }[provinciaSeleccionada.dificultad] || 'Media') }}</span>
+                  </span>
+                </div>
+                <div class="rpg-parameter">
+                  <span class="param-lbl">📍 Principal:</span>
+                  <span class="param-val">{{ provinciaSeleccionada.lugarPrincipal }}</span>
+                </div>
+                <div class="rpg-parameter">
+                  <span class="param-lbl">🍻 After Party:</span>
+                  <span class="param-val text-neon-blue">{{ provinciaSeleccionada.lugarAfter }}</span>
+                </div>
+              </div>
+
+              <p class="desc-detalle">{{ provinciaSeleccionada.descripcionMision }}</p>
+              
+              <!-- Recompensas de la misión -->
+              <div class="detalles-recompensas" v-if="provinciaSeleccionada.recompensaPrincipal">
+                <p class="titulo-recompensas-mision">🎁 Recompensas de Misión:</p>
+                <div class="recompensas-iconos-grid">
+                  <span class="recompensa-item-badge" title="Recompensa Principal">
+                    {{ provinciaSeleccionada.recompensaPrincipal.emoji }} {{ provinciaSeleccionada.recompensaPrincipal.nombre }}
+                  </span>
+                  <span class="recompensa-item-badge" title="Recompensa Secundaria">
+                    {{ provinciaSeleccionada.recompensaSecundaria.emoji }} {{ provinciaSeleccionada.recompensaSecundaria.nombre }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Advertencia de Práctica / Repetida -->
+              <div v-if="misionesCompletadas.includes(provinciaSeleccionada.id)" class="caja-alerta-practica">
+                <span>💡 Esta provincia ya fue completada. Puedes repetirla como práctica, pero no obtendrás recompensas únicas otra vez.</span>
+              </div>
+
+              <button
+                class="btn btn-primary btn-iniciar-premium"
+                @click="alIniciarMision(provinciaSeleccionada)"
+                :disabled="!provinciaSeleccionada.desbloqueada"
+                id="btn-iniciar-mision-mapa"
+              >
+                {{ (avanceMision && avanceMision.idProvincia === provinciaSeleccionada.id) ? `⚡ Continuar misión en ${provinciaSeleccionada.nombre}` : `⚡ Iniciar misión en ${provinciaSeleccionada.nombre}` }}
+              </button>
+            </div>
+            <div v-else class="detalle-provincia-placeholder card text-center">
+              <p>Selecciona una provincia desbloqueada en el mapa para planificar tu próxima incursión nocturna 🗺️</p>
+            </div>
+          </transition>
+        </div>
+
+        <!-- Subtarjeta 2: Consejo del Héroe -->
+        <div class="card panel-lateral-derecho-consejo glass-panel animate-fade-in">
+          <div class="panel-header-sub">
+            <span class="panel-icon">💡</span>
+            <h3>CONSEJO DEL HÉROE</h3>
+          </div>
+          <div class="panel-body-sub">
+            <p class="consejo-texto">
+              Patrullar misiones aumenta tu Reputación nocturna y tu Experiencia, pero incrementa tu nivel de Sospecha en el campus. ¡Equilibra tu vida civil y heroica!
+            </p>
+          </div>
+        </div>
+
+        <!-- Subtarjeta 3: Próxima Recompensa / Meta -->
+        <div class="card panel-lateral-derecho-recompensa glass-panel animate-fade-in">
+          <div class="panel-header-sub">
+            <span class="panel-icon">🏆</span>
+            <h3>PRÓXIMA META</h3>
+          </div>
+          <div class="panel-body-sub">
+            <p class="recompensa-texto text-neon-gold">
+              {{ proximaRecompensaTexto }}
+            </p>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <!-- SECCIÓN DE PROGRESO DEL HÉROE (INVENTARIO, LOGROS, COLECCIÓN, CHECKPOINTS) -->
@@ -563,8 +684,33 @@ const {
   esModoNocturno,
   mensajeAlertaMapa,
   navegarA,
-  PANTALLAS
+  PANTALLAS,
+  marcasExposicion,
+  guardarProgreso,
+  avanceMision
 } = useEstadoJuego()
+
+const claseSospechaRango = computed(() => {
+  const s = estadisticasHeroe.sospechaIdentidad
+  if (s <= 25) return 'normal'
+  if (s <= 50) return 'advertencia'
+  return 'alerta'
+})
+
+const textoSospechaEstado = computed(() => {
+  const s = estadisticasHeroe.sospechaIdentidad
+  if (s <= 25) return 'NORMAL'
+  if (s <= 50) return 'ADVERTENCIA'
+  return 'ALERTA'
+})
+
+const proximaRecompensaTexto = computed(() => {
+  if (nivelHeroe.value === 1) return 'Nivel 2: Desbloquea Cartago y habilidades de Ciberseguridad.'
+  if (nivelHeroe.value === 2) return 'Nivel 3: Desbloquea Alajuela y mejoras de Reputación.'
+  if (nivelHeroe.value === 3) return 'Nivel 4: Desbloquea Guanacaste y recompensas épicas.'
+  if (nivelHeroe.value === 4) return 'Nivel 5: Desbloquea Puntarenas, Limón y la gloria del After.'
+  return '¡Nivel máximo alcanzado! Eres la leyenda del After.'
+})
 
 const sospechaRangoInfo = computed(() => {
   const s = estadisticasHeroe.sospechaIdentidad
@@ -868,6 +1014,13 @@ function obtenerContadorPestana(id) {
   return 0
 }
 
+// --- Guardar y Salir ---
+function guardarYSalir() {
+  reproducirEfecto('click')
+  guardarProgreso()
+  navegarA(PANTALLAS.INICIO)
+}
+
 // --- Edición de Perfil ---
 function abrirEditarPerfil() {
   reproducirEfecto('click')
@@ -953,44 +1106,106 @@ function guardarEdicion() {
 onMounted(async () => {
   reproducirMusica('mapa')
   await cargarMisiones()
+  
+  if (esModoNocturno.value) {
+    if (avanceMision.value && avanceMision.value.idProvincia) {
+      const provActiva = provinciasProcesadas.value.find(p => p.id === avanceMision.value.idProvincia)
+      if (provActiva) {
+        provinciaSeleccionada.value = provActiva
+      }
+    } else {
+      const primeraDisponible = provinciasProcesadas.value.find(p => p.desbloqueada && !misionesCompletadas.value.includes(p.id))
+      const primeraDesbloqueada = primeraDisponible || provinciasProcesadas.value.find(p => p.desbloqueada)
+      if (primeraDesbloqueada) {
+        provinciaSeleccionada.value = primeraDesbloqueada
+      }
+    }
+  }
 })
 </script>
 
 <style scoped>
 .mapa-misiones {
   min-height: calc(100vh - 64px);
-  padding: var(--space-8) var(--space-4);
-  max-width: 1200px;
+  padding: var(--space-6) var(--space-4);
+  max-width: 1440px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
 }
 
-/* --- Header --- */
+/* --- Header Premium Card --- */
 .encabezado-mapa {
+  background: rgba(13, 17, 33, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(184, 79, 255, 0.35);
+  box-shadow: 0 0 25px rgba(184, 79, 255, 0.12), inset 0 0 15px rgba(0, 200, 255, 0.05);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-6);
-  flex-wrap: wrap;
+  width: 100%;
+}
+
+.avatar-glow-wrapper {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(184, 79, 255, 0.15);
+  border: 2px solid var(--color-neon-purple);
+  border-radius: 50%;
+  box-shadow: 0 0 15px var(--color-neon-purple-glow);
+  flex-shrink: 0;
+}
+
+.avatar-glow-ring {
+  position: absolute;
+  inset: -6px;
+  border: 1px dashed rgba(0, 200, 255, 0.3);
+  border-radius: 50%;
+  animation: rotate-clockwise 15s linear infinite;
 }
 
 .info-heroe-mapa {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 .avatar-heroe-mapa {
-  font-size: 3rem;
-  animation: float 3s ease-in-out infinite;
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+.heroe-details-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nombre-heroe-destacado {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  font-size: var(--text-2xl);
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 10px var(--color-neon-blue-glow);
 }
 
 .titulo-mapa {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-1);
   font-family: var(--font-display);
   font-size: var(--text-3xl);
-  margin: 0 0 var(--space-1);
   color: var(--color-text-primary);
 }
 
@@ -1086,12 +1301,11 @@ onMounted(async () => {
 }
 
 .btn-vista {
-  background: transparent;
-  border: 1px solid transparent;
+  background: rgba(13, 9, 28, 0.85);
+  border: 1px solid rgba(184, 79, 255, 0.4);
   color: var(--color-text-secondary);
   padding: var(--space-2) var(--space-5);
-  border-radius: var(--radius-lg);
-  font-family: var(--font-display);
+  font-family: 'Orbitron', var(--font-display), sans-serif;
   font-size: var(--text-sm);
   font-weight: var(--font-bold);
   cursor: pointer;
@@ -1100,25 +1314,28 @@ onMounted(async () => {
   align-items: center;
   gap: var(--space-2);
   outline: none;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 }
 
 .btn-vista:hover {
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  background: rgba(184, 79, 255, 0.15);
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.25);
 }
 
 .btn-vista.activo {
-  background: rgba(0, 200, 255, 0.08);
-  border-color: rgba(0, 200, 255, 0.3);
+  background: rgba(0, 200, 255, 0.12);
+  border-color: var(--color-neon-blue);
   color: var(--color-neon-blue);
-  box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
-  text-shadow: 0 0 8px rgba(0, 200, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.45);
+  text-shadow: 0 0 8px rgba(0, 200, 255, 0.6);
+  font-weight: 800;
 }
 
 .modo-diurno-mapa .btn-vista.activo {
-  background: rgba(0, 200, 255, 0.04);
-  border-color: rgba(0, 200, 255, 0.15);
-  box-shadow: none;
+  background: rgba(0, 200, 255, 0.08);
+  border-color: rgba(0, 200, 255, 0.3);
 }
 
 /* --- Contenido mapa grid --- */
@@ -1147,6 +1364,140 @@ onMounted(async () => {
   flex-direction: column;
   gap: var(--space-4);
 }
+
+/* --- RPG Card Premium details --- */
+.rpg-card-premium {
+  position: relative;
+  background: linear-gradient(145deg, rgba(13, 9, 28, 0.95) 0%, rgba(5, 7, 18, 0.98) 100%) !important;
+  border: 1.5px solid var(--color-neon-purple) !important;
+  box-shadow: 0 0 25px rgba(184, 79, 255, 0.25), inset 0 0 15px rgba(184, 79, 255, 0.15) !important;
+  overflow: hidden;
+}
+
+.rpg-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-neon-purple), var(--color-neon-blue));
+}
+
+.rpg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed rgba(184, 79, 255, 0.3);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.rpg-dossier-label {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--color-neon-purple);
+  text-shadow: 0 0 8px var(--color-neon-purple-glow);
+}
+
+.rpg-dossier-decor {
+  width: 30px;
+  height: 4px;
+  background: var(--color-neon-blue);
+  box-shadow: 0 0 6px var(--color-neon-blue-glow);
+}
+
+.provincia-destacada-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.provincia-label {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.provincia-val {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rpg-parameters-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: rgba(184, 79, 255, 0.03);
+  border: 1px solid rgba(184, 79, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.rpg-parameter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 4px;
+}
+
+.rpg-parameter:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.param-lbl {
+  font-weight: var(--font-semibold);
+  color: var(--color-text-secondary);
+}
+
+.param-val {
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  text-align: right;
+}
+
+.dificultad-tag {
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  margin-left: var(--space-1);
+}
+
+/* Premium active button styling */
+.btn-iniciar-premium {
+  background: linear-gradient(135deg, #7b2cbf 0%, #9d4edd 50%, #ff007f 100%) !important;
+  border: 2px solid #ff007f !important;
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.45) !important;
+  color: #ffffff !important;
+  font-family: 'Orbitron', var(--font-display), sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.05em !important;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4) !important;
+}
+
+.btn-iniciar-premium:hover {
+  transform: translateY(-4px) scale(1.03) !important;
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 30px rgba(255, 0, 127, 0.75), 0 0 45px rgba(255, 215, 0, 0.45) !important;
+}
+
 
 .tipo-mision-badge {
   align-self: flex-start;
@@ -1862,12 +2213,21 @@ onMounted(async () => {
 }
 
 .btn-iniciar-jornada {
-  width: 100%;
-  box-shadow: 0 0 15px rgba(0, 200, 255, 0.2);
+  width: auto;
+  max-width: 280px;
+  margin-inline: auto;
+  display: flex;
+  background: linear-gradient(135deg, #7b2cbf 0%, #ff007f 50%, #ffaa00 100%) !important;
+  border: 1.5px solid #ff007f !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.6), 0 0 35px rgba(255, 170, 0, 0.35), inset 0 0 10px rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6) !important;
 }
 
 .btn-iniciar-jornada:hover {
-  box-shadow: 0 0 20px rgba(0, 200, 255, 0.4);
+  filter: brightness(1.25) saturate(1.25) !important;
+  box-shadow: 0 0 30px rgba(255, 0, 127, 0.85), 0 0 50px rgba(255, 170, 0, 0.55), inset 0 0 15px rgba(255, 255, 255, 0.45) !important;
+  transform: translateY(-2.5px) !important;
 }
 
 .alerta-error-vuelo {
@@ -1905,7 +2265,18 @@ onMounted(async () => {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: radial-gradient(circle at 35% 40%, #06091e 0%, #02030a 100%);
+  background-image: url('/images/fondo-paneloperaciones.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.mapa-misiones-fondo-vivo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(6, 9, 30, 0.45) 0%, rgba(2, 3, 10, 0.85) 100%);
+  pointer-events: none;
 }
 
 .op-grid-overlay {
@@ -2028,5 +2399,256 @@ onMounted(async () => {
 .seccion-progreso-heroe {
   position: relative;
   z-index: 2;
+}
+
+/* OVERRIDES E INSTALACIÓN DE ESTILOS DEL DASHBOARD DE OPERACIONES */
+.seccion-operaciones-izquierda {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.seccion-operaciones-derecha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.panel-header-sub {
+  background: rgba(0, 200, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 200, 255, 0.15);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panel-header-sub h3 {
+  font-size: var(--text-xs);
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  letter-spacing: 0.1em;
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 6px var(--color-neon-blue-glow);
+  margin: 0;
+}
+
+.panel-body-sub {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stat-lbl-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.stat-val-lbl.normal { color: var(--color-neon-green); }
+.stat-val-lbl.advertencia { color: var(--color-neon-gold); }
+.stat-val-lbl.alerta { color: #ff4646; }
+
+.pista-progreso-neon {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.relleno-progreso-neon {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.relleno-progreso-neon.normal {
+  background: var(--color-neon-green);
+  box-shadow: 0 0 8px var(--color-neon-green-glow);
+}
+
+.relleno-progreso-neon.advertencia {
+  background: var(--color-neon-gold);
+  box-shadow: 0 0 8px var(--color-neon-gold-glow);
+}
+
+.relleno-progreso-neon.alerta {
+  background: #ff4646;
+  box-shadow: 0 0 8px rgba(255, 70, 70, 0.6);
+}
+
+.estado-alerta-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  font-weight: bold;
+}
+
+.estado-alerta-box.normal {
+  background: rgba(0, 255, 136, 0.05);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  color: var(--color-neon-green);
+}
+
+.estado-alerta-box.advertencia {
+  background: rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  color: var(--color-neon-gold);
+}
+
+.estado-alerta-box.alerta {
+  background: rgba(255, 70, 70, 0.05);
+  border: 1px solid rgba(255, 70, 70, 0.25);
+  color: #ff4646;
+}
+
+.alert-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+  display: inline-block;
+  animation: pulse-glow-dot 1s infinite alternate;
+}
+
+@keyframes pulse-glow-dot {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.exposicion-box {
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.exposicion-lbl {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.exposicion-valor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-block: 4px;
+}
+
+.expo-dot {
+  opacity: 0.15;
+  filter: grayscale(1);
+}
+
+.expo-dot.activo {
+  opacity: 1;
+  filter: none;
+}
+
+.expo-num {
+  font-size: var(--text-xs);
+  font-weight: bold;
+}
+
+.exposicion-desc {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.detalle-provincia-placeholder {
+  padding: var(--space-5);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  background: rgba(13, 17, 33, 0.4);
+  border-radius: var(--radius-xl);
+}
+
+.consejo-texto,
+.recompensa-texto {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Restructuración de columnas del layout */
+.contenido-mapa-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* Modernización de Indicadores de Estadísticas */
+.estadisticas-mapa :deep(.indicador-estadistica) {
+  background: rgba(13, 17, 33, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4), inset 0 0 10px rgba(255,255,255,0.02);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.estadisticas-mapa :deep(.indicador-estadistica:hover) {
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgba(0, 200, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 200, 255, 0.1), inset 0 0 10px rgba(0, 200, 255, 0.05);
+}
+
+.estadisticas-mapa :deep(.stat-icono) {
+  font-size: 1.4rem !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.seccion-visor-izquierdo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-self: stretch;
+}
+
+.visor-provincias-vista {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* RESPONSIVE AJUSTES */
+@media (max-width: 1200px) {
+  .contenido-mapa-grid {
+    grid-template-columns: 260px 1fr;
+  }
+  .seccion-operaciones-derecha {
+    grid-column: 1 / span 2;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .seccion-operaciones-derecha > * {
+    flex: 1;
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .contenido-mapa-grid {
+    grid-template-columns: 1fr;
+  }
+  .seccion-operaciones-derecha {
+    grid-column: auto;
+    flex-direction: column;
+  }
 }
 </style>

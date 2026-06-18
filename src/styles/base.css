@@ -148,79 +148,167 @@ select:focus-visible {
   background-clip: text;
 }
 
-/* --- Botón base reutilizable --- */
-.btn {
+/* --- SISTEMA UNIFICADO DE BOTONES DEL HÉROE --- */
+
+/* Base para los botones del héroe */
+.btn,
+.btn-hero-primary,
+.btn-hero-secondary,
+.btn-hero-danger,
+.btn-hero-ghost,
+.btn-hero-nav {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-6);
-  border: none;
-  border-radius: var(--radius-full);
-  font-family: var(--font-display);
-  font-weight: var(--font-semibold);
-  font-size: var(--text-base);
+  font-family: 'Orbitron', var(--font-display), sans-serif !important;
+  font-weight: 900;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  outline: none;
+  border: 1px solid transparent;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)) !important;
+  backdrop-filter: blur(8px);
 }
 
-.btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0.1);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
+/* 1. Botón Principal (btn-hero-primary) */
+.btn-hero-primary,
+.btn-primary,
+.btn-hero,
+.btn-primary-aaa {
+  background: linear-gradient(135deg, #7b2cbf 0%, #ff007f 50%, #ffaa00 100%) !important;
+  border: 1.5px solid #ff007f !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.6), 0 0 35px rgba(255, 170, 0, 0.35), inset 0 0 10px rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6) !important;
 }
 
-.btn:hover::before { opacity: 1; }
-.btn:active { transform: scale(0.97); }
-
-.btn-primary {
-  background: var(--gradient-btn);
-  color: #0a0e1a;
-  box-shadow: var(--shadow-btn);
+.btn-hero-primary:hover,
+.btn-primary:hover,
+.btn-hero:hover,
+.btn-primary-aaa:hover {
+  filter: brightness(1.25) saturate(1.25) !important;
+  box-shadow: 0 0 30px rgba(255, 0, 127, 0.85), 0 0 50px rgba(255, 170, 0, 0.55), inset 0 0 15px rgba(255, 255, 255, 0.45) !important;
+  transform: translateY(-2.5px) !important;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(0, 255, 136, 0.55);
+.btn-hero-primary:active,
+.btn-primary:active,
+.btn-hero:active,
+.btn-primary-aaa:active {
+  transform: translateY(0.5px) scale(0.96) !important;
+  box-shadow: 0 0 12px rgba(255, 0, 127, 0.5) !important;
 }
 
-.btn-hero {
-  background: var(--gradient-btn-hero);
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(184, 79, 255, 0.40);
+/* 2. Botón Secundario (btn-hero-secondary) */
+.btn-hero-secondary,
+.btn-outline,
+.btn-secondary-aaa {
+  background: rgba(15, 10, 25, 0.95) !important;
+  border: 1.5px solid #9d4edd !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(157, 78, 221, 0.35) !important;
+  backdrop-filter: blur(8px);
 }
 
-.btn-hero:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(184, 79, 255, 0.55);
+.btn-hero-secondary:hover,
+.btn-outline:hover,
+.btn-secondary-aaa:hover {
+  background: rgba(157, 78, 221, 0.15) !important;
+  border-color: #ff007f !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.65) !important;
+  transform: translateY(-2px) !important;
 }
 
-.btn-outline {
-  background: transparent;
-  color: var(--color-neon-green);
-  border: 1.5px solid var(--color-neon-green);
+.btn-hero-secondary:active,
+.btn-outline:active,
+.btn-secondary-aaa:active {
+  transform: translateY(0.5px) scale(0.96) !important;
 }
 
-.btn-outline:hover {
-  background: var(--color-neon-green-glow);
-  transform: translateY(-2px);
+/* 3. Botón Peligro / Borrado (btn-hero-danger) */
+.btn-hero-danger,
+.btn-danger {
+  background: rgba(26, 10, 10, 0.8) !important;
+  border: 1px solid #ff4646 !important;
+  color: #ff4646 !important;
+  box-shadow: 0 0 10px rgba(255, 70, 70, 0.1) !important;
+  backdrop-filter: blur(8px);
 }
 
+.btn-hero-danger:hover,
+.btn-danger:hover {
+  background: rgba(255, 70, 70, 0.15) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(255, 70, 70, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-hero-danger:active,
+.btn-danger:active {
+  transform: translateY(0.5px) scale(0.96) !important;
+}
+
+/* 4. Botón Fantasma (btn-hero-ghost) */
+.btn-hero-ghost {
+  background: rgba(255, 255, 255, 0.01) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+.btn-hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-hero-ghost:active {
+  transform: scale(0.98) !important;
+}
+
+/* 5. Botón de Navegación / Panel Táctico / HUD (btn-hero-nav / btn-tactico) */
+.btn-hero-nav,
+.btn-tactico {
+  background: rgba(13, 9, 28, 0.85) !important;
+  border: 1.5px solid rgba(255, 0, 127, 0.6) !important;
+  color: #ff007f !important;
+  box-shadow: 0 0 12px rgba(255, 0, 127, 0.2) !important;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)) !important;
+  backdrop-filter: blur(12px);
+}
+
+.btn-hero-nav:hover,
+.btn-tactico:hover {
+  background: rgba(255, 0, 127, 0.15) !important;
+  border-color: #ff007f !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.6), inset 0 0 8px rgba(255, 0, 127, 0.3) !important;
+  transform: translateY(-1.5px) !important;
+  text-shadow: 0 0 8px rgba(255, 0, 127, 0.6) !important;
+}
+
+.btn-hero-nav:active,
+.btn-tactico:active {
+  transform: translateY(0.5px) scale(0.96) !important;
+}
+
+/* Modificadores de tamaño */
 .btn-lg {
-  padding: var(--space-4) var(--space-10);
-  font-size: var(--text-lg);
+  padding: var(--space-4) var(--space-10) !important;
+  font-size: var(--text-lg) !important;
 }
 
 .btn-sm {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-4) !important;
+  font-size: var(--text-sm) !important;
 }
 
 /* --- Tarjeta base --- */

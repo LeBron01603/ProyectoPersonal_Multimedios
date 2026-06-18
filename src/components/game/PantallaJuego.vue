@@ -63,15 +63,15 @@
         <p class="texto-narrativa-secundario">
           Tu misión comienza en <strong>{{ provinciaActiva?.lugarPrincipal }}</strong>. Debes guiar a los grupos universitarios para que disfruten de la historia y cultura, y culminar con éxito en <strong>{{ provinciaActiva?.lugarAfter }}</strong>.
         </p>
-        <button class="btn btn-hero btn-lg btn-iniciar-mision" @click="comenzarMisionPrincipal()" aria-label="Iniciar Misión Principal de la provincia">
+        <button class="btn btn-hero btn-iniciar-mision" @click="comenzarMisionPrincipal()" aria-label="Iniciar Misión Principal de la provincia">
           ⚡ Iniciar Misión
         </button>
       </div>
 
       <!-- ================= CHECKPOINT 1 ================= -->
-      <div v-else-if="subEstadoPantalla === 'checkpoint_1'" class="tarjeta-narrativa card text-center checkpoint-card animate-fade-in">
-        <!-- Confeti/Destellos neón de logro -->
-        <div class="particulas-logro-contenedor" aria-hidden="true">
+      <div v-else-if="subEstadoPantalla === 'checkpoint_1'" class="tarjeta-narrativa card text-center checkpoint-card animate-fade-in" :class="{ 'checkpoint-card--recuperacion': checkpointRendimiento?.esRecuperacion }">
+        <!-- Confeti/Destellos neón de logro (solo si no es de recuperación) -->
+        <div v-if="!checkpointRendimiento?.esRecuperacion" class="particulas-logro-contenedor" aria-hidden="true">
           <div 
             v-for="n in 30" 
             :key="n" 
@@ -80,14 +80,14 @@
           ></div>
         </div>
 
-        <span class="icono-narrativa animate-float">🎉</span>
+        <span class="icono-narrativa animate-float">{{ checkpointRendimiento?.esRecuperacion ? '⚠️' : '🎉' }}</span>
         <h2 class="titulo-narrativa" :class="checkpointRendimiento?.clase">
           {{ checkpointRendimiento?.titulo }}
         </h2>
         <h3 class="subtitulo-checkpoint">
           {{ provinciaActiva?.recompensaSecundaria?.emoji || '🍻' }} {{ provinciaActiva?.recompensaSecundaria?.nombre?.toUpperCase() || 'AVANCE NARRATIVO' }}
         </h3>
-        <div class="divisoria-neon green"></div>
+        <div class="divisoria-neon" :class="checkpointRendimiento?.esRecuperacion ? 'red' : 'green'"></div>
         <p class="texto-narrativa-principal" v-html="checkpointRendimiento?.principal"></p>
         <p class="texto-narrativa-secundario" v-html="checkpointRendimiento?.secundario"></p>
         
@@ -584,21 +584,24 @@ const checkpointRendimiento = computed(() => {
       titulo: "🏆 ¡RENDIMIENTO PERFECTO!",
       principal: `¡Espectacular! Has demostrado un conocimiento absoluto del alma de ${provinciaActiva.value?.nombre || 'la provincia'}.`,
       secundario: `Los estudiantes de ${provinciaActiva.value?.lugarPrincipal || 'la zona'} están maravillados con tu guía. ¡La noche avanza bajo el cuidado de una verdadera leyenda!`,
-      clase: "text-neon-green"
+      clase: "text-neon-green",
+      esRecuperacion: false
     }
-  } else if (correctas >= 2) {
+  } else if (correctas === 3) {
     return {
       titulo: "✨ BUEN CAMINO",
-      principal: `¡Excelente esfuerzo! Estás guiando al grupo y demostrando conocer bastante bien ${provinciaActiva.value?.nombre || 'la provincia'}.`,
+      principal: `¡Excelente esfuerzo! Estás guiding al grupo y demostrando conocer bastante bien ${provinciaActiva.value?.nombre || 'la provincia'}.`,
       secundario: `Los estudiantes de ${provinciaActiva.value?.lugarPrincipal || 'la zona'} agradecen tu ayuda. Con un poco más de precisión, la noche será un éxito rotundo.`,
-      clase: "text-neon-blue"
+      clase: "text-neon-blue",
+      esRecuperacion: false
     }
   } else {
     return {
-      titulo: "⚠️ ALERTA DE NOCHE DIFÍCIL",
-      principal: `La noche en ${provinciaActiva.value?.nombre || 'la provincia'} se está complicando. Has tenido algunas dudas en el camino.`,
-      secundario: `Los estudiantes de ${provinciaActiva.value?.lugarPrincipal || 'la zona'} se sienten algo desorientados. ¡Es hora de concentrarse y recuperar el control para salvar el after!`,
-      clase: "text-neon-red"
+      titulo: "⚠️ CHECKPOINT DE RECUPERACIÓN",
+      principal: `La noche en ${provinciaActiva.value?.nombre || 'la provincia'} se está complicando y tu rendimiento es bajo. Has tenido varias dudas en el camino.`,
+      secundario: `Los estudiantes de ${provinciaActiva.value?.lugarPrincipal || 'la zona'} se sienten desorientados. ¡Es hora de concentrarse y recuperar el control para salvar el after!`,
+      clase: "text-neon-red",
+      esRecuperacion: true
     }
   }
 })
@@ -1299,30 +1302,39 @@ onUnmounted(() => {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
-  background: rgba(10, 15, 30, 0.55);
-  border: 1.5px solid rgba(0, 200, 255, 0.25);
-  border-radius: var(--radius-xl);
+  background: rgba(10, 15, 30, 0.65) !important;
+  border: 1.5px solid rgba(184, 79, 255, 0.3) !important;
+  border-radius: var(--radius-md) !important; /* Esquinas más tácticas */
   color: var(--color-text-primary);
   cursor: pointer;
   text-align: left;
   transition: all var(--transition-base);
   font-size: var(--text-base);
   font-weight: var(--font-medium);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  box-shadow: 0 0 10px rgba(184, 79, 255, 0.05) !important;
+  outline: none;
 }
 
 .boton-opcion:not(:disabled):hover,
 .boton-opcion:not(:disabled):focus-visible {
-  border-color: var(--color-neon-blue);
-  background: rgba(0, 200, 255, 0.12);
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+  border-color: #00d4ff !important;
+  background: rgba(0, 212, 255, 0.08) !important;
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.35) !important;
   outline: none !important;
+}
+
+.boton-opcion:active {
+  border-color: #1e5eff !important;
+  box-shadow: 0 0 25px rgba(30, 94, 255, 0.6) !important;
 }
 
 .boton-opcion:disabled {
   cursor: not-allowed;
-  opacity: 0.45;
+  opacity: 0.4 !important;
   transform: none !important;
+  box-shadow: none !important;
 }
 
 .boton-opcion.opcion-correcta:disabled,
@@ -1334,26 +1346,27 @@ onUnmounted(() => {
 .letra-opcion {
   font-family: var(--font-display);
   font-weight: var(--font-extrabold);
-  color: var(--color-neon-blue);
+  color: #00d4ff;
   font-size: var(--text-base);
   min-width: 24px;
 }
 
 .opcion-correcta {
-  border-color: var(--color-neon-green) !important;
-  background: rgba(0, 255, 136, 0.15) !important;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.35) !important;
+  border-color: #00ff88 !important;
+  background: rgba(0, 255, 136, 0.12) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4) !important;
 }
 
 .opcion-incorrecta {
   border-color: #ff4646 !important;
-  background: rgba(255, 70, 70, 0.15) !important;
-  box-shadow: 0 0 20px rgba(255, 70, 70, 0.35) !important;
+  background: rgba(255, 70, 70, 0.12) !important;
+  box-shadow: 0 0 20px rgba(255, 70, 70, 0.4) !important;
 }
 
 .opcion-revelada {
-  border-color: var(--color-neon-green) !important;
-  background: rgba(0, 255, 136, 0.08) !important;
+  border-color: #00ff88 !important;
+  background: rgba(0, 255, 136, 0.06) !important;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.2) !important;
 }
 
 .simbolo-feedback {
@@ -1776,6 +1789,14 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
+.checkpoint-card--recuperacion {
+  background: radial-gradient(circle at top, rgba(255, 70, 70, 0.15) 0%, rgba(10, 6, 22, 0.95) 100%) !important;
+  border: 1.5px solid rgba(255, 70, 70, 0.45) !important;
+  box-shadow: 
+    0 0 35px rgba(255, 70, 70, 0.25), 
+    inset 0 0 20px rgba(255, 70, 70, 0.08) !important;
+}
+
 .checkpoint-card .icono-narrativa {
   font-size: 4.5rem;
   display: inline-flex;
@@ -1790,9 +1811,20 @@ onUnmounted(() => {
   margin-bottom: var(--space-2);
 }
 
+.checkpoint-card--recuperacion .icono-narrativa {
+  background: radial-gradient(circle, rgba(255, 70, 70, 0.2) 0%, transparent 70%) !important;
+  border: 2px solid rgba(255, 70, 70, 0.35) !important;
+  box-shadow: 0 0 20px rgba(255, 70, 70, 0.3) !important;
+}
+
 .checkpoint-card .titulo-narrativa {
   color: var(--color-neon-gold) !important;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.checkpoint-card--recuperacion .titulo-narrativa {
+  color: #ff6b6b !important;
+  text-shadow: 0 0 10px rgba(255, 70, 70, 0.4) !important;
 }
 
 /* --- Mejoras de Pregunta Protagonista --- */

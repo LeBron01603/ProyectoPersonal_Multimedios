@@ -1,6 +1,8 @@
 <template>
   
   <section class="pantalla-identidad" aria-label="Creador de identidad del héroe">
+    <!-- Fondo fijo e inmutable detrás del creador de identidad -->
+    <div class="fondo-fijo-identidad" aria-hidden="true"></div>
     <div class="contenedor-identidad animate-fade-in-scale">
 
       <!-- Header de la pantalla -->
@@ -449,24 +451,59 @@ function alConfirmar() {
 </script>
 
 <style scoped>
-/* --- Contenedor principal --- */
+/* --- Contenedor principal sin fondo propio para evitar saltos --- */
 .pantalla-identidad {
-  min-height: calc(100vh - 64px);
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-12) var(--space-4);
+  z-index: 1;
 }
 
+/* Fondo fijo e inmutable */
+.fondo-fijo-identidad {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/images/fondo-ruta-tica-inicio.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.fondo-fijo-identidad::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
+}
+
+/* --- Tarjeta del Formulario con Glassmorphism y Glow --- */
 .contenedor-identidad {
+  position: relative;
+  z-index: 3;
   width: 100%;
-  max-width: 700px;
-  background: var(--gradient-card);
-  border: 1px solid var(--color-border);
+  max-width: 760px;
+  background: rgba(5, 10, 25, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(184, 79, 255, 0.35);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
-  box-shadow: var(--shadow-card), var(--shadow-neon-purple);
-  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(184, 79, 255, 0.15);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.contenedor-identidad:hover {
+  border-color: rgba(0, 200, 255, 0.45);
+  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.75), 0 0 30px rgba(0, 200, 255, 0.2);
 }
 
 /* --- Header --- */
@@ -476,24 +513,32 @@ function alConfirmar() {
 }
 
 .icono-identidad {
-  font-size: 3rem;
+  font-size: 3.5rem;
   display: inline-block;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
+  filter: drop-shadow(0 0 12px rgba(184, 79, 255, 0.5));
 }
 
 .titulo-identidad {
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  color: var(--color-neon-purple);
-  text-shadow: 0 0 15px var(--color-neon-purple-glow);
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #b84fff 0%, #00c8ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 15px rgba(184, 79, 255, 0.6)) drop-shadow(0 0 30px rgba(0, 200, 255, 0.3));
   margin-bottom: var(--space-2);
 }
 
 .subtitulo-identidad {
   color: var(--color-text-secondary);
   font-size: var(--text-base);
-  max-width: 450px;
+  max-width: 500px;
   margin-inline: auto;
+  line-height: 1.5;
 }
 
 /* --- Formulario --- */
@@ -515,28 +560,43 @@ function alConfirmar() {
   z-index: 1000 !important;
 }
 
+.etiqueta-formulario {
+  font-family: 'Orbitron', sans-serif;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* --- Inputs/Selects con Bordes Neón y Focus --- */
 .input-formulario {
   width: 100%;
   padding: var(--space-3) var(--space-4);
-  background: rgba(17, 24, 39, 0.75);
-  border: 1px solid var(--color-border);
+  background: rgba(8, 12, 28, 0.65);
+  border: 1px solid rgba(0, 200, 255, 0.3);
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
   font-family: inherit;
   font-size: var(--text-base);
-  transition: all var(--transition-base);
+  transition: all 0.3s ease;
+}
+
+.input-formulario:hover {
+  border-color: rgba(0, 200, 255, 0.6);
+  background: rgba(8, 12, 28, 0.75);
 }
 
 .input-formulario:focus {
   outline: none;
-  border-color: var(--color-neon-purple);
-  box-shadow: 0 0 0 3px var(--color-neon-purple-glow);
-  background: rgba(17, 24, 39, 0.85);
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.5);
+  background: rgba(8, 12, 28, 0.85);
 }
 
 .error-input {
   border-color: #ff4646 !important;
-  box-shadow: 0 0 0 3px rgba(255, 70, 70, 0.2) !important;
+  box-shadow: 0 0 10px rgba(255, 70, 70, 0.4) !important;
 }
 
 .mensaje-error {
@@ -552,8 +612,8 @@ function alConfirmar() {
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
-  background: rgba(0, 200, 255, 0.08);
-  border: 1px solid rgba(0, 200, 255, 0.25);
+  background: rgba(0, 200, 255, 0.05);
+  border: 1px dashed rgba(0, 200, 255, 0.35);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   margin-bottom: var(--space-2);
@@ -581,8 +641,8 @@ function alConfirmar() {
 .tarjeta-personalidad {
   position: relative;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1.5px solid rgba(184, 79, 255, 0.2);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   display: flex;
@@ -590,19 +650,19 @@ function alConfirmar() {
   align-items: center;
   gap: var(--space-1);
   text-align: center;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .tarjeta-personalidad:hover {
   border-color: var(--color-neon-purple);
-  background: rgba(184, 79, 255, 0.08);
+  background: rgba(184, 79, 255, 0.1);
   transform: translateY(-2px);
 }
 
 .tarjeta-personalidad.selected {
   border-color: var(--color-neon-purple);
-  background: rgba(184, 79, 255, 0.15);
-  box-shadow: 0 0 15px var(--color-neon-purple-glow);
+  background: rgba(184, 79, 255, 0.2);
+  box-shadow: 0 0 15px rgba(184, 79, 255, 0.4);
 }
 
 .tarjeta-personalidad.selected::after {
@@ -615,18 +675,18 @@ function alConfirmar() {
   font-weight: var(--font-bold);
 }
 
-.emoji-personalidad { font-size: 1.6rem; }
+.emoji-personalidad { font-size: 1.8rem; }
 
 .nombre-personalidad {
-  font-family: var(--font-display);
+  font-family: 'Orbitron', var(--font-display), sans-serif;
   font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
+  font-weight: 800;
   color: var(--color-text-primary);
 }
 
 .bono-personalidad {
   font-size: var(--text-xs);
-  font-weight: var(--font-semibold);
+  font-weight: 700;
   color: var(--color-neon-green);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -634,28 +694,29 @@ function alConfirmar() {
 }
 
 .desc-personalidad {
-  font-size: var(--text-xs);
+  font-size: 0.72rem;
   color: var(--color-text-muted);
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
 /* --- Preview --- */
 .preview-identidad {
-  background: rgba(0, 200, 255, 0.04);
-  border: 1px solid rgba(0, 200, 255, 0.2);
+  background: rgba(0, 200, 255, 0.03);
+  border: 1px solid rgba(0, 200, 255, 0.25);
   border-radius: var(--radius-lg);
   padding: var(--space-4) var(--space-6);
   text-align: left;
 }
 
 .etiqueta-preview {
+  font-family: 'Orbitron', sans-serif;
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   margin: 0 0 var(--space-4);
   text-align: center;
-  font-weight: var(--font-bold);
+  font-weight: 800;
 }
 
 .preview-columnas {
@@ -671,14 +732,15 @@ function alConfirmar() {
   background: rgba(255, 255, 255, 0.01);
   padding: var(--space-3);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255,255,255,0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .preview-header-sub {
+  font-family: 'Orbitron', sans-serif;
   font-size: var(--text-xs);
-  font-weight: var(--font-bold);
+  font-weight: 800;
   color: var(--color-neon-blue);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   border-bottom: 1px solid rgba(0, 200, 255, 0.15);
   padding-bottom: var(--space-1);
   margin-bottom: var(--space-2);
@@ -700,16 +762,52 @@ function alConfirmar() {
   }
 }
 
-/* --- Acciones --- */
+/* --- Botón Premium y Acciones --- */
 .acciones-formulario {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-4);
   justify-content: flex-end;
   margin-top: var(--space-2);
 }
 
+.acciones-formulario .btn-hero {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, #7b2cbf 0%, #9d4edd 50%, #ff007f 100%);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 0, 127, 0.85);
+  box-shadow: 0 0 22px rgba(255, 0, 127, 0.45), 0 0 35px rgba(157, 78, 221, 0.25);
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.acciones-formulario .btn-hero:hover:not(.btn-disabled) {
+  background: linear-gradient(135deg, #7b2cbf 0%, #9d4edd 50%, #ff007f 100%);
+  filter: brightness(1.2) saturate(1.2);
+  box-shadow: 0 0 30px rgba(255, 0, 127, 0.75), 0 0 50px rgba(157, 78, 221, 0.45);
+  transform: scale(1.03) translateY(-2px);
+}
+
+.acciones-formulario .btn-outline {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-weight: 800;
+  border: 1.5px solid rgba(0, 200, 255, 0.4);
+  color: var(--color-neon-blue);
+  background: rgba(0, 200, 255, 0.02);
+}
+
+.acciones-formulario .btn-outline:hover {
+  background: rgba(0, 200, 255, 0.08);
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+  transform: translateY(-2px);
+}
+
 .btn-disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
   transform: none !important;
   box-shadow: none !important;
@@ -717,8 +815,11 @@ function alConfirmar() {
 
 /* --- Responsive --- */
 @media (max-width: 640px) {
+  .pantalla-identidad {
+    padding: var(--space-6) var(--space-4);
+  }
   .contenedor-identidad {
-    padding: var(--space-5) var(--space-4);
+    padding: var(--space-6) var(--space-4);
   }
   .cuadricula-personalidad {
     grid-template-columns: 1fr;
@@ -728,6 +829,7 @@ function alConfirmar() {
   }
   .acciones-formulario .btn {
     width: 100%;
+    justify-content: center;
   }
 }
 </style>

@@ -1,15 +1,20 @@
 <template>
   <!-- EncabezadoApp: encabezado persistente del juego -->
-  <header class="encabezado-app">
+  <header class="encabezado-app" :class="{ 'header-inicio': pantallaActual === PANTALLAS.INICIO }">
     <div class="header-inner container">
       <!-- Logo / Brand -->
-      <div class="header-brand">
-        <span class="brand-icon animate-float">🦸</span>
+      <div v-if="pantallaActual !== PANTALLAS.INICIO" class="header-brand">
+        <div class="brand-logo-wrapper">
+          <span class="brand-icon animate-float">🦸</span>
+          <div class="brand-glow-bg"></div>
+        </div>
         <div class="brand-text">
-          <span class="brand-title">Ruta Tica</span>
+          <span class="brand-title">RUTA TICA</span>
           <span class="brand-subtitle">El Héroe del After</span>
+          <span class="brand-insignia">🛡️ Protector Universitario</span>
         </div>
       </div>
+      <div v-else class="header-brand-placeholder"></div>
 
       <!-- Estadísticas del héroe (visibles solo si hay identidad) -->
       <div v-if="mostrarEstadisticas" class="header-stats">
@@ -175,6 +180,20 @@ function confirmarReinicio() {
   border-bottom: 1px solid var(--color-border);
 }
 
+.encabezado-app.header-inicio {
+  position: absolute;
+  width: 100%;
+  background: transparent;
+  border-bottom: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: none;
+}
+
+.encabezado-app.header-inicio .header-controls {
+  pointer-events: auto;
+}
+
 .header-inner {
   display: flex;
   align-items: center;
@@ -184,40 +203,114 @@ function confirmarReinicio() {
   min-height: 64px;
 }
 
-/* --- Brand --- */
+/* --- Brand (Credencial Heroica) --- */
 .header-brand {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   flex-shrink: 0;
+  position: relative;
+  background: linear-gradient(135deg, rgba(8, 14, 28, 0.95) 0%, rgba(13, 20, 35, 0.9) 100%);
+  border: 1.5px solid rgba(0, 212, 255, 0.4);
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.25), inset 0 0 10px rgba(0, 212, 255, 0.1);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.header-brand::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+.header-brand:hover {
+  border-color: #00d4ff;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.45), inset 0 0 12px rgba(0, 212, 255, 0.2);
+}
+
+.header-brand:hover::before {
+  left: 150%;
+  transition: 0.75s ease-in-out;
+}
+
+.brand-logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 200, 255, 0.1);
+  border: 1.5px solid var(--color-neon-blue);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 10px rgba(0, 200, 255, 0.35);
+}
+
+.brand-glow-bg {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-neon-blue), var(--color-neon-purple));
+  opacity: 0.3;
+  filter: blur(6px);
+  z-index: -1;
 }
 
 .brand-icon {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   display: inline-block;
+  z-index: 1;
 }
 
 .brand-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.1;
+  gap: 1px;
 }
 
 .brand-title {
-  font-family: var(--font-display);
-  font-weight: var(--font-extrabold);
-  font-size: var(--text-lg);
-  color: var(--color-neon-green);
-  text-shadow: 0 0 10px var(--color-neon-green-glow);
-  letter-spacing: 0.04em;
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  background: linear-gradient(90deg, var(--color-neon-blue) 0%, var(--color-neon-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(0, 200, 255, 0.55));
+  letter-spacing: 0.06em;
+  line-height: 1.0;
 }
 
 .brand-subtitle {
   font-family: var(--font-display);
-  font-size: var(--text-xs);
+  font-size: 0.65rem;
   color: var(--color-text-secondary);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  font-weight: var(--font-semibold);
+}
+
+.brand-insignia {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: var(--color-neon-purple);
+  text-shadow: 0 0 6px var(--color-neon-purple-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 /* --- Stats --- */
@@ -229,7 +322,7 @@ function confirmarReinicio() {
   justify-content: center;
 }
 
-/* --- Controles --- */
+/* --- Controles (Cápsulas Tecnológicas) --- */
 .header-controls {
   display: flex;
   align-items: center;
@@ -238,33 +331,43 @@ function confirmarReinicio() {
 }
 
 .control-btn {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  background: rgba(10, 15, 30, 0.85);
+  border: 1.5px solid rgba(0, 212, 255, 0.4);
+  border-radius: 20px; /* Cápsula tecnológica */
   color: var(--color-text-primary);
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.2), inset 0 0 4px rgba(0, 212, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .control-btn:hover {
-  background: rgba(0,255,136,0.12);
-  border-color: var(--color-neon-green);
-  transform: scale(1.05);
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.12);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.55), inset 0 0 6px rgba(0, 212, 255, 0.25);
+  transform: translateY(-1.5px) scale(1.05);
+  filter: brightness(1.2) saturate(1.1);
 }
 
 .control-btn.muted {
-  opacity: 0.5;
+  opacity: 0.45;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.control-btn--danger {
+  border-color: rgba(255, 70, 70, 0.4);
+  box-shadow: 0 0 8px rgba(255, 70, 70, 0.2);
 }
 
 .control-btn--danger:hover {
   background: rgba(255, 70, 70, 0.15);
   border-color: #ff4646;
+  box-shadow: 0 0 15px rgba(255, 70, 70, 0.55);
 }
 
 /* --- Barra de progreso --- */
@@ -307,7 +410,8 @@ function confirmarReinicio() {
   .header-stats {
     display: none;
   }
-  .brand-subtitle {
+  .brand-subtitle,
+  .brand-insignia {
     display: none;
   }
 }

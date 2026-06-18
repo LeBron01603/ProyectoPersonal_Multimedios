@@ -31,10 +31,14 @@
                 </div>
               </div>
               <div class="hero-title-group">
-                <h2 id="centro-heroe-titulo" class="titulo-heroico texto-neon-purple">
-                  {{ identidadHeroe.aliasHeroe || 'Héroe Sin Nombre' }}
+                <h2 id="centro-heroe-titulo" class="titulo-heroico text-neon-purple">
+                  {{ identidadHeroe.aliasHeroe || 'Héroe del After' }}
                 </h2>
-                <p class="subtitulo-heroico">Protegiendo la vida universitaria de Costa Rica</p>
+                <div class="hero-title-badge-header" v-if="tituloFinal">
+                  <span class="badge-emoji">{{ tituloFinal.emoji }}</span>
+                  <span class="badge-name">{{ tituloFinal.nombre }}</span>
+                </div>
+                <p class="subtitulo-heroico">🛡️ Protector Universitario — Sede de Operaciones</p>
               </div>
             </div>
 
@@ -72,31 +76,92 @@
                 <!-- Modo Lectura -->
                 <div v-if="!modoEdicion" class="perfil-info-grid">
                   
-                  <!-- Panel de Progreso Heroico -->
-                  <div class="progreso-heroico-dashboard">
-                    <div class="tarjeta-progreso-neon">
-                      <span class="card-title">PROVINCIAS COMPLETADAS</span>
-                      <span class="card-value value-green">{{ misionesCompletadas.length }}</span>
+                  <!-- Tarjeta izquierda: IDENTIDAD CIVIL -->
+                  <div class="tarjeta-info-premium credencial-civil glass-panel-neon cian">
+                    <div class="credencial-header">
+                      <span class="credencial-chip">🪪 IDENTIDAD CIVIL</span>
+                      <span class="insignia-ucr">🏛️ {{ identidadHeroe.universidad }}</span>
                     </div>
-                    <div class="tarjeta-progreso-neon">
-                      <span class="card-title">PROVINCIAS RESTANTES</span>
-                      <span class="card-value value-blue">{{ 7 - misionesCompletadas.length }}</span>
+                    <div class="credencial-body-modern">
+                      <div class="avatar-civil-container">
+                        <div class="avatar-scanner"></div>
+                        <span class="avatar-civil-icon">🎓</span>
+                      </div>
+                      <div class="civil-identity-details">
+                        <h3 class="civil-name">{{ identidadHeroe.nombre }}</h3>
+                        <p class="civil-age">{{ identidadHeroe.edad }} años | Estudiante</p>
+                        <div class="hologram-grid-overlay"></div>
+                      </div>
                     </div>
-                    <div class="tarjeta-progreso-neon">
-                      <span class="card-title">AVENTURA COMPLETADA</span>
-                      <span class="card-value value-purple">{{ porcentajeProgreso }}%</span>
-                    </div>
-                    <div class="tarjeta-progreso-neon">
-                      <span class="card-title">XP TOTAL</span>
-                      <span class="card-value value-gold">{{ experienciaHeroe }} XP</span>
-                    </div>
-                    <div class="tarjeta-progreso-neon">
-                      <span class="card-title">NIVEL ACTUAL</span>
-                      <span class="card-value value-cyan">NIVEL {{ nivelHeroe }}</span>
+                    
+                    <div class="civil-badges-container">
+                      <div class="badge-item-hero cian">
+                        <span class="badge-label">CARRERA</span>
+                        <span class="badge-value">{{ nombreCarreraLegible(identidadHeroe.carrera) }}</span>
+                      </div>
+                      <div class="badge-item-hero cian" v-if="identidadHeroe.clubUniversitario">
+                        <span class="badge-label">CLUB</span>
+                        <span class="badge-value">{{ identidadHeroe.clubUniversitario }}</span>
+                      </div>
+                      <div class="badge-item-hero cian">
+                        <span class="badge-label">DEPORTE</span>
+                        <span class="badge-value">{{ deporteLegible(identidadHeroe.deporte) }}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <!-- Dashboard de Estadísticas -->
+                  <!-- Tarjeta derecha: IDENTIDAD HEROICA -->
+                  <div class="tarjeta-info-premium licencia-heroica glass-panel-neon purpura">
+                    <div class="licencia-header">
+                      <span class="licencia-title-badge">🦸 IDENTIDAD HEROICA</span>
+                      <span class="licencia-serial">RT-0{{ nivelHeroe }}-{{ experienciaHeroe }}</span>
+                    </div>
+                    
+                    <div class="hero-identity-body">
+                      <!-- Medalla Visual del Héroe -->
+                      <div class="medalla-visual-heroe">
+                        <span class="medalla-emoji">🎖️</span>
+                        <div class="medalla-glow"></div>
+                      </div>
+                      
+                      <div class="hero-identity-text">
+                        <h3 class="hero-alias-destacado text-neon-purple">
+                          {{ identidadHeroe.aliasHeroe || 'Héroe del After' }}
+                        </h3>
+                        <p class="hero-titulo-destacado" v-if="tituloFinal">
+                          {{ tituloFinal.emoji }} {{ tituloFinal.nombre }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Panel de Rango -->
+                    <div class="panel-de-rango-neon">
+                      <span class="rango-badge-text">🛡️ {{ tituloFinal?.nombre || 'Protector Universitario' }}</span>
+                    </div>
+
+                    <div class="hero-licencia-details">
+                      <div class="detail-row"><span class="lbl">Nivel:</span> <span class="val text-neon-purple">Nvl {{ nivelHeroe }}</span></div>
+                      <div class="detail-row"><span class="lbl">Experiencia:</span> <span class="val text-neon-gold">{{ experienciaHeroe }} XP</span></div>
+                      <div class="detail-row"><span class="lbl">Reputación:</span> <span class="val text-neon-blue">{{ estadisticasHeroe.reputacionNocturna }}%</span></div>
+                      
+                      <!-- Track de Sospecha Secreta -->
+                      <div class="progreso-sospecha-licencia">
+                        <div class="sospecha-meta-licencia">
+                          <span class="lbl">SOSPECHA:</span>
+                          <span class="sospecha-rango-badge-mini" :class="sospechaRangoInfo.clase">{{ sospechaRangoInfo.label }}</span>
+                        </div>
+                        <div class="barra-sospecha-licencia">
+                          <div
+                            class="barra-sospecha-relleno-licencia"
+                            :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }"
+                            :class="sospechaRangoInfo.clase"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Módulo de Estadísticas y Progreso de Patrullaje -->
                   <div class="estadisticas-dashboard-seccion">
                     <h3>📊 Módulo de Estadísticas</h3>
                     <div class="estadisticas-dashboard-grid">
@@ -162,63 +227,6 @@
                     </div>
                   </div>
 
-                  <!-- Bloque Identidad Civil -->
-                  <div class="tarjeta-info civil">
-                    <h3>🎓 Identidad Civil</h3>
-                    <div class="detalles-info">
-                      <p><strong>Nombre:</strong> {{ identidadHeroe.nombre }}</p>
-                      <p><strong>Edad:</strong> {{ identidadHeroe.edad }} años</p>
-                      <p><strong>Universidad:</strong> {{ identidadHeroe.universidad }}</p>
-                      <p><strong>Sede:</strong> {{ nombreSedeLegible(identidadHeroe.universidad, identidadHeroe.sedeUniversitaria) }}</p>
-                      <p><strong>Carrera:</strong> {{ nombreCarreraLegible(identidadHeroe.carrera) }}</p>
-                      <p><strong>Semestre:</strong> {{ identidadHeroe.semestre }}°</p>
-                      <p><strong>Promedio Ponderado:</strong> {{ identidadHeroe.promedio }}</p>
-                      <p><strong>Créditos Aprobados:</strong> {{ identidadHeroe.creditosAprobados }}</p>
-                      <p><strong>Club Universitario:</strong> {{ identidadHeroe.clubUniversitario || 'Ninguno' }}</p>
-                      <p><strong>Actividad física:</strong> {{ deporteLegible(identidadHeroe.deporte) }}</p>
-                    </div>
-                  </div>
-
-                  <!-- Bloque Identidad Heroica -->
-                  <div class="tarjeta-info heroica">
-                    <h3>🦸 Identidad Heroica</h3>
-                    <div class="detalles-info">
-                      <p><strong>Alias:</strong> {{ identidadHeroe.aliasHeroe || 'Sin alias' }}</p>
-                      <p><strong>Nivel:</strong> {{ nivelHeroe }}</p>
-                      <p><strong>Experiencia:</strong> {{ experienciaHeroe }} XP</p>
-                      <p><strong>Reputación Nocturna:</strong> {{ estadisticasHeroe.reputacionNocturna }}</p>
-                      
-                      <div class="titulo-heroico-contenedor" v-if="tituloFinal">
-                        <p><strong>Título Heroico:</strong> <span class="titulo-nombre-val">{{ tituloFinal.emoji }} {{ tituloFinal.nombre }}</span></p>
-                        <p class="titulo-desc">{{ tituloFinal.descripcion }}</p>
-                      </div>
-
-                      <div class="progreso-sospecha">
-                        <div class="sospecha-meta">
-                          <span><strong>Sospecha:</strong> {{ estadisticasHeroe.sospechaIdentidad }}%</span>
-                          <span class="sospecha-rango-badge" :class="sospechaRangoInfo.clase">{{ sospechaRangoInfo.label }}</span>
-                        </div>
-                        <div class="barra-sospecha-centro">
-                          <div
-                            class="barra-sospecha-relleno"
-                            :style="{ width: estadisticasHeroe.sospechaIdentidad + '%' }"
-                            :class="sospechaRangoInfo.clase"
-                          ></div>
-                        </div>
-                      </div>
-
-                      <div class="crisis-estatus-centro" style="margin-top: 10px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 4px;">
-                        <p style="margin: 0;"><strong>Marcas Exposición:</strong> <span class="badge-marcas" style="color: #ff6b6b; font-weight: bold;">{{ marcasExposicion }}/2</span></p>
-                        <p style="margin: 0;"><strong>Estado:</strong> <span class="badge-estado-actual" style="font-weight: bold; text-transform: uppercase;">{{ estadoSuspicionNombre }}</span></p>
-                      </div>
-
-                      <!-- Alerta de sospecha interactiva narrada -->
-                      <div class="advertencia-sospecha-centro" :class="sospechaRangoInfo.clase">
-                        <p>{{ mensajeSospechaHeroe }}</p>
-                      </div>
-                    </div>
-                  </div>
-
                   <!-- Bloque Resumen de Último Patrullaje -->
                   <div class="tarjeta-info mision-reciente">
                     <h3>⚡ Último Patrullaje Registrado</h3>
@@ -229,7 +237,7 @@
                     </div>
                   </div>
 
-                  <button class="btn btn-outline btn-editar-perfil-centro" @click="activarModoEdicion" aria-label="Editar identidad de héroe">
+                  <button class="btn btn-hero-secondary btn-editar-perfil-centro" @click="activarModoEdicion" aria-label="Editar identidad de héroe">
                     ✏️ Modificar Identidad
                   </button>
                 </div>
@@ -307,10 +315,43 @@
                 </form>
               </div>
 
-              <!-- ================= PESTAÑA: PROGRESO ================= -->
-              <div v-if="tabActiva === 'progreso'" id="panel-progreso" role="tabpanel" aria-label="Progreso de Aventura" class="seccion-progreso animate-fade-in">
+              <!-- ================= PESTAÑA: MOCHILA ================= -->
+              <div v-if="tabActiva === 'mochila'" id="panel-mochila" role="tabpanel" aria-label="Mochila e Inventario" class="seccion-mochila animate-fade-in">
+                <div class="seccion-mochila-scroll">
+                  <!-- Mochila / Inventario -->
+                  <div class="inventario-bloque">
+                    <h4>🎒 Objetos en Mochila</h4>
+                    <div v-if="inventarioHeroe.length > 0" class="mochila-grid">
+                      <div v-for="(item, i) in inventarioHeroe" :key="i" class="item-mochila-card">
+                        <span class="item-emoji">{{ item.emoji }}</span>
+                        <span class="item-nombre">{{ item.nombre }}</span>
+                      </div>
+                    </div>
+                    <p class="vacio-texto" v-else>Tu mochila está vacía. ¡Resuelve misiones para ganar objetos!</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================= PESTAÑA: RECUERDOS ================= -->
+              <div v-if="tabActiva === 'recuerdos'" id="panel-recuerdos" role="tabpanel" aria-label="Recuerdos del After" class="seccion-mochila animate-fade-in">
+                <div class="seccion-mochila-scroll">
+                  <!-- Recuerdos / Colección After -->
+                  <div class="inventario-bloque">
+                    <h4>🍹 Recuerdos del After</h4>
+                    <div v-if="coleccionAfter.length > 0" class="mochila-grid">
+                      <div v-for="(rec, i) in coleccionAfter" :key="i" class="item-mochila-card after-recuerdo">
+                        <span class="item-emoji">{{ rec.emoji }}</span>
+                        <span class="item-nombre">{{ rec.nombre }}</span>
+                      </div>
+                    </div>
+                    <p class="vacio-texto" v-else>No has guardado recuerdos de after parties. ¡Ayuda a los estudiantes de noche!</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================= PESTAÑA: HITOS ================= -->
+              <div v-if="tabActiva === 'hitos'" id="panel-hitos" role="tabpanel" aria-label="Hitos de Aventura" class="seccion-progreso animate-fade-in">
                 <div class="seccion-progreso-scroll">
-                  
                   <!-- Calendario Académico Básico -->
                   <div class="progreso-bloque">
                     <h4>📅 Calendario Académico</h4>
@@ -363,7 +404,12 @@
                     </div>
                     <p class="vacio-texto" v-else>No has desbloqueado hitos aún. ¡Completa misiones para encontrarlos!</p>
                   </div>
+                </div>
+              </div>
 
+              <!-- ================= PESTAÑA: LOGROS ================= -->
+              <div v-if="tabActiva === 'logros'" id="panel-logros" role="tabpanel" aria-label="Logros Obtenidos" class="seccion-progreso animate-fade-in">
+                <div class="seccion-progreso-scroll">
                   <!-- Logros -->
                   <div class="progreso-bloque">
                     <h4>🏆 Logros Obtenidos</h4>
@@ -375,38 +421,6 @@
                     </div>
                     <p class="vacio-texto" v-else>Ningún logro desbloqueado todavía. ¡Conviértete en leyenda!</p>
                   </div>
-
-                </div>
-              </div>
-
-              <!-- ================= PESTAÑA: MOCHILA ================= -->
-              <div v-if="tabActiva === 'mochila'" id="panel-mochila" role="tabpanel" aria-label="Mochila e Inventario" class="seccion-mochila animate-fade-in">
-                <div class="seccion-mochila-scroll">
-                  
-                  <!-- Mochila / Inventario -->
-                  <div class="inventario-bloque">
-                    <h4>🎒 Objetos en Mochila</h4>
-                    <div v-if="inventarioHeroe.length > 0" class="mochila-grid">
-                      <div v-for="(item, i) in inventarioHeroe" :key="i" class="item-mochila-card">
-                        <span class="item-emoji">{{ item.emoji }}</span>
-                        <span class="item-nombre">{{ item.nombre }}</span>
-                      </div>
-                    </div>
-                    <p class="vacio-texto" v-else>Tu mochila está vacía. ¡Resuelve misiones para ganar objetos!</p>
-                  </div>
-
-                  <!-- Recuerdos / Colección After -->
-                  <div class="inventario-bloque">
-                    <h4>🍹 Recuerdos del After</h4>
-                    <div v-if="coleccionAfter.length > 0" class="mochila-grid">
-                      <div v-for="(rec, i) in coleccionAfter" :key="i" class="item-mochila-card after-recuerdo">
-                        <span class="item-emoji">{{ rec.emoji }}</span>
-                        <span class="item-nombre">{{ rec.nombre }}</span>
-                      </div>
-                    </div>
-                    <p class="vacio-texto" v-else>No has guardado recuerdos de after parties. ¡Ayuda a los estudiantes de noche!</p>
-                  </div>
-
                 </div>
               </div>
 
@@ -728,9 +742,11 @@ function alCambiarVolumenEfectos(e) {
 
 const tabs = [
   { id: 'perfil', icono: '👤', label: 'Perfil' },
-  { id: 'progreso', icono: '🚩', label: 'Progreso' },
   { id: 'mochila', icono: '🎒', label: 'Mochila' },
-  { id: 'ranking', icono: '🏆', label: 'Ranking' },
+  { id: 'recuerdos', icono: '🍹', label: 'Recuerdos' },
+  { id: 'hitos', icono: '🚩', label: 'Hitos' },
+  { id: 'logros', icono: '🏆', label: 'Logros' },
+  { id: 'ranking', icono: '📊', label: 'Ranking' },
   { id: 'audio', icono: '🔊', label: 'Audio' },
   { id: 'opciones', icono: '⚙️', label: 'Guardado' }
 ]
@@ -1042,28 +1058,47 @@ function cerrar() {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  background: none;
-  border: none;
-  padding: var(--space-3) var(--space-1);
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid transparent;
+  padding: var(--space-3) var(--space-2);
   color: var(--color-text-secondary);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all var(--transition-base);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: var(--font-display);
   font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
+  font-weight: var(--font-bold);
   outline: none;
 }
 
 .tab-btn:hover {
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.02);
+  color: #ffffff;
+  background: rgba(184, 79, 255, 0.06);
+  border-color: rgba(184, 79, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.tab-btn:hover .tab-icono {
+  transform: scale(1.2) rotate(5deg);
 }
 
 .tab-btn.activo {
-  color: var(--color-neon-purple);
-  border-color: var(--color-neon-purple);
-  text-shadow: 0 0 5px var(--color-neon-purple-glow);
+  color: #ffffff !important;
+  background: rgba(184, 79, 255, 0.12) !important;
+  border: 1px solid rgba(184, 79, 255, 0.35) !important;
+  border-bottom: 2px solid var(--color-neon-purple) !important;
+  box-shadow: 0 -4px 15px rgba(184, 79, 255, 0.2), inset 0 0 10px rgba(184, 79, 255, 0.05);
+  text-shadow: 0 0 8px rgba(184, 79, 255, 0.6);
+}
+
+.tab-btn.activo .tab-icono {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 5px rgba(184, 79, 255, 0.6));
+}
+
+.tab-icono {
+  font-size: 1.25rem;
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 /* --- Contenido --- */
@@ -1109,16 +1144,340 @@ function cerrar() {
   letter-spacing: 0.05em;
 }
 
-.tarjeta-info.civil h3 {
-  color: var(--color-neon-blue);
-  border-bottom: 1px solid rgba(0, 200, 255, 0.15);
-  padding-bottom: var(--space-2);
+/* Tarjetas Premium - Credencial Civil y Licencia Heroica */
+.tarjeta-info-premium {
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow: hidden;
+  transition: all var(--transition-base);
 }
 
-.tarjeta-info.heroica h3 {
-  color: var(--color-neon-purple);
+.tarjeta-info-premium:hover {
+  transform: translateY(-3px);
+}
+
+/* Glassmorphism y Bordes Neón */
+.glass-panel-neon {
+  background: rgba(4, 6, 15, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass-panel-neon.cian {
+  border: 1.5px solid rgba(0, 200, 255, 0.25);
+  box-shadow: inset 0 0 15px rgba(0, 200, 255, 0.05), 0 0 15px rgba(0, 200, 255, 0.1);
+}
+
+.glass-panel-neon.cian:hover {
+  border-color: rgba(0, 200, 255, 0.6);
+  box-shadow: inset 0 0 20px rgba(0, 200, 255, 0.1), 0 0 25px rgba(0, 200, 255, 0.25);
+}
+
+.glass-panel-neon.purpura {
+  border: 1.5px solid rgba(184, 79, 255, 0.25);
+  box-shadow: inset 0 0 15px rgba(184, 79, 255, 0.05), 0 0 15px rgba(184, 79, 255, 0.1);
+}
+
+.glass-panel-neon.purpura:hover {
+  border-color: rgba(184, 79, 255, 0.6);
+  box-shadow: inset 0 0 20px rgba(184, 79, 255, 0.1), 0 0 25px rgba(184, 79, 255, 0.25);
+}
+
+/* Credencial Civil */
+.credencial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 200, 255, 0.15);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.credencial-chip {
+  font-size: 1.2rem;
+  color: var(--color-neon-blue);
+  filter: drop-shadow(0 0 5px var(--color-neon-blue));
+}
+
+.credencial-u-logo {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.credencial-body {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.credencial-photo-box {
+  width: 75px;
+  height: 95px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid rgba(0, 200, 255, 0.3);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.photo-placeholder {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 5px rgba(0, 200, 255, 0.3));
+}
+
+.scanner-bar {
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background: var(--color-neon-blue);
+  box-shadow: 0 0 8px var(--color-neon-blue);
+  top: 0;
+  animation: scan-animation 2.5s infinite linear;
+}
+
+@keyframes scan-animation {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.credencial-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-grow: 1;
+}
+
+.student-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent);
+  margin-block: 4px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  margin: 0;
+}
+
+.detail-row .lbl {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.detail-row .val {
+  color: var(--color-text-primary);
+  font-weight: 700;
+  text-align: right;
+}
+
+/* Licencia Heroica */
+.licencia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid rgba(184, 79, 255, 0.15);
   padding-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.licencia-title-badge {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-neon-purple);
+  text-shadow: 0 0 5px var(--color-neon-purple-glow);
+}
+
+.licencia-serial {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+
+.licencia-body {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.licencia-avatar-box {
+  width: 75px;
+  height: 75px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid rgba(184, 79, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(184, 79, 255, 0.1);
+}
+
+.hero-insignia-icon {
+  font-size: 2.2rem;
+  z-index: 2;
+  filter: drop-shadow(0 0 6px var(--color-neon-purple));
+}
+
+.glow-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  background: linear-gradient(135deg, var(--color-neon-purple), var(--color-neon-blue)) border-box;
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: pulse-ring 2s infinite ease-in-out;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+.licencia-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-grow: 1;
+}
+
+.hero-alias {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.hero-title-val {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--color-neon-gold);
+  font-weight: bold;
+}
+
+/* Track de Sospecha Secreta (Licencia) */
+.progreso-sospecha-licencia {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.sospecha-meta-licencia {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sospecha-meta-licencia .lbl {
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: var(--color-text-secondary);
+}
+
+.sospecha-rango-badge-mini {
+  font-size: 0.65rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.sospecha-rango-badge-mini.segura { color: var(--color-neon-green); }
+.sospecha-rango-badge-mini.rumores { color: var(--color-neon-gold); }
+.sospecha-rango-badge-mini.alta { color: #ff8c00; }
+.sospecha-rango-badge-mini.investigacion { color: #ff4646; }
+
+.barra-sospecha-licencia {
+  height: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-block: 2px;
+}
+
+.barra-sospecha-relleno-licencia {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+.barra-sospecha-relleno-licencia.segura { background: var(--color-neon-green); box-shadow: 0 0 5px var(--color-neon-green-glow); }
+.barra-sospecha-relleno-licencia.rumores { background: var(--color-neon-gold); box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+.barra-sospecha-relleno-licencia.alta { background: #ff8c00; box-shadow: 0 0 5px rgba(255, 140, 0, 0.5); }
+.barra-sospecha-relleno-licencia.investigacion { background: #ff4646; box-shadow: 0 0 5px rgba(255, 70, 70, 0.5); }
+
+.crisis-estatus-licencia {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--color-text-secondary);
+  margin-top: 3px;
+}
+
+.crisis-estatus-licencia strong.segura { color: var(--color-neon-green); }
+.crisis-estatus-licencia strong.rumores { color: var(--color-neon-gold); }
+.crisis-estatus-licencia strong.alta { color: #ff8c00; }
+.crisis-estatus-licencia strong.investigacion { color: #ff4646; }
+
+/* Alerta de sospecha interactiva */
+.licencia-alert-box {
+  border-radius: var(--radius-md);
+  padding: 6px 10px;
+  font-size: 0.65rem;
+  line-height: 1.3;
+  margin-top: var(--space-1);
+}
+
+.licencia-alert-box.segura {
+  background: rgba(0, 255, 136, 0.06);
+  border: 1px solid rgba(0, 255, 136, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.licencia-alert-box.rumores {
+  background: rgba(255, 215, 0, 0.06);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.licencia-alert-box.alta {
+  background: rgba(255, 140, 0, 0.06);
+  border: 1px solid rgba(255, 140, 0, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.licencia-alert-box.investigacion {
+  background: rgba(255, 70, 70, 0.06);
+  border: 1px solid rgba(255, 70, 70, 0.15);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .detalles-info {
@@ -1979,18 +2338,20 @@ function cerrar() {
 .centro-hero-section {
   display: flex;
   align-items: center;
-  gap: var(--space-5);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
+  gap: var(--space-6);
+  background: rgba(4, 6, 15, 0.45);
+  border: 1px solid rgba(0, 200, 255, 0.2);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
   margin-top: var(--space-2);
+  box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.05), 0 0 15px rgba(184, 79, 255, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .avatar-wrapper {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1999,11 +2360,11 @@ function cerrar() {
 
 .avatar-halo {
   position: absolute;
-  inset: -4px;
+  inset: -5px;
   border-radius: 50%;
   background: conic-gradient(from 0deg, var(--color-neon-blue), var(--color-neon-purple), var(--color-neon-blue));
-  animation: rotate-halo 6s infinite linear;
-  box-shadow: 0 0 15px var(--color-neon-purple-glow);
+  animation: rotate-halo 4s infinite linear;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), 0 0 20px rgba(184, 79, 255, 0.4);
 }
 
 @keyframes rotate-halo {
@@ -2012,19 +2373,20 @@ function cerrar() {
 
 .avatar-box {
   position: absolute;
-  inset: 2px;
-  background: #090613;
+  inset: 3px;
+  background: #06040a;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   z-index: 1;
 }
 
 .avatar-icon {
-  font-size: 2.2rem;
+  font-size: 2.8rem;
   line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(184, 79, 255, 0.6));
 }
 
 .hero-title-group {
@@ -2033,11 +2395,35 @@ function cerrar() {
 
 .titulo-heroico {
   font-family: var(--font-display);
-  font-size: 1.65rem !important;
+  font-size: 1.85rem !important;
   margin: 0 0 4px 0 !important;
   font-weight: 800;
   letter-spacing: 0.05em;
-  text-shadow: 0 0 10px var(--color-neon-purple-glow);
+  color: #fff;
+  text-shadow: 0 0 10px rgba(184, 79, 255, 0.8), 0 0 20px rgba(184, 79, 255, 0.4);
+}
+
+.hero-title-badge-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(184, 79, 255, 0.2), rgba(0, 200, 255, 0.2));
+  border: 1px solid rgba(184, 79, 255, 0.4);
+  border-radius: var(--radius-full);
+  padding: 2px 10px;
+  font-size: 0.72rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 6px;
+  box-shadow: 0 0 8px rgba(184, 79, 255, 0.25);
+}
+
+.badge-emoji {
+  font-size: 0.85rem;
+}
+
+.badge-name {
+  letter-spacing: 0.02em;
 }
 
 .subtitulo-heroico {
@@ -2326,5 +2712,275 @@ function cerrar() {
   .progreso-heroico-dashboard {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* --- FASE VISUAL HEROICA 2.0: ESTILOS ADICIONALES --- */
+
+/* Tabs del Centro / Bitácora Heroicas */
+.tabs-centro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  border-bottom: 2px solid rgba(0, 212, 255, 0.15);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.tab-btn {
+  flex: 1;
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(10, 15, 30, 0.6) !important;
+  border: 1px solid rgba(0, 212, 255, 0.2) !important;
+  border-bottom: 2px solid transparent !important;
+  padding: var(--space-3) var(--space-2);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.tab-btn:hover {
+  color: #00d4ff !important;
+  background: rgba(0, 212, 255, 0.1) !important;
+  border-color: #00d4ff !important;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.35), inset 0 0 8px rgba(0, 212, 255, 0.15);
+  transform: translateY(-3px);
+}
+
+.tab-btn.activo {
+  color: #ffffff !important;
+  background: linear-gradient(to bottom, rgba(157, 78, 221, 0.2), rgba(30, 94, 255, 0.1)) !important;
+  border: 1.5px solid rgba(0, 212, 255, 0.6) !important;
+  border-bottom: 3px solid #00d4ff !important;
+  box-shadow: 0 -4px 20px rgba(0, 212, 255, 0.45), 0 0 10px rgba(157, 78, 221, 0.3), inset 0 0 12px rgba(0, 212, 255, 0.2) !important;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+}
+
+.tab-icono {
+  font-size: 1.8rem !important; /* Iconos más grandes */
+  margin-bottom: 2px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.tab-btn:hover .tab-icono {
+  transform: scale(1.2) translateY(-2px);
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.6));
+}
+
+.tab-btn.activo .tab-icono {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.8));
+}
+
+/* Rediseño de Identidad Civil (Tarjeta Izquierda) */
+.credencial-body-modern {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-civil-container {
+  width: 90px;
+  height: 90px;
+  background: rgba(10, 15, 30, 0.8);
+  border: 2px solid #00d4ff;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.avatar-scanner {
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background: #00d4ff;
+  box-shadow: 0 0 10px #00d4ff;
+  top: 0;
+  animation: scan-animation-civil 2.5s infinite linear;
+}
+
+@keyframes scan-animation-civil {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.avatar-civil-icon {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+}
+
+.civil-identity-details {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.civil-name {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: 1.25rem;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+}
+
+.civil-age {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.hologram-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+  background-size: 8px 8px;
+  pointer-events: none;
+}
+
+.civil-badges-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.badge-item-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(10, 15, 30, 0.75);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
+.badge-item-hero.cian {
+  border-left: 3px solid #00d4ff;
+}
+
+.badge-item-hero .badge-label {
+  color: var(--color-text-secondary);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.badge-item-hero .badge-value {
+  color: #ffffff;
+  font-weight: 800;
+  text-shadow: 0 0 5px rgba(0, 212, 255, 0.4);
+}
+
+/* Rediseño de Identidad Heroica (Tarjeta Derecha) */
+.hero-identity-body {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: rgba(157, 78, 221, 0.03);
+  border: 1px solid rgba(157, 78, 221, 0.15);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.medalla-visual-heroe {
+  width: 60px;
+  height: 60px;
+  background: rgba(10, 15, 30, 0.85);
+  border: 2px solid #ffd700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.medalla-emoji {
+  font-size: 2.2rem;
+  z-index: 2;
+}
+
+.medalla-glow {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid #ffd700;
+  opacity: 0.6;
+  animation: pulse-ring-medalla 2s infinite ease-in-out;
+}
+
+@keyframes pulse-ring-medalla {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+.hero-identity-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.hero-alias-destacado {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: 1.35rem;
+  font-weight: 900;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(157, 78, 221, 0.8);
+}
+
+.hero-titulo-destacado {
+  font-size: 0.85rem;
+  color: var(--color-neon-gold);
+  font-weight: bold;
+  margin: 2px 0 0 0;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+}
+
+/* Panel de Rango */
+.panel-de-rango-neon {
+  background: linear-gradient(90deg, rgba(30, 94, 255, 0.25), rgba(157, 78, 221, 0.25));
+  border: 1.5px solid #9d4edd;
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  text-align: center;
+  box-shadow: 0 0 12px rgba(157, 78, 221, 0.3), inset 0 0 8px rgba(157, 78, 221, 0.15);
+}
+
+.rango-badge-text {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-weight: var(--font-bold);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  text-shadow: 0 0 6px rgba(157, 78, 221, 0.6);
+}
+
+.hero-licencia-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 </style>

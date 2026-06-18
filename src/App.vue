@@ -83,7 +83,7 @@
     </main>
 
     <!-- Footer persistente -->
-    <PiePaginaApp />
+    <PiePaginaApp v-if="pantallaActual !== PANTALLAS.INICIO" />
 
   </div>
 </template>

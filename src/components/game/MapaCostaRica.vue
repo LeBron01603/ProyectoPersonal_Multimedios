@@ -1,6 +1,13 @@
 <template>
   <!-- MapaCostaRica: mapa interactivo vectorial real de Costa Rica (SVG) -->
   <div class="mapa-costa-rica-container" @mousemove="onMouseMove">
+    <!-- HUD Tactical corners and scanline -->
+    <div class="hud-corner top-left"></div>
+    <div class="hud-corner top-right"></div>
+    <div class="hud-corner bottom-left"></div>
+    <div class="hud-corner bottom-right"></div>
+    <div class="hud-scanline"></div>
+
     <svg 
       viewBox="280 40 600 800" 
       class="svg-mapa-cr"
@@ -579,87 +586,155 @@ function seleccionarNodo(node, event) {
 <style scoped>
 .mapa-costa-rica-container {
   width: 100%;
-  background: radial-gradient(circle at center, rgba(14, 18, 42, 0.75) 0%, rgba(8, 10, 24, 0.9) 100%);
-  border: 1px solid rgba(0, 220, 255, 0.2);
+  min-height: 680px;
+  border: 1.5px solid rgba(0, 200, 255, 0.45);
   border-radius: var(--radius-xl);
   padding: var(--space-4);
   box-shadow: 
-    inset 0 0 40px rgba(0, 220, 255, 0.1),
-    inset 0 0 15px rgba(184, 79, 255, 0.05),
-    0 10px 30px rgba(0, 0, 0, 0.8),
-    0 0 30px rgba(0, 220, 255, 0.05);
+    inset 0 0 50px rgba(0, 200, 255, 0.25),
+    inset 0 0 25px rgba(184, 79, 255, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.85),
+    0 0 35px rgba(0, 200, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   position: relative;
   overflow: hidden;
   transition: all var(--transition-base);
+  z-index: 1;
 }
 
-.mapa-costa-rica-container:hover {
-  border-color: rgba(0, 220, 255, 0.35);
-  box-shadow: 
-    inset 0 0 50px rgba(0, 220, 255, 0.15),
-    inset 0 0 25px rgba(184, 79, 255, 0.08),
-    0 15px 40px rgba(0, 0, 0, 0.9),
-    0 0 45px rgba(0, 220, 255, 0.08);
+/* Background image blurred texture (secondary desaturated tactial grid helper) */
+.mapa-costa-rica-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/fondo-paneloperaciones.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.45) saturate(0.65) blur(1px);
+  opacity: 0.35;
+  z-index: -2;
+  pointer-events: none;
 }
 
-/* Tech corner decorations */
-.mapa-costa-rica-container::before,
+/* Dark radial backing centered behind the SVG to separate it + grid overlay */
 .mapa-costa-rica-container::after {
   content: '';
   position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 2px solid var(--color-neon-blue);
+  inset: 0;
+  background: 
+    linear-gradient(rgba(0, 220, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 220, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(1, 2, 5, 0.88) 0%, rgba(2, 4, 12, 0.45) 60%, rgba(1, 2, 5, 0.95) 100%);
+  background-size: 24px 24px, 24px 24px, auto;
+  z-index: -1;
   pointer-events: none;
 }
-.mapa-costa-rica-container::before {
+
+
+.mapa-costa-rica-container:hover {
+  border-color: rgba(0, 220, 255, 0.65);
+  box-shadow: 
+    inset 0 0 60px rgba(0, 220, 255, 0.35),
+    inset 0 0 30px rgba(184, 79, 255, 0.18),
+    0 15px 45px rgba(0, 0, 0, 0.9),
+    0 0 45px rgba(0, 220, 255, 0.3);
+}
+
+/* HUD corners */
+.hud-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid rgba(0, 200, 255, 0.7);
+  pointer-events: none;
+  z-index: 3;
+}
+.hud-corner.top-left {
   top: 10px;
   left: 10px;
   border-right: none;
   border-bottom: none;
 }
-.mapa-costa-rica-container::after {
+.hud-corner.top-right {
+  top: 10px;
+  right: 10px;
+  border-left: none;
+  border-bottom: none;
+}
+.hud-corner.bottom-left {
+  bottom: 10px;
+  left: 10px;
+  border-right: none;
+  border-top: none;
+}
+.hud-corner.bottom-right {
   bottom: 10px;
   right: 10px;
   border-left: none;
   border-top: none;
 }
 
+/* Scanline/hologram filter */
+.hud-scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.12) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.3;
+}
+
 .svg-mapa-cr {
+  position: relative;
+  z-index: 2;
   width: 100%;
-  max-width: 600px;
+  max-width: 100%;
+  max-height: 650px;
   height: auto;
   aspect-ratio: 3 / 4;
+  filter: drop-shadow(0 0 20px rgba(0, 200, 255, 0.38)) brightness(1.28) contrast(1.15);
 }
 
 /* --- Capas Geográficas --- */
 .provincia-path {
-  fill: rgba(10, 12, 28, 0.7);
-  stroke: rgba(255, 255, 255, 0.05);
+  fill: rgba(3, 4, 10, 0.92);
+  stroke: rgba(255, 255, 255, 0.1);
   stroke-width: 1.5;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   pointer-events: all;
 }
 
+.provincia-path.bloqueada {
+  fill: rgba(1, 2, 4, 0.95);
+  stroke: rgba(255, 255, 255, 0.03);
+  cursor: not-allowed;
+}
+
 .provincia-path.disponible {
-  fill: rgba(var(--neon-color-rgb), 0.03);
-  stroke: rgba(var(--neon-color-rgb), 0.4);
-  stroke-width: 2.2;
+  fill: rgba(var(--neon-color-rgb), 0.2);
+  stroke: var(--neon-color);
+  stroke-width: 3.8;
   cursor: pointer;
+  filter: drop-shadow(0 0 8px rgba(var(--neon-color-rgb), 0.5));
   animation: dynamic-glow 3s infinite alternate;
 }
 
 .provincia-path.completada {
-  fill: rgba(0, 255, 136, 0.06);
-  stroke: rgba(0, 255, 136, 0.5);
-  stroke-width: 2.2;
+  fill: rgba(0, 255, 136, 0.25);
+  stroke: #00ff88;
+  stroke-width: 3.8;
   cursor: pointer;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.5));
 }
 
 /* Hover, Focus y Selección */
@@ -667,18 +742,18 @@ function seleccionarNodo(node, event) {
 .provincia-path.completada:hover,
 .provincia-path.disponible:focus-visible,
 .provincia-path.completada:focus-visible {
-  fill: rgba(var(--neon-color-rgb), 0.12);
+  fill: rgba(var(--neon-color-rgb), 0.28);
   stroke: var(--neon-color);
-  stroke-width: 3.5;
-  filter: drop-shadow(0 0 10px var(--neon-color));
+  stroke-width: 4.5;
+  filter: drop-shadow(0 0 15px var(--neon-color));
   outline: none;
 }
 
 .provincia-path.seleccionada {
-  fill: rgba(var(--neon-color-rgb), 0.18) !important;
+  fill: rgba(var(--neon-color-rgb), 0.38) !important;
   stroke: var(--neon-color) !important;
-  stroke-width: 4.5 !important;
-  filter: drop-shadow(0 0 14px var(--neon-color)) !important;
+  stroke-width: 6px !important;
+  filter: drop-shadow(0 0 25px var(--neon-color)) !important;
   z-index: 10;
 }
 
@@ -688,25 +763,27 @@ function seleccionarNodo(node, event) {
 
 /* --- Conexiones vectoriales --- */
 .linea-conexion-neon {
-  stroke: rgba(255, 255, 255, 0.03);
+  stroke: rgba(255, 255, 255, 0.02);
   stroke-width: 2.5;
   transition: all 0.5s ease;
   pointer-events: none;
 }
 
 .linea-conexion-neon.desbloqueada {
-  stroke: rgba(0, 200, 255, 0.18);
-  stroke-width: 3.5;
+  stroke: rgba(0, 200, 255, 0.85);
+  stroke-width: 5.5px;
+  filter: drop-shadow(0 0 6px rgba(0, 200, 255, 0.5));
 }
 
 .linea-conexion-neon.completada {
-  stroke: rgba(0, 255, 136, 0.4);
-  stroke-width: 3.5;
+  stroke: rgba(0, 255, 136, 0.95);
+  stroke-width: 5.5px;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.6));
 }
 
 .linea-conexion-neon.pulsa {
   stroke: #ff9d00;
-  stroke-width: 3.5;
+  stroke-width: 4.5px;
   stroke-dasharray: 8 4;
   animation: stroke-slide 1.5s linear infinite;
 }
@@ -725,18 +802,19 @@ function seleccionarNodo(node, event) {
 }
 
 .nodo-provincia.bloqueada {
-  cursor: pointer;
-  opacity: 0.65;
+  cursor: not-allowed;
+  opacity: 0.3;
+  filter: grayscale(1);
 }
 
 .circulo-nodo-core {
   fill: #060913;
-  stroke-width: 2.5;
+  stroke-width: 3.2;
   transition: all 0.3s ease;
 }
 
 .brillo-nodo {
-  stroke-width: 1;
+  stroke-width: 1.5;
   stroke-dasharray: 4 2;
   fill: transparent;
   transition: all 0.3s ease;
@@ -796,26 +874,27 @@ function seleccionarNodo(node, event) {
 }
 
 .fondo-label-nodo {
-  fill: #0c0f1a;
-  stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 1;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  fill: #020308;
+  stroke: rgba(0, 200, 255, 0.45);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.85));
 }
 
 .nodo-provincia.seleccionada .fondo-label-nodo {
-  stroke: currentColor;
+  stroke: var(--neon-color);
 }
 
 .texto-label-nodo {
   font-family: var(--font-display);
   font-size: 0.7rem;
   font-weight: var(--font-bold);
-  fill: var(--color-text-secondary);
+  fill: #ffffff;
   user-select: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
 }
 
 .nodo-provincia.seleccionada .texto-label-nodo {
-  fill: var(--color-text-primary);
+  fill: #ffffff;
 }
 
 /* --- Pings recomendados --- */

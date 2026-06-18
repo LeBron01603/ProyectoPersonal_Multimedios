@@ -153,15 +153,18 @@ const idUnico = ref(Math.random().toString(36).substring(2, 9))
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #ff4646, #cc2a2a);
-  border: 1px solid rgba(255, 70, 70, 0.4);
-  color: var(--color-text-primary);
+  background: rgba(26, 10, 10, 0.8) !important;
+  border: 1px solid #ff4646 !important;
+  color: #ff4646 !important;
+  box-shadow: 0 0 10px rgba(255, 70, 70, 0.1) !important;
+  backdrop-filter: blur(8px);
 }
 
 .btn-danger:hover {
-  background: linear-gradient(135deg, #ff6b6b, #e53e3e);
-  box-shadow: 0 0 12px rgba(255, 70, 70, 0.4);
-  transform: translateY(-2px);
+  background: rgba(255, 70, 70, 0.15) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(255, 70, 70, 0.35) !important;
+  transform: translateY(-1.5px) !important;
 }
 
 /* --- Animación Modal-Fade --- */

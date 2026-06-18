@@ -114,27 +114,82 @@
         <div v-if="eventoActivo && !consecuenciaTexto" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="suspicion-event-title">
           <div class="modal-wrapper" @click.self="() => {}">
             <div class="modal-card-suspicion animate-fade-in-scale">
+              <!-- Ambientación Holográfica -->
+              <div class="hologram-grid-overlay"></div>
+              <div class="hologram-scanline"></div>
+              <div class="hologram-particles">
+                <span class="h-part hp1"></span>
+                <span class="h-part hp2"></span>
+                <span class="h-part hp3"></span>
+                <span class="h-part hp4"></span>
+              </div>
+
+              <!-- Encabezado Heroico Premium -->
               <header class="suspicion-header text-center">
-                <span class="emoji-alerta animate-pulse" aria-hidden="true">🕵️‍♂️</span>
-                <h2 id="suspicion-event-title" class="texto-neon-orange">Evento de Sospecha</h2>
-                <p class="advertencia-sus-rango">
-                  Nivel de Sospecha: 
-                  <span class="badge-rango-sospecha" :class="claseSospecha(estadisticasHeroe.sospechaIdentidad)">
-                    {{ etiquetaSospecha(estadisticasHeroe.sospechaIdentidad) }}
+                <div class="incidente-insignia">🕵️</div>
+                <h2 id="suspicion-event-title" class="incidente-titulo">ALERTA DEL CAMPUS</h2>
+                <p class="incidente-subtitulo">Posible riesgo para tu identidad secreta</p>
+                <div class="incidente-nivel-wrapper">
+                  <span class="nivel-label">ESTADO ACTUAL:</span>
+                  <span class="badge-rango-sospecha-tactico" :class="claseSospecha(estadisticasHeroe.sospechaIdentidad)">
+                    <span v-if="exposicionRevelada || marcasExposicion >= 2">⚠️ Expuesto</span>
+                    <span v-else-if="claseSospecha(estadisticasHeroe.sospechaIdentidad) === 'segura'">🟢 Identidad Segura</span>
+                    <span v-else-if="claseSospecha(estadisticasHeroe.sospechaIdentidad) === 'rumores'">🟡 Rumores</span>
+                    <span v-else-if="claseSospecha(estadisticasHeroe.sospechaIdentidad) === 'alta'">🟠 Sospechas</span>
+                    <span v-else-if="claseSospecha(estadisticasHeroe.sospechaIdentidad) === 'investigacion'">🔴 Investigación</span>
                   </span>
-                </p>
+                </div>
               </header>
-              
-              <p class="texto-evento">{{ eventoActivo.texto }}</p>
-              
+
+              <!-- Tarjeta de Narrativa -->
+              <div class="informe-narrativo-bloque">
+                <div class="informe-narrativo-header">
+                  <span class="hologram-ping"></span>
+                  <span class="informe-titulo">📖 INFORME DEL CAMPUS</span>
+                </div>
+                <div class="narrativa-separador-linea"></div>
+                <p class="texto-evento">{{ eventoActivo.texto }}</p>
+                <div class="narrativa-separador-linea"></div>
+              </div>
+
+              <!-- Zona de Impacto Potencial (Fase Visual) -->
+              <div class="zona-impacto-tactico">
+                <div class="impacto-header">
+                  <span>⚡ POSIBLES EFECTOS</span>
+                </div>
+                <div class="impacto-badges-grid">
+                  <template v-if="opcionHovered">
+                    <span 
+                      v-for="(val, stat) in opcionHovered.modificaciones" 
+                      :key="stat" 
+                      class="stat-badge-mod"
+                      :class="val > 0 ? 'sube' : 'baja'"
+                    >
+                      <span v-if="stat === 'energia'">⚡ {{ val > 0 ? '+' : '' }}{{ val }} Energía</span>
+                      <span v-else-if="stat === 'conocimiento'">🎓 {{ val > 0 ? '+' : '' }}{{ val }} Conocimiento</span>
+                      <span v-else-if="stat === 'responsabilidad'">📚 {{ val > 0 ? '+' : '' }}{{ val }} Responsabilidad</span>
+                      <span v-else-if="stat === 'reputacionNocturna'">🛡️ {{ val > 0 ? '+' : '' }}{{ val }} Reputación</span>
+                      <span v-else-if="stat === 'sospechaIdentidad'">🕵️ {{ val > 0 ? '+' : '' }}{{ val }} Sospecha</span>
+                      <span v-else-if="stat === 'diversion'">🎉 {{ val > 0 ? '+' : '' }}{{ val }} Diversión</span>
+                      <span v-else>{{ stat }}: {{ val > 0 ? '+' : '' }}{{ val }}</span>
+                    </span>
+                  </template>
+                  <span v-else class="val-placeholder">Pasa el cursor por una respuesta para analizar su impacto...</span>
+                </div>
+              </div>
+
+              <!-- Listado de Respuestas Premium -->
               <div class="opciones-evento-lista">
                 <button 
                   v-for="(opc, idx) in eventoActivo.opciones" 
                   :key="idx" 
-                  class="btn btn-outline btn-opcion-evento"
+                  class="btn-opcion-evento-tactico"
+                  @mouseenter="opcionHovered = opc"
+                  @mouseleave="opcionHovered = null"
                   @click="seleccionarOpcionEvento(opc)"
                 >
-                  {{ opc.texto }}
+                  <span class="opcion-icono-bocadillo">💬</span>
+                  <span class="opcion-texto-val">{{ opc.texto }}</span>
                 </button>
               </div>
             </div>
@@ -147,13 +202,22 @@
         <div v-if="consecuenciaTexto" class="modal-overlay" role="dialog" aria-modal="true">
           <div class="modal-wrapper" @click.self="() => {}">
             <div class="modal-card-suspicion consequence animate-fade-in-scale">
+              <!-- Ambientación Holográfica -->
+              <div class="hologram-grid-overlay"></div>
+              <div class="hologram-scanline"></div>
+
               <header class="suspicion-header text-center">
-                <span class="emoji-alerta" aria-hidden="true">📢</span>
-                <h2 class="texto-neon-blue">Consecuencias</h2>
+                <div class="incidente-insignia blue">📢</div>
+                <h2 class="incidente-titulo blue">INFORME DE RESOLUCIÓN</h2>
+                <p class="incidente-subtitulo">Resultados del incidente de sospecha</p>
               </header>
-              
-              <p class="texto-evento">{{ consecuenciaTexto }}</p>
-              
+
+              <div class="informe-narrativo-bloque">
+                <div class="narrativa-separador-linea"></div>
+                <p class="texto-evento-consecuencia">{{ consecuenciaTexto }}</p>
+                <div class="narrativa-separador-linea"></div>
+              </div>
+
               <button class="btn btn-hero btn-lg" @click="cerrarConsecuencia">
                 Entendido
               </button>
@@ -178,7 +242,7 @@ import { useEstadoJuego } from '../../composables/useEstadoJuego.js'
 import { useAudio } from '../../composables/useAudio.js'
 
 // --- Estado global del juego ---
-const { navegarA, estadisticasHeroe, guardarProgreso, PANTALLAS } = useEstadoJuego()
+const { navegarA, estadisticasHeroe, guardarProgreso, PANTALLAS, exposicionRevelada, marcasExposicion } = useEstadoJuego()
 const { reproducirEfecto, reproducirMusica } = useAudio()
 
 // --- Estado local ---
@@ -186,6 +250,7 @@ const seleccionadas = ref([])
 const eventoActivo = ref(null)
 const consecuenciaTexto = ref('')
 const noticiaDelDia = ref(null)
+const opcionHovered = ref(null)
 
 onMounted(() => {
   reproducirMusica('campus')
@@ -791,73 +856,328 @@ function alCancelar() {
   justify-content: center;
 }
 
+/* Tarjeta Narrativa Premium */
 .modal-card-suspicion {
   width: 100%;
-  max-width: 520px;
-  background: var(--gradient-card);
-  border: 1px solid rgba(255, 140, 0, 0.25);
-  box-shadow: var(--shadow-card), 0 0 25px rgba(255, 140, 0, 0.15);
+  max-width: 550px;
+  background: radial-gradient(circle at top, #0f162c 0%, #060913 100%);
+  border: 1.5px solid rgba(0, 200, 255, 0.45);
+  box-shadow: 0 0 30px rgba(184, 79, 255, 0.25), inset 0 0 20px rgba(0, 200, 255, 0.1);
   border-radius: var(--radius-xl);
   padding: var(--space-8) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
   color: var(--color-text-primary);
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
 }
 
 .modal-card-suspicion.consequence {
-  border-color: rgba(0, 200, 255, 0.25);
-  box-shadow: var(--shadow-card), 0 0 25px rgba(0, 200, 255, 0.15);
+  border-color: rgba(184, 79, 255, 0.45);
+  box-shadow: 0 0 30px rgba(0, 200, 255, 0.25), inset 0 0 20px rgba(184, 79, 255, 0.1);
 }
 
-.emoji-alerta {
-  font-size: 3.5rem;
+/* Ambientación Holográfica */
+.hologram-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+  background-size: 25px 25px;
+  mask-image: radial-gradient(circle, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hologram-scanline {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent);
+  animation: hologram-scan 6s infinite linear;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes hologram-scan {
+  0% { top: -5%; }
+  100% { top: 105%; }
+}
+
+.hologram-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.h-part {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--color-neon-blue);
+  border-radius: 50%;
+  opacity: 0.25;
+  box-shadow: 0 0 5px var(--color-neon-blue);
+}
+
+.hp1 { top: 25%; left: 10%; animation: float-h-part 15s infinite ease-in-out; }
+.hp2 { top: 65%; left: 85%; animation: float-h-part 18s infinite ease-in-out -4s; }
+.hp3 { top: 80%; left: 20%; animation: float-h-part 14s infinite ease-in-out -8s; }
+.hp4 { top: 15%; left: 75%; animation: float-h-part 20s infinite ease-in-out -12s; }
+
+@keyframes float-h-part {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+  50% { transform: translate(10px, -20px) scale(1.3); opacity: 0.45; }
+}
+
+/* Encabezado Heroico */
+.suspicion-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.incidente-insignia {
+  font-size: 2.8rem;
   line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.6));
+  animation: pulse-insignia 2s infinite ease-in-out;
+  margin-bottom: var(--space-2);
 }
 
-.texto-neon-orange {
+.incidente-insignia.blue {
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.6));
+}
+
+@keyframes pulse-insignia {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.incidente-titulo {
+  font-family: 'Orbitron', var(--font-display), sans-serif;
+  font-size: 1.45rem;
+  font-weight: 900;
   color: #ff9d00;
-  text-shadow: 0 0 10px rgba(255, 157, 0, 0.4);
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
+  text-shadow: 0 0 12px rgba(255, 157, 0, 0.5);
   margin: 0;
+  letter-spacing: 0.08em;
 }
 
-.advertencia-sus-rango {
-  font-size: var(--text-xs);
+.incidente-titulo.blue {
+  color: var(--color-neon-blue);
+  text-shadow: 0 0 12px var(--color-neon-blue-glow);
+}
+
+.incidente-subtitulo {
+  font-size: 0.75rem;
   color: var(--color-text-secondary);
-  margin: var(--space-1) 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 4px 0 0;
+}
+
+.incidente-nivel-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.nivel-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.badge-rango-sospecha-tactico {
+  font-size: 0.68rem;
+  font-weight: var(--font-bold);
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.badge-rango-sospecha-tactico.segura {
+  background: rgba(0, 255, 136, 0.06);
+  border-color: rgba(0, 255, 136, 0.3);
+  color: var(--color-neon-green);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+}
+
+.badge-rango-sospecha-tactico.rumores {
+  background: rgba(255, 215, 0, 0.06);
+  border-color: rgba(255, 215, 0, 0.3);
+  color: var(--color-neon-gold);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+.badge-rango-sospecha-tactico.alta {
+  background: rgba(255, 140, 0, 0.06);
+  border-color: rgba(255, 140, 0, 0.3);
+  color: #ff8c00;
+  box-shadow: 0 0 8px rgba(255, 140, 0, 0.2);
+}
+
+.badge-rango-sospecha-tactico.investigacion {
+  background: rgba(255, 70, 70, 0.06);
+  border-color: rgba(255, 70, 70, 0.3);
+  color: #ff4646;
+  box-shadow: 0 0 8px rgba(255, 70, 70, 0.2);
+}
+
+/* Tarjeta de Narrativa */
+.informe-narrativo-bloque {
+  position: relative;
+  z-index: 2;
+  background: rgba(10, 14, 26, 0.4);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.informe-narrativo-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.hologram-ping {
+  width: 6px;
+  height: 6px;
+  background: var(--color-neon-purple);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-neon-purple);
+}
+
+.informe-titulo {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: bold;
+  color: var(--color-neon-purple);
+  letter-spacing: 0.06em;
+}
+
+.narrativa-separador-linea {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184, 79, 255, 0.2), transparent);
+  margin-block: var(--space-3);
 }
 
 .texto-evento {
-  font-size: var(--text-sm);
-  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: #e8f4f8;
   line-height: 1.6;
   margin: 0;
-  text-align: justify;
+  text-align: left;
+  font-style: italic;
 }
 
+.texto-evento-consecuencia {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: #e8f4f8;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+/* Zona de Impacto */
+.zona-impacto-tactico {
+  position: relative;
+  z-index: 2;
+  border: 1px dashed rgba(0, 240, 255, 0.2);
+  background: rgba(0, 240, 255, 0.02);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+}
+
+.impacto-header {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: var(--color-neon-blue);
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.impacto-badges-grid {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  min-height: 20px;
+  align-items: center;
+}
+
+.val-placeholder {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Listado de Respuestas */
 .opciones-evento-lista {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.btn-opcion-evento {
+.btn-opcion-evento-tactico {
+  background: rgba(10, 14, 26, 0.6);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
   text-align: left;
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-xs);
-  line-height: 1.4;
-  border-color: rgba(255, 255, 255, 0.08);
+  padding: var(--space-4) var(--space-5);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  outline: none;
 }
 
-.btn-opcion-evento:hover {
-  border-color: #ff9d00;
-  background: rgba(255, 157, 0, 0.05);
+.opcion-icono-bocadillo {
+  font-size: 1rem;
+  line-height: 1.2;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.btn-opcion-evento-tactico:hover {
+  border-color: var(--color-neon-blue);
+  background: rgba(0, 240, 255, 0.06);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+.btn-opcion-evento-tactico:hover .opcion-icono-bocadillo {
+  transform: scale(1.2) rotate(-5deg);
+  opacity: 1;
+}
+
+.btn-opcion-evento-tactico:active {
+  transform: translateY(1px);
 }
 
 @media (max-width: 640px) {
